@@ -344,6 +344,8 @@ footer{border-top:var(--cl);background:rgba(21,17,31,.6)}
 /* ---------- effets : calques (derrière ou autour du texte, jamais cliquables) ---------- */
 .fx-ov{position:fixed;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;display:none}
 .fx-sep{position:absolute;left:0;top:-9px;width:100%;height:18px;z-index:2;pointer-events:none;display:block}
+.fx-head{position:absolute;left:0;width:100%;z-index:-1;pointer-events:none;display:block}   /* trace d'en-tête : au-dessus du fond du bandeau, sous son texte */
+html.fx-onde .sec-head{position:relative;isolation:isolate}
 .fx-mx{background-image:radial-gradient(circle,rgba(183,156,255,.13) 0,rgba(183,156,255,.13) 1.1px,transparent 1.7px)}
 html.fx-onde main>section{position:relative}
 @media (hover:hover){
@@ -1372,16 +1374,19 @@ var signal=(function(){
 })();
 
 /* =====================================================================
-   2 · ONDE : oscilloscope dans le hero + ondes discrètes en séparateur
+   2 · ONDE : oscilloscope dans le hero + trace légère dans le fond de chaque en-tête de section
+   (sinon une onde discrète en séparateur, ex. Cinematek)
    ===================================================================== */
 var heroVis=true;
 var onde=(function(){
   var cv=null,ctx=null,W=0,H=0,top=0,base=0,amp=20,heroH=640,docL=0,docT=0,lambda=260,step=4,n=0;
   var ys=null,fm=1,px=0,py=0,gCore=null,half=60,lum=.42;   /* lum : opacité du trait (0,35-0,5) */
-  var seps=[],NT=new Float32Array(256),i;
+  var seps=[],heads=[],NT=new Float32Array(256),i;
+  /* en-têtes de section : phase, longueur d'onde et poids des harmoniques propres à chacun (le pouls, lui, reste commun) */
+  var HV=[{ph:.8,lk:1,w:[.58,.27,.15]},{ph:2.9,lk:.82,w:[.5,.32,.18]},{ph:4.6,lk:1.18,w:[.62,.2,.18]},{ph:1.7,lk:.92,w:[.54,.3,.16]},{ph:5.5,lk:1.07,w:[.6,.25,.15]}];
   for(i=0;i<256;i++)NT[i]=Math.random()*2-1;
   function noise(x){var a=Math.floor(x),f=x-a,u,v;a&=255;u=NT[a];v=NT[(a+1)&255];f=f*f*(3-2*f);return u+(v-u)*f}
-  function refreshVis(){e.vis=heroVis||seps.some(function(s){return s.vis})}
+  function refreshVis(){e.vis=heroVis||seps.some(function(s){return s.vis})||heads.some(function(h){return h.vis})}
   function ensure(){
     if(cv)return;
     cv=doc.createElement('canvas');cv.className='fx-cv-onde';cv.setAttribute('aria-hidden','true');
@@ -1408,6 +1413,20 @@ var onde=(function(){
       var g=s.ctx.createLinearGradient(0,0,s.w,0);
       g.addColorStop(0,'rgba(183,156,255,0)');g.addColorStop(.12,'rgba(183,156,255,.55)');g.addColorStop(.88,'rgba(183,156,255,.55)');g.addColorStop(1,'rgba(183,156,255,0)');
       s.g=g;
+    });
+    heads.forEach(function(h){                            /* trace d'en-tête : bande centrée sur le titre, canvas DPR 1 */
+      var r=h.sh.getBoundingClientRect(),tr=h.t.getBoundingClientRect();
+      h.w=Math.max(1,Math.round(r.width));h.hh=r.height;h.docL=r.left+view.sx;h.docT=r.top+view.sy;
+      h.base=(tr.top+tr.bottom)/2-r.top;
+      h.amp=clamp(tr.height*.1,8,18);
+      var hf=Math.round(h.amp*2.5+14);h.top=Math.round(h.base-hf);h.H=hf*2;h.ctr=h.base-h.top;
+      h.cv.style.top=h.top+'px';h.cv.style.height=h.H+'px';
+      sizeCanvas(h.cv,h.ctx,h.w,h.H,1);
+      h.lambda=(h.w<760?170:260)*h.v.lk;h.step=h.w<760?6:4;h.n=Math.ceil(h.w/h.step)+1;
+      h.ys=new Float32Array(h.n);
+      var g=h.ctx.createLinearGradient(0,0,h.w,0);
+      g.addColorStop(0,'rgba(183,156,255,0)');g.addColorStop(.03,'rgba(183,156,255,1)');g.addColorStop(.97,'rgba(183,156,255,1)');g.addColorStop(1,'rgba(183,156,255,0)');
+      h.g=g;h.ctx.lineJoin='round';
     });
   }
   function sample(T,usePtr){
@@ -1437,11 +1456,46 @@ var onde=(function(){
     }
     c.lineWidth=1;c.strokeStyle=s.g;c.stroke();
   }
+  function sampleHead(h,T,usePtr){                        /* même écriture que le hero, avec phase / forme propres à l'en-tête */
+    var A=h.amp*(.55+.45*beatEnv(T)),t=T+h.v.ph,w=h.v.w,ys=h.ys,st=h.step,W2=h.w,x,k,s,tp,y,dx,j,
+        px2=Ptr.sx-(h.docL-view.sx),py2=Ptr.sy-(h.docT-view.sy),
+        pull=usePtr?clamp(py2-h.base,-40,40)*.6*Ptr.str:0;
+    for(j=0;j<h.n;j++){
+      x=j*st;k=x/h.lambda*TAU;
+      s=w[0]*Math.sin(k+t*2.1)+w[1]*Math.sin(k*2.3-t*3.3+1.7)+w[2]*Math.sin(k*5.1+t*5.2+.6);
+      tp=Math.min(1,x/60,(W2-x)/60);
+      s+=noise(x*.05+t*9)*.16+(Math.random()-.5)*.06;
+      y=h.ctr+A*s*tp;
+      if(pull){dx=(x-px2)/72;y+=Math.exp(-dx*dx*.5)*pull}
+      ys[j]=clamp(y,2,h.H-2);
+    }
+  }
+  function drawHead(h){                                   /* un seul trait fin, 1 px, sans halo */
+    var c=h.ctx,a=h.ys,j;
+    c.clearRect(0,0,h.w,h.H);
+    c.beginPath();c.moveTo(0,a[0]);
+    for(j=1;j<h.n;j++)c.lineTo(j*h.step,a[j]);
+    c.lineWidth=1;c.globalAlpha=lum;c.strokeStyle=h.g;c.stroke();c.globalAlpha=1;
+  }
+  function frameHead(h,T){
+    var py2=Ptr.sy-(h.docT-view.sy);
+    sampleHead(h,T,py2>-30&&py2<h.hh+30);drawHead(h);
+  }
   function mkSeps(){
-    if(seps.length){seps.forEach(function(s){s.cv.style.display='block'});return}
+    if(seps.length||heads.length){
+      seps.forEach(function(s){s.cv.style.display='block'});heads.forEach(function(h){h.cv.style.display='block'});return;
+    }
     qsa('main > section[id]').forEach(function(sec){
       if(sec===hero)return;
-      var c=doc.createElement('canvas');c.className='fx-sep';c.setAttribute('aria-hidden','true');sec.appendChild(c);
+      var c=doc.createElement('canvas'),sh=qs('.sec-head',sec);
+      c.setAttribute('aria-hidden','true');
+      if(sh){                                             /* une seule trace par coupure : l'en-tête remplace le séparateur */
+        c.className='fx-head';sh.appendChild(c);
+        var h={sh:sh,t:qs('.h-title',sh)||sh,cv:c,ctx:c.getContext('2d'),v:HV[heads.length%HV.length],vis:false,g:null,ys:null,n:0,w:0,hh:0,H:0,top:0,base:0,ctr:0,amp:10,lambda:260,step:4,docL:0,docT:0};
+        h.io=watch(c,function(v){h.vis=v;refreshVis();if(v)kick()},'80px 0px');
+        heads.push(h);return;
+      }
+      c.className='fx-sep';sec.appendChild(c);
       var s={sec:sec,cv:c,ctx:c.getContext('2d'),w:0,vis:false,g:null,ph:rnd(0,6),io:null};
       s.io=watch(c,function(v){s.vis=v;refreshVis();if(v)kick()},'80px 0px');
       seps.push(s);
@@ -1457,6 +1511,7 @@ var onde=(function(){
       root.classList.remove('fx-onde');
       if(cv){cv.style.display='none';ctx.clearRect(0,0,W,H)}
       seps.forEach(function(s){s.cv.style.display='none'});
+      heads.forEach(function(h){h.cv.style.display='none'});
     },
     refreshVis:refreshVis,
     frame:function(T,dt){
@@ -1466,11 +1521,13 @@ var onde=(function(){
       var inHero=py>-30&&py<heroH+30;
       if(heroVis){sample(T,inHero);drawHero(T,false)}
       seps.forEach(function(s){if(s.vis&&s.g)drawSep(s,T)});
+      heads.forEach(function(h){if(h.vis&&h.ys)frameHead(h,T)});
     },
     still:function(){
       if(!ys)return;
       fm=1;sample(STILL_T,false);drawHero(STILL_T,true);
       seps.forEach(function(s){if(s.vis&&s.g)drawSep(s,STILL_T)});
+      heads.forEach(function(h){if(h.vis&&h.ys){sampleHead(h,STILL_T,false);drawHead(h)}});
     }
   };
   return e;
