@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Universitek — Encore et Encor · 16 octobre · Montpellier</title>
+<meta name="description" content="Universitek, Montpellier : soirées électroniques underground et organisme de formation. Prochaine date : vendredi 16 octobre 2026, Le Salon des Indépendants.">
+<meta name="theme-color" content="#15121B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%238B3DFF' stroke-linecap='round' stroke-width='7'%3E%3Cpath d='M26 8C41 7 51 18 50 32S39 55 25 54 4 43 5 29 13 9 26 8Z'/%3E%3Ccircle cx='51' cy='50' r='7'/%3E%3C/g%3E%3Ccircle cx='53' cy='13' r='5' fill='%238B3DFF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFEADF; --paper2:#E3DBC8; --ink:#15121B; --night:#0E0B14;
+  --v:#6838B8; --vv:#8B3DFF; --vl:#C9B6FF; --mute:#4D4757; --mute-n:#BDB5CC;
+  --neon:#39FF14; --focus:#6838B8; --head:68px;
+  --disp:'Anton','Impact','Haettenschweiler','Arial Narrow Bold',sans-serif;
+  --mono:'Courier Prime','Courier New',Courier,monospace;
+  --mk:'Permanent Marker','Marker Felt','Comic Sans MS',cursive;
+  --tear-a:polygon(0% 4px,3.6% 8px,7.1% 5px,10.7% 8px,14.3% 9px,17.9% 2px,21.4% 1px,25% 11px,28.6% 4px,32.1% 4px,35.7% 13px,39.3% 7px,42.9% 11px,46.4% 7px,50% 9px,53.6% 3px,57.1% 9px,60.7% 11px,64.3% 7px,67.9% 10px,71.4% 9px,75% 2px,78.6% 10px,82.1% 8px,85.7% 5px,89.3% 1px,92.9% 11px,96.4% 7px,100% 10px,100% calc(100% - 12px),96.4% calc(100% - 10px),92.9% calc(100% - 12px),89.3% calc(100% - 6px),85.7% calc(100% - 11px),82.1% calc(100% - 6px),78.6% calc(100% - 12px),75% calc(100% - 12px),71.4% calc(100% - 2px),67.9% calc(100% - 3px),64.3% calc(100% - 4px),60.7% calc(100% - 13px),57.1% calc(100% - 6px),53.6% calc(100% - 9px),50% calc(100% - 5px),46.4% calc(100% - 7px),42.9% calc(100% - 6px),39.3% calc(100% - 5px),35.7% calc(100% - 8px),32.1% calc(100% - 8px),28.6% calc(100% - 12px),25% calc(100% - 9px),21.4% calc(100% - 12px),17.9% calc(100% - 11px),14.3% calc(100% - 13px),10.7% calc(100% - 9px),7.1% calc(100% - 3px),3.6% calc(100% - 11px),0% calc(100% - 13px));
+  --tear-b:polygon(0% 4px,3.6% 13px,7.1% 3px,10.7% 9px,14.3% 2px,17.9% 4px,21.4% 13px,25% 4px,28.6% 9px,32.1% 7px,35.7% 6px,39.3% 7px,42.9% 3px,46.4% 11px,50% 2px,53.6% 4px,57.1% 1px,60.7% 4px,64.3% 6px,67.9% 12px,71.4% 6px,75% 2px,78.6% 4px,82.1% 13px,85.7% 2px,89.3% 8px,92.9% 6px,96.4% 9px,100% 5px,100% calc(100% - 9px),96.4% calc(100% - 7px),92.9% calc(100% - 9px),89.3% calc(100% - 12px),85.7% calc(100% - 8px),82.1% calc(100% - 3px),78.6% calc(100% - 2px),75% calc(100% - 12px),71.4% calc(100% - 7px),67.9% calc(100% - 3px),64.3% calc(100% - 12px),60.7% calc(100% - 8px),57.1% calc(100% - 10px),53.6% calc(100% - 12px),50% calc(100% - 4px),46.4% calc(100% - 5px),42.9% calc(100% - 12px),39.3% calc(100% - 3px),35.7% calc(100% - 10px),32.1% calc(100% - 2px),28.6% calc(100% - 9px),25% calc(100% - 9px),21.4% calc(100% - 12px),17.9% calc(100% - 11px),14.3% calc(100% - 7px),10.7% calc(100% - 3px),7.1% calc(100% - 3px),3.6% calc(100% - 7px),0% calc(100% - 7px));
+  --tear-c:polygon(0% 3px,3.6% 9px,7.1% 9px,10.7% 7px,14.3% 4px,17.9% 11px,21.4% 11px,25% 7px,28.6% 7px,32.1% 4px,35.7% 1px,39.3% 5px,42.9% 8px,46.4% 2px,50% 11px,53.6% 4px,57.1% 4px,60.7% 2px,64.3% 13px,67.9% 10px,71.4% 12px,75% 8px,78.6% 1px,82.1% 5px,85.7% 7px,89.3% 2px,92.9% 12px,96.4% 5px,100% 3px,100% 100%,0 100%);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.55 var(--mono);overflow-x:clip;min-height:100vh}
+body.lock{overflow:hidden}
+/* papier froissé + grain de photocopie, posés sur toute la page */
+body::before{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.55;
+  background:
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .013' numOctaves='5' seed='7' stitchTiles='stitch' result='t'/%3E%3CfeDiffuseLighting in='t' lighting-color='%23fff' surfaceScale='7' diffuseConstant='1.05'%3E%3CfeDistantLight azimuth='235' elevation='58'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .18 0 0 0 0 .1 -2.1 0 0 0 1.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E"),
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .06 0 0 0 0 .1 0 0 0 1.5 -.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--vv);color:#fff}
+img,svg{max-width:100%}
+a{color:inherit;text-decoration-color:var(--vv);text-decoration-thickness:.18em;text-underline-offset:.16em}
+a:hover{text-decoration-color:var(--ink)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:2px}
+.night{--focus:var(--vl)} .violet{--focus:#fff}
+.sr-only{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:fixed;left:12px;top:-80px;z-index:200;background:var(--ink);color:var(--paper);padding:12px 18px;font-weight:700;text-decoration:none;border:3px solid var(--vv)}
+.skip:focus{top:12px}
+.wrap{width:min(1240px,100% - 32px);margin-inline:auto}
+@media(min-width:760px){.wrap{width:min(1240px,100% - 64px)}}
+.mk{font-family:var(--mk);font-weight:400;line-height:1.15;letter-spacing:.01em}
+h1,h2,h3{margin:0;font-family:var(--disp);font-weight:400;text-transform:uppercase}
+p{margin:0}
+
+/* boutons : bloc noir, ombre violette décalée */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:48px;padding:.7rem 1.3rem;background:var(--ink);color:var(--paper);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--vv);font:400 1.2rem/1 var(--disp);letter-spacing:.07em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--vv)}
+.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--vv)}
+.btn.alt{background:var(--paper);color:var(--ink)}
+.btn.inv{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn.sm{min-height:44px;padding:.5rem 1rem;font-size:1.05rem}
+.btn.v{background:var(--v);border-color:var(--paper);color:#fff;box-shadow:5px 5px 0 var(--paper)}
+
+/* scotch, tampons, bulles de bombe */
+.tape{position:absolute;width:96px;height:30px;background:rgba(224,210,150,.8);box-shadow:0 1px 3px rgba(0,0,0,.28);clip-path:polygon(0 0,100% 0,97% 20%,100% 40%,97% 60%,100% 80%,97% 100%,0 100%,3% 80%,0 60%,3% 40%,0 20%);z-index:3;pointer-events:none}
+.stamp{display:inline-block;border:3px solid var(--v);color:var(--v);padding:.2em .6em;font:400 1.1rem/1.1 var(--disp);letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg);filter:url(#stamp)}
+.splat{position:absolute;pointer-events:none;color:var(--vv);z-index:1}
+.bub{width:1.1em;height:1.1em;color:var(--vv);flex:none}
+.bul{list-style:none;margin:0;padding:0}
+.bul li{position:relative;padding-left:1.7em}
+.bul li::before{content:"";position:absolute;left:0;top:.2em;width:1.1em;height:1.3em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%238B3DFF' stroke-linecap='round' stroke-width='8'%3E%3Cpath d='M32 8C46 7 57 18 56 32S45 57 31 56 8 46 8 31 19 9 32 8Z'/%3E%3Cpath d='M20 31a12 12 0 0 1 8-10' stroke-width='6'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+
+/* en-tête */
+.top{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:3px solid var(--ink)}
+.top-in{width:min(1360px,100% - 32px);margin-inline:auto;height:var(--head);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:inline-flex;align-items:center;gap:.4rem;font:400 1.9rem/1 var(--disp);letter-spacing:.03em;text-transform:uppercase;text-decoration:none;min-height:44px}
+.logo span{display:inline-block;transform:rotate(-1.2deg)}
+.logo .swash{height:.34em;bottom:-.1em;left:-4%;width:108%}
+.nav{display:flex;align-items:center;gap:22px}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+.nav a:not(.btn){display:inline-flex;align-items:center;min-height:44px;padding:0 .7rem;font-weight:700;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;background:linear-gradient(var(--v),var(--v)) left bottom/0 100% no-repeat;transition:background-size .25s,color .25s}
+.nav a:not(.btn):hover{background-size:100% 100%;color:#fff}
+.burger{display:none;align-items:center;gap:.6rem;min-height:48px;min-width:48px;padding:0 .9rem;background:var(--ink);color:var(--paper);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--vv);font:400 1.1rem/1 var(--disp);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.burger i{display:block;width:20px;height:14px;background:linear-gradient(currentColor 0 3px,transparent 3px 5.5px,currentColor 5.5px 8.5px,transparent 8.5px 11px,currentColor 11px 14px)}
+.burger[aria-expanded=true] i{background:linear-gradient(45deg,transparent 43%,currentColor 43% 57%,transparent 57%),linear-gradient(-45deg,transparent 43%,currentColor 43% 57%,transparent 57%)}
+@media(max-width:1080px){
+  .burger{display:inline-flex}
+  .nav{display:none;position:fixed;inset:var(--head) 0 0 0;z-index:60;flex-direction:column;align-items:stretch;gap:28px;padding:20px 16px 48px;background:var(--night);color:var(--paper);overflow:auto;--focus:var(--vl)}
+  .nav.open{display:flex}
+  .nav ul{flex-direction:column;gap:0}
+  .nav a:not(.btn){font:400 2.7rem/1 var(--disp);letter-spacing:.03em;min-height:64px;padding:0 4px;border-bottom:2px solid rgba(239,234,223,.18)}
+  .nav .btn{font-size:1.5rem;min-height:56px;background:var(--paper);color:var(--ink);border-color:var(--paper)}
+}
+@media(min-width:1081px){:root{--head:76px}}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;min-height:clamp(660px,calc(100svh - var(--head)),980px);display:flex;border-bottom:3px solid var(--ink);--surf:112px}
+.liquid{position:absolute;left:0;right:0;top:var(--surf);bottom:0;z-index:1;overflow:hidden}
+.liquid b{position:absolute;inset:0;overflow:hidden}
+.liquid b i{position:absolute;inset:-30%;transform:rotate(17deg)}
+.liquid b:nth-child(1){-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 38%);mask-image:linear-gradient(180deg,transparent 0,#000 38%)}
+.liquid b:nth-child(1) i{background:radial-gradient(circle,var(--vv) 1.3px,transparent 1.9px) 0 0/9px 9px}
+.liquid b:nth-child(2){-webkit-mask-image:linear-gradient(180deg,transparent 40%,#000 41%,#000 100%);mask-image:linear-gradient(180deg,transparent 40%,#000 41%,#000 100%)}
+.liquid b:nth-child(2) i{background:radial-gradient(circle,var(--vv) 2.3px,transparent 2.9px) 0 0/9px 9px}
+.liquid b:nth-child(3){-webkit-mask-image:linear-gradient(180deg,transparent 72%,#000 73%,#000 100%);mask-image:linear-gradient(180deg,transparent 72%,#000 73%,#000 100%)}
+.liquid b:nth-child(3) i{background:radial-gradient(circle,var(--v) 3.3px,transparent 3.9px) 0 0/9px 9px}
+.surface{position:absolute;left:-1%;width:102%;top:calc(var(--surf) - 10px);height:22px;z-index:2;overflow:visible}
+/* affiche collée : le visuel de la soirée du 16/10, pas l'emblème du site */
+.poster{position:absolute;z-index:-1;right:0;top:calc(var(--surf) + 18px);width:var(--pw);margin:0;padding:14px 14px 12px;background:var(--paper2);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);transform:rotate(4deg)}
+.poster .tape{left:50%;top:-16px;margin-left:-48px;transform:rotate(-4deg)}
+.poster .tape.b{left:auto;right:-30px;top:auto;bottom:34px;margin:0;width:84px;transform:rotate(58deg)}
+.poster svg{display:block;width:100%;height:auto;overflow:visible}
+.poster figcaption{margin-top:10px;font:700 .72rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+#bubbles{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+/* même conteneur que l'en-tête (.top-in) ; flex:0 1 auto sinon le flex-grow du .hero (ligne) l'étire en pleine largeur et annule le centrage */
+.hero-in{--pw:clamp(240px,27vw,420px);position:relative;z-index:5;width:min(1360px,100% - 32px);margin:0 auto;padding:22px 0 60px;display:flex;flex-direction:column;flex:0 1 auto}
+.kick{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;min-height:calc(var(--surf) - 36px);font-weight:700;font-size:.9rem;letter-spacing:.16em;text-transform:uppercase}
+.kick .tag{background:var(--ink);color:var(--paper);padding:.35em .8em;transform:rotate(-1.5deg)}
+.title{position:relative;margin-top:18px;font-size:clamp(4.6rem,22vw,15.5rem);line-height:.84;letter-spacing:-.005em;filter:url(#rough)}
+@media(min-width:700px){.title{font-size:clamp(7rem,15.5vw,15.5rem)}}
+.title>span{display:block}
+.title .t1,.title .t2,.title .t3{animation:slam .55s cubic-bezier(.2,.8,.2,1) both}
+.title .t2{animation-delay:.12s} .title .t3{animation-delay:.26s}
+.title .t3{font-size:.27em;line-height:1;letter-spacing:.04em;margin-top:.42em}
+.title .t3 i{font-style:normal;color:var(--v);padding:0 .15em}
+.hl{position:relative;display:inline-block;isolation:isolate}
+.swash{position:absolute;left:-3%;bottom:-.04em;width:106%;height:.46em;z-index:-1;overflow:visible;color:var(--vv)}
+.title .swash{height:.5em;bottom:-.08em}
+.lower{display:grid;gap:26px 40px;margin-top:auto;padding-top:46px;align-items:end}
+@media(min-width:900px){.lower{grid-template-columns:minmax(320px,430px) 1fr}}
+.slip{position:relative;background:var(--paper2);border:3px solid var(--ink);padding:22px 22px 18px;box-shadow:7px 7px 0 var(--ink);transform:rotate(-1.4deg)}
+.slip .tape{left:50%;top:-16px;margin-left:-48px;transform:rotate(3deg)}
+.slip dl{margin:0;display:grid;gap:12px}
+.slip dl>div{display:grid;grid-template-columns:5.6rem 1fr;gap:12px;align-items:baseline;border-bottom:2px dashed rgba(21,18,27,.4);padding-bottom:10px}
+.slip dl>div:last-child{border:0;padding-bottom:0}
+.slip dt{font-size:.8rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.slip dd{margin:0;font-weight:700}
+.slip dd b{font:400 2.6rem/1 var(--disp);letter-spacing:.02em;margin-right:.3em}
+.fine{margin-top:12px;font-size:.88rem;color:var(--mute)}
+.accroche{display:inline-block;background:var(--ink);color:var(--paper);padding:.45em .85em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.95rem;transform:rotate(-1deg)}
+.cta{display:flex;flex-wrap:wrap;gap:18px 22px;margin-top:22px;align-items:center}
+.n2{font-size:1.3rem;transform:rotate(-3deg);margin-left:.4rem}
+.hero .splat{right:2vw;bottom:-14px;width:110px;transform:rotate(14deg)}
+@keyframes slam{from{opacity:0;transform:translateY(.1em) rotate(-1.4deg) scale(1.025)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+  .drips path{transform-box:fill-box;transform-origin:50% 0;animation:run 2.8s cubic-bezier(.35,.55,.25,1) both;animation-delay:var(--d,.8s)}
+  @keyframes run{from{transform:scaleY(.02)}to{transform:none}}
+}
+@media(prefers-reduced-motion:reduce){.title .t1,.title .t2,.title .t3{animation:none}}
+@media(max-width:699px){
+  .hero{--surf:100px;min-height:auto}
+  .poster{position:relative;z-index:auto;right:auto;top:auto;width:min(68vw,300px);margin:40px auto 0;transform:rotate(3deg)}
+  .slip dl>div{grid-template-columns:1fr;gap:2px}
+  .btn{width:100%}
+  .hero .splat{display:none}
+}
+
+/* bandeau défilant */
+.mq-wrap{overflow:hidden;padding:0;position:relative;z-index:2}
+.mq{background:var(--ink);color:var(--paper);margin:0;border-block:3px solid var(--vv);padding:.5rem 0;font:400 1.55rem/1 var(--disp);letter-spacing:.08em;text-transform:uppercase}
+.mq-track{display:flex;width:max-content;animation:mq 34s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+.mq-track span{padding-right:1.6rem;white-space:nowrap}
+.mq-track span i{font-style:normal;color:var(--vv);padding-left:1.6rem}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.mq-track{animation:none;width:auto;flex-wrap:wrap;justify-content:center;row-gap:.5rem}.mq-track span[aria-hidden]{display:none}.mq{margin:0}}
+
+/* sections */
+.sec{position:relative;padding:clamp(64px,9vw,130px) 0}
+.night{background:var(--night);color:var(--paper)}
+.night::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.night>*,.violet>*{position:relative;z-index:1}
+.violet{background:var(--v);color:#F7F3FF}
+.torn-a{clip-path:var(--tear-a);margin-top:-10px;padding-top:calc(clamp(64px,9vw,130px) + 12px);padding-bottom:calc(clamp(64px,9vw,130px) + 12px)}
+.torn-b{clip-path:var(--tear-b);margin-top:-10px;padding-top:calc(clamp(64px,9vw,130px) + 12px);padding-bottom:calc(clamp(64px,9vw,130px) + 12px)}
+.torn-c{clip-path:var(--tear-c);margin-top:-10px;padding-top:calc(clamp(64px,9vw,130px) + 12px)}
+.sh{display:grid;gap:10px;margin-bottom:clamp(30px,5vw,64px)}
+.num{font-weight:700;font-size:1rem;letter-spacing:.22em;color:var(--v)}
+.night .num{color:var(--vl)} .violet .num{color:#fff}
+.sh h2{font-size:clamp(3.7rem,11vw,9.5rem);line-height:.86;letter-spacing:-.005em;text-wrap:balance;filter:url(#rough)}
+.sub{max-width:52ch;font-size:1.05rem}
+.mute{color:var(--mute)} .night .mute{color:var(--mute-n)}
+
+/* agenda */
+.row{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:150px 1fr auto auto;gap:22px 34px;align-items:center;padding:30px 24px;border-block:4px solid var(--ink)}
+.row::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--v);transform:scaleY(0);transform-origin:50% 100%;transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.row:focus-within::before{transform:none}
+.row:focus-within,.row:focus-within .mute{color:#fff}
+@media(hover:hover){.row:hover::before{transform:none}.row:hover,.row:hover .mute{color:#fff}.row:hover .btn{border-color:#fff}}
+.r-date{display:grid;line-height:1}
+.r-date b{font:400 5.6rem/.85 var(--disp)}
+.r-date span{font:400 1.7rem/1 var(--disp);letter-spacing:.08em;text-transform:uppercase;margin-top:.15em}
+.r-date i{font-style:normal;font-size:.82rem;font-weight:700;letter-spacing:.14em;margin-top:.7rem;text-transform:uppercase}
+.r-main h3{font-size:clamp(2rem,3.4vw,3.1rem);line-height:.95;letter-spacing:.005em}
+.r-main h3 i{font-style:normal;color:var(--v);padding:0 .12em}
+.row:focus-within .r-main h3 i{color:var(--vl)}
+@media(hover:hover){.row:hover .r-main h3 i{color:var(--vl)}}
+.r-main p{margin-top:10px}
+.r-main .accr{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:.95rem}
+.r-prix{text-align:center;line-height:1}
+.r-prix b{display:block;font:400 4rem/.9 var(--disp)}
+.r-prix span{font-size:.8rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.row.ghost{border-top:0;border-bottom:4px dashed rgba(21,18,27,.45);padding-block:22px;grid-template-columns:150px 1fr;color:var(--mute)}
+.row.ghost::before{display:none}
+.row.ghost b{font:400 2.4rem/1 var(--disp);letter-spacing:.06em}
+@media(max-width:1000px){.row{grid-template-columns:1fr auto;grid-template-areas:"date prix" "main main" "btn btn"}.r-date{grid-area:date}.r-prix{grid-area:prix;text-align:right}.r-main{grid-area:main}.row .btn{grid-area:btn;width:100%}.r-date{grid-template-columns:auto 1fr;gap:0 14px;align-items:end}.r-date i{grid-column:1/-1}}
+@media(max-width:560px){.r-date b{font-size:4.6rem}.row.ghost{grid-template-columns:1fr}}
+.lu-h{margin:clamp(48px,7vw,84px) 0 28px;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.9;display:flex;align-items:center;gap:.4rem}
+.lu-h .bub{font-size:.9em}
+.lineup{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:30px 28px}
+.lineup li{position:relative;background:var(--paper2);border:3px solid var(--ink);padding:30px 22px 24px;box-shadow:6px 6px 0 var(--ink)}
+.lineup li:nth-child(1){transform:rotate(-1.2deg)} .lineup li:nth-child(2){transform:rotate(.9deg);background:var(--paper)} .lineup li:nth-child(3){transform:rotate(-.6deg)}
+.lineup .tape{left:24px;top:-15px;transform:rotate(-4deg)} .lineup li:nth-child(2) .tape{left:auto;right:22px;transform:rotate(5deg)}
+.lineup h4{margin:0 0 10px;font:400 2.5rem/.95 var(--disp);text-transform:uppercase;letter-spacing:.01em}
+.lineup p{font-size:1rem}
+@media(max-width:900px){.lineup{grid-template-columns:1fr}.lineup li{transform:none!important}}
+.agenda .splat{right:3vw;top:60px;width:130px;transform:rotate(-12deg)}
+
+/* masterclass */
+.mcs{list-style:none;margin:0 0 56px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:44px 36px}
+.mc{position:relative;background:var(--paper);color:var(--ink);padding:14px 14px 22px;transform:rotate(var(--r,0deg));box-shadow:8px 8px 0 rgba(139,61,255,.55);--focus:var(--v)}
+.mcs li:nth-child(1){--r:-.9deg} .mcs li:nth-child(2){--r:.8deg} .mcs li:nth-child(3){--r:.6deg} .mcs li:nth-child(4){--r:-.7deg}
+.mc .tape{left:50%;top:-16px;margin-left:-48px;transform:rotate(-2deg)}
+.vthumb{position:relative;aspect-ratio:16/9;background:var(--ink);border:3px solid var(--ink);overflow:hidden}
+.vthumb iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;background:none;color:var(--paper);font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.art{position:absolute;inset:0}
+.a1{background:radial-gradient(circle at 74% 58%,var(--vv) 0 22%,transparent 22.4%),repeating-radial-gradient(circle at 74% 58%,transparent 0 12px,rgba(239,234,223,.4) 12px 14px),var(--ink)}
+.a2{background:radial-gradient(circle,var(--ink) 2.2px,transparent 2.8px) 0 0/11px 11px,var(--v)}
+.a3{background:repeating-conic-gradient(from 8deg at 72% 78%,var(--ink) 0 7deg,var(--paper2) 7deg 14deg)}
+.a4{background:radial-gradient(circle at 30% 54%,var(--ink) 0 5%,var(--vv) 5.2% 11%,var(--ink) 11.2% 12.5%,transparent 12.7%),repeating-radial-gradient(circle at 30% 54%,var(--ink) 0 2px,var(--paper2) 2px 7px)}
+.a4::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 54%,var(--ink) 0 5%,var(--v) 5.2% 11%,var(--ink) 11.2% 12.5%,transparent 12.7%),repeating-radial-gradient(circle at 78% 54%,rgba(21,18,27,.5) 0 2px,transparent 2px 7px);-webkit-mask-image:radial-gradient(circle at 78% 54%,#000 0 30%,transparent 30.4%);mask-image:radial-gradient(circle at 78% 54%,#000 0 30%,transparent 30.4%)}
+.word{position:absolute;left:12px;bottom:34px;font:400 clamp(3.4rem,8vw,5.6rem)/.8 var(--disp);text-transform:uppercase;letter-spacing:.01em;color:var(--paper);text-shadow:3px 3px 0 var(--ink)}
+.a3 + .word{color:var(--vv);-webkit-text-stroke:2px var(--ink);text-shadow:none;paint-order:stroke fill}
+.a2 + .word{text-shadow:3px 3px 0 var(--ink)}
+.dur{position:absolute;left:10px;top:10px;background:var(--paper);color:var(--ink);padding:.2em .55em;font:400 1.5rem/1 var(--disp);letter-spacing:.06em;border:2px solid var(--ink);transform:rotate(-3deg)}
+.play{position:absolute;right:16px;top:50%;width:68px;height:68px;margin-top:-44px;transition:transform .15s}
+.vid:hover .play{transform:scale(1.1) rotate(-6deg)}
+.vid:focus-visible{outline-offset:-6px;outline-color:var(--vv);outline-width:4px}
+.mention{position:absolute;left:0;right:0;bottom:0;background:var(--ink);color:var(--paper);padding:.4em .7em;font-size:.8125rem;line-height:1.3;border-top:2px solid var(--vv)}
+.mc-info{padding:16px 6px 0}
+.mc-info h3{font-size:clamp(1.7rem,2.6vw,2.2rem);line-height:1;letter-spacing:.01em}
+.who{margin-top:8px;font-weight:700}
+.meta{margin-top:4px;font-size:.92rem;color:var(--mute)}
+.tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.tags span{border:2px solid var(--ink);padding:.05em .55em;font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.mc-info .lvl{display:inline-block;margin-top:8px;background:var(--v);color:#fff;padding:.05em .6em;font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.mc-stamp{position:absolute;right:-6px;top:-22px;z-index:4;background:var(--paper);--focus:var(--v)}
+@media(max-width:860px){.mcs{grid-template-columns:1fr}}
+
+/* à propos */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:34px 30px;margin-top:10px}
+.pillar{position:relative;padding:34px 28px 36px;border:4px solid var(--ink)}
+.pillar h3{font-size:clamp(3.4rem,7vw,6rem);line-height:.88;margin-bottom:16px}
+.pillar.f{background:var(--paper);transform:rotate(-.8deg);box-shadow:8px 8px 0 var(--ink)}
+.pillar.p{background:var(--v);color:#F7F3FF;transform:rotate(.9deg);box-shadow:8px 8px 0 var(--ink);--focus:#fff}
+.pillar .bul li{margin-top:.5rem}
+.pillar .tape{right:30px;top:-16px;transform:rotate(4deg)}
+.edu{margin-top:30px;max-width:62ch;font-size:1.1rem}
+.chiffres{list-style:none;margin:clamp(44px,6vw,76px) 0 0;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:26px 20px}
+.chiffres li{display:grid;place-items:center;text-align:center;border:4px solid var(--v);outline:2px solid var(--v);outline-offset:4px;color:var(--v);padding:18px 8px 14px;filter:url(#stamp);background:rgba(227,219,200,.35)}
+.chiffres li:nth-child(odd){transform:rotate(-3deg)} .chiffres li:nth-child(even){transform:rotate(2.5deg)} .chiffres li:nth-child(3){transform:rotate(-1deg)}
+.chiffres b{font:400 3.6rem/.9 var(--disp);letter-spacing:.01em}
+.chiffres span{margin-top:8px;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1.25}
+@media(max-width:1000px){.chiffres{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.pillars{grid-template-columns:1fr}.chiffres{grid-template-columns:1fr 1fr;gap:26px 18px}.chiffres b{font-size:3rem}.pillar.f,.pillar.p{transform:none}}
+.apropos .splat{left:2vw;bottom:30px;width:120px;transform:rotate(30deg)}
+
+/* artistes */
+.violet::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(21,18,27,.55) 2.1px,transparent 2.7px) 0 0/10px 10px;-webkit-mask-image:linear-gradient(200deg,transparent 40%,#000 100%);mask-image:linear-gradient(200deg,transparent 40%,#000 100%);opacity:.5}
+.artists{list-style:none;margin:0;padding:0;border-top:4px solid var(--ink)}
+.artists li{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:1fr auto;gap:6px 24px;align-items:center;padding:12px 4px;border-bottom:4px solid var(--ink)}
+.artists li::before,.arch li::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleY(0);transform-origin:50% 100%;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.artists li:focus-within::before{transform:none}
+@media(hover:hover){.artists li:hover::before{transform:none}.artists li:hover{padding-inline:20px}}
+.artists li{transition:padding .35s}
+.artists h3{font-size:clamp(2.8rem,7.5vw,6.2rem);line-height:.95;letter-spacing:.005em}
+.artists .gn{display:block;font-size:.95rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.artists a.sc{display:inline-flex;align-items:center;min-height:44px;padding:0 .9rem;border:3px solid #fff;font-weight:700;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#fff}
+.artists a.sc:hover,.artists a.sc:focus-visible{background:#fff;color:var(--ink)}
+@media(max-width:620px){.artists li{grid-template-columns:1fr}.artists a.sc{justify-self:start;margin-bottom:8px}}
+
+/* archives */
+.arch{list-style:none;margin:0;padding:0;border-top:3px solid var(--paper)}
+.arch li{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:180px 1fr 330px;gap:4px 24px;align-items:baseline;padding:16px 8px;border-bottom:2px solid rgba(239,234,223,.35);transition:padding .3s}
+.arch li::before{background:var(--v)}
+@media(hover:hover){.arch li:hover::before{transform:none}.arch li:hover{padding-inline:22px;color:#fff}}
+.arch .d{font-weight:700;letter-spacing:.14em;color:var(--vl)}
+.arch .t{font:400 clamp(1.7rem,3vw,2.5rem)/1 var(--disp);text-transform:uppercase;letter-spacing:.01em}
+.arch .l{color:var(--mute-n)}
+@media(hover:hover){.arch li:hover .d,.arch li:hover .l{color:#fff}}
+.arch .fest .t::after{content:"Festival";margin-left:.7rem;vertical-align:middle;background:var(--vv);color:var(--ink);padding:.1em .5em;font:700 .8rem/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;display:inline-block;transform:rotate(-3deg)}
+.arch .fest .l small{display:block;font-size:.85rem}
+@media(max-width:860px){.arch li{grid-template-columns:1fr;padding-block:14px}}
+.arch-note{margin-top:30px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+
+/* cinematek */
+.cine{padding-block:clamp(50px,7vw,90px)}
+.flyer{position:relative;width:min(780px,100%);margin-inline:auto;background:var(--night);color:var(--paper);border:4px solid var(--neon);padding:34px clamp(20px,4vw,40px) 32px;transform:rotate(1deg);box-shadow:0 0 0 4px var(--night),0 0 26px rgba(57,255,20,.32);--focus:var(--neon)}
+.flyer .tape{left:30px;top:-17px;transform:rotate(-5deg)}
+.flyer .eb{font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:.85rem;color:var(--neon)}
+.flyer h2{font-size:clamp(2.8rem,6vw,4.4rem);line-height:.95;color:var(--neon);margin:6px 0 14px;letter-spacing:.03em}
+.flyer p.tx{max-width:60ch}
+.flyer a.go{display:inline-flex;align-items:center;min-height:48px;margin-top:20px;padding:.5rem 1.1rem;background:var(--neon);color:#0b0b0b;font-weight:700;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;border:3px solid var(--neon);transition:background .15s,color .15s}
+.flyer a.go:hover{background:transparent;color:var(--neon)}
+
+/* pied de page */
+.foot{padding-bottom:0}
+.foot h2.big{position:absolute;left:0;right:0;bottom:-.1em;margin:0;font-size:clamp(4rem,18.5vw,17rem);line-height:.8;color:var(--v);text-align:center;white-space:nowrap;pointer-events:none;user-select:none;opacity:.9}
+.fcols{display:grid;grid-template-columns:repeat(4,1fr);gap:38px 30px}
+.fcols h3{font-size:1.6rem;letter-spacing:.06em;margin-bottom:14px;color:var(--vl)}
+.fcols ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.fcols a{display:inline-flex;align-items:center;min-height:44px}
+.fcols p{margin-bottom:12px;font-size:.98rem}
+.qualiopi{margin-top:16px;border:3px dashed var(--vl);padding:16px;font-size:.92rem;color:var(--mute-n)}
+.qualiopi b{display:block;margin-bottom:6px;color:var(--paper);letter-spacing:.06em}
+.legal{position:relative;z-index:2;margin-top:clamp(44px,6vw,70px);padding:18px 0;border-top:2px solid rgba(239,234,223,.3);display:flex;flex-wrap:wrap;gap:6px 26px;font-size:.92rem}
+.legal a{display:inline-flex;align-items:center;min-height:44px}
+.legal .bub{font-size:1.2rem;margin-right:.4rem}
+.foot .wrap{padding-bottom:clamp(90px,15vw,260px)}
+@media(max-width:1000px){.fcols{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.fcols{grid-template-columns:1fr}}
+
+.badge{position:fixed;left:10px;bottom:10px;z-index:100;background:var(--ink);color:var(--paper);border:2px solid var(--vv);padding:5px 10px;font:700 12px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;pointer-events:none;transform:rotate(-2deg)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- bombe : bords tremblés, grain, voile de brume -->
+    <filter id="spray" x="-15%" y="-60%" width="130%" height="220%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="4" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="9" xChannelSelector="R" yChannelSelector="G" result="d1"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="2" seed="2" result="g"/>
+      <feDisplacementMap in="d1" in2="g" scale="4" xChannelSelector="G" yChannelSelector="R" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="5" result="mist"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="9" result="s"/>
+      <feColorMatrix in="s" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 14 0 0 0 -7" result="speck"/>
+      <feComposite in="mist" in2="speck" operator="in" result="spk"/>
+      <feMerge><feMergeNode in="spk"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <!-- encre de photocopie : contour rongé -->
+    <filter id="rough" x="-2%" y="-3%" width="104%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- tampon encreur : trous dans l'encre -->
+    <filter id="stamp" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="3" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -12 0 0 0 8.1" result="m"/>
+      <feComposite in="SourceGraphic" in2="m" operator="in" result="e"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="8" result="w"/>
+      <feDisplacementMap in="e" in2="w" scale="2.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <!-- bulle cerclée au feutre (pastille de titre, mentions) -->
+    <symbol id="bub" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="7">
+        <path d="M32 8C46 7 57 18 56 32S45 57 31 56 8 46 8 31 19 9 32 8Z"/>
+        <path d="M20 31a12 12 0 0 1 8-10" stroke-width="5"/>
+      </g>
+      <circle cx="58" cy="7" r="4" fill="currentColor"/>
+    </symbol>
+    <!-- trait de bombe avec coulures -->
+    <symbol id="swash" viewBox="0 0 400 60" preserveAspectRatio="none">
+      <g fill="currentColor" stroke="currentColor" stroke-linecap="round" filter="url(#spray)">
+        <path d="M10 30C90 14 170 38 250 24S350 26 390 18" fill="none" stroke-width="24"/>
+        <path d="M30 40C120 30 240 44 380 32" fill="none" stroke-width="10"/>
+        <path d="M96 30V50A5 5 0 1 0 106 50V30Z" stroke="none"/>
+        <path d="M292 26V44A4 4 0 1 0 300 44V26Z" stroke="none"/>
+      </g>
+    </symbol>
+    <!-- éclaboussure -->
+    <symbol id="splat" viewBox="0 0 160 140">
+      <g fill="currentColor" filter="url(#spray)">
+        <path d="M70 20c18-8 30 6 42 4 16-3 26 12 22 28-3 12 12 18 6 34-5 14-24 8-34 18-12 12-30 8-42-2-10-9-30-4-34-20-4-14 10-20 8-34-3-14 14-22 32-28Z"/>
+        <circle cx="136" cy="20" r="7"/><circle cx="18" cy="30" r="5"/><circle cx="150" cy="102" r="4"/><circle cx="30" cy="124" r="6"/><circle cx="106" cy="132" r="3.5"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Aller au contenu</a>
+
+<header class="top" id="top">
+  <div class="top-in">
+    <a class="logo" href="#top" aria-label="Universitek, haut de page"><span class="hl">Universitek<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="nav"><i aria-hidden="true"></i><span>Menu</span></button>
+    <nav class="nav" id="nav" aria-label="Navigation principale">
+      <ul>
+        <li><a href="#agenda">Agenda</a></li>
+        <li><a href="#masterclass">Masterclass</a></li>
+        <li><a href="#apropos">À propos</a></li>
+        <li><a href="#artistes">Artistes</a></li>
+        <li><a href="#archives">Archives</a></li>
+        <li><a href="#cinematek">Cinematek</a></li>
+      </ul>
+      <a class="btn sm" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero" aria-labelledby="titre">
+  <div class="liquid" aria-hidden="true"><b><i></i></b><b><i></i></b><b><i></i></b></div>
+  <svg class="surface" viewBox="0 0 1000 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 11C40 4 70 18 120 10S210 4 260 12 350 18 400 9 500 5 560 13 650 16 700 8 800 5 860 14 940 15 1000 9" fill="none" stroke="#15121B" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#rough)"/></svg>
+
+  <canvas id="bubbles" aria-hidden="true"></canvas>
+
+  <div class="hero-in">
+    <p class="kick"><span class="tag">Prochain événement</span><span>Ven. 16.10.2026 — 21h — Montpellier</span></p>
+
+    <h1 class="title" id="titre">
+      <span class="t1">Encore</span>
+      <span class="t2">et <span class="hl">encor<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></span>
+      <span class="t3">Le Château Cosco <i>·</i> Liminaal</span>
+    </h1>
+
+    <figure class="poster">
+      <span class="tape" aria-hidden="true"></span><span class="tape b" aria-hidden="true"></span>
+      <svg viewBox="0 0 520 600" aria-hidden="true" focusable="false">
+        <g filter="url(#spray)" fill="none" stroke="#8B3DFF" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M262 46C396 40 478 138 474 266S378 488 252 484 40 392 44 262 126 52 262 46C300 44 326 52 352 62" stroke-width="40"/>
+          <path d="M190 178L186 246" stroke-width="46"/>
+          <path d="M334 172L338 240" stroke-width="42"/>
+          <path d="M126 322C176 430 346 438 396 312" stroke-width="36"/>
+        </g>
+        <g class="drips" filter="url(#spray)" fill="#8B3DFF">
+          <path style="--d:.7s" d="M205 478V572A11 11 0 1 0 219 572V478Z"/>
+          <path style="--d:1.1s" d="M295 476V548A8 8 0 1 0 305 548V476Z"/>
+          <path style="--d:1.5s" d="M61 380V446A8 8 0 1 0 71 446V380Z"/>
+          <path style="--d:.9s" d="M180 250V346A9 9 0 1 0 192 346V250Z"/>
+          <path style="--d:1.3s" d="M336 244V312A7 7 0 1 0 344 312V244Z"/>
+          <path style="--d:1.7s" d="M125 330V412A8 8 0 1 0 135 412V330Z"/>
+          <path style="--d:1.2s" d="M389.500 322V388A7 7 0 1 0 398.500 388V322Z"/>
+          <path style="--d:1.9s" d="M463 300V376A8 8 0 1 0 473 376V300Z"/>
+        </g>
+      </svg>
+      <figcaption>Affiche — Encore et Encor · 16.10 · Le Salon</figcaption>
+    </figure>
+
+    <div class="lower">
+      <div class="slip">
+        <span class="tape" aria-hidden="true"></span>
+        <dl>
+          <div><dt>Quand</dt><dd>Vendredi 16 octobre 2026, 21h</dd></div>
+          <div><dt>Où</dt><dd>Le Salon des Indépendants<br>4 rue Lunaret, Montpellier</dd></div>
+          <div><dt>Combien</dt><dd><b>10 €</b>tarif unique</dd></div>
+        </dl>
+        <p class="fine">Prix bas pour rémunérer correctement les artistes et soutenir la scène indépendante.</p>
+      </div>
+      <div>
+        <p class="accroche">Live machines modulaire · Techno DIY · Cold techno</p>
+        <div class="cta">
+          <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie · 10 € ↗</a>
+          <a class="btn alt" href="#lineup">Voir le line-up ↓</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <svg class="splat" aria-hidden="true" focusable="false" viewBox="0 0 160 140"><use href="#splat"/></svg>
+</section>
+
+<div class="mq-wrap" aria-hidden="true">
+  <div class="mq"><div class="mq-track">
+    <span>Ven. 16.10 <i>·</i> Le Salon des Indépendants <i>·</i> 10 € <i>·</i> Encore et Encor <i>·</i> Le Château Cosco <i>·</i> Liminaal <i>·</i> Transmission &amp; célébrations <i>·</i></span>
+    <span aria-hidden="true">Ven. 16.10 <i>·</i> Le Salon des Indépendants <i>·</i> 10 € <i>·</i> Encore et Encor <i>·</i> Le Château Cosco <i>·</i> Liminaal <i>·</i> Transmission &amp; célébrations <i>·</i></span>
+  </div></div>
+</div>
+
+<!-- ============ 01 AGENDA ============ -->
+<section class="sec agenda" id="agenda" aria-labelledby="h-agenda">
+  <svg class="splat" aria-hidden="true" focusable="false" viewBox="0 0 160 140"><use href="#splat"/></svg>
+  <div class="wrap">
+    <header class="sh">
+      <h2 id="h-agenda"><span class="hl">Agenda<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></h2>
+      <p class="sub">À venir. Un seul rendez-vous pour l’instant : c’est déjà beaucoup de bruit.</p>
+    </header>
+
+    <article class="row" aria-label="Encore et Encor, Le Château Cosco, Liminaal — 16 octobre 2026">
+      <div class="r-date"><b>16</b><span>Oct.</span><i>Ven. 2026 · 21h</i></div>
+      <div class="r-main">
+        <h3>Encore et Encor <i>·</i> Le Château Cosco <i>·</i> Liminaal</h3>
+        <p class="accr">Live machines modulaire · Techno DIY · Cold techno</p>
+        <p class="mute">Le Salon des Indépendants — 4 rue Lunaret, Montpellier</p>
+      </div>
+      <div class="r-prix"><b>10 €</b><span>tarif unique</span></div>
+      <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie ↗</a>
+    </article>
+    <div class="row ghost">
+      <b>••/••</b>
+      <p>Prochaine date : à venir. Le gabarit est prêt, il ne manque que les dates.</p>
+    </div>
+
+    <h3 class="lu-h" id="lineup"><svg class="bub" aria-hidden="true" focusable="false" viewBox="0 0 64 64"><use href="#bub"/></svg>Line-up</h3>
+    <ul class="lineup">
+      <li><span class="tape" aria-hidden="true"></span><h4>Encore et Encor</h4><p>Live machines sans timecode, techno 130-145&nbsp;BPM, hypnotique et rave.</p></li>
+      <li><span class="tape" aria-hidden="true"></span><h4>Le Château Cosco</h4><p>Trio noise rock / techno DIY, transe répétitive et cérémonielle.</p></li>
+      <li><span class="tape" aria-hidden="true"></span><h4>Liminaal</h4><p>Cold techno, slow rave, acid, textures cold wave. Mixe avec le collectif depuis 2024.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 02 MASTERCLASS ============ -->
+<section class="sec night torn-a" id="masterclass" aria-labelledby="h-mc">
+  <div class="wrap">
+    <header class="sh">
+      <h2 id="h-mc"><span class="hl">Master&shy;class<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></h2>
+      <p class="sub">Les masterclass en ligne, en direct ou en replay. Quatre sessions à revoir, patches, live et DJing.</p>
+    </header>
+
+    <ul class="mcs">
+      <li class="mc">
+        <span class="tape" aria-hidden="true"></span>
+        <div class="vthumb">
+          <button class="vid" type="button" data-id="-XEUyl_Y-5s" data-title="Dark progressive : patches, tips &amp; tricks">
+            <span class="art a1" aria-hidden="true"></span><span class="word" aria-hidden="true">Dark<br>prog</span>
+            <span class="dur" aria-hidden="true">1h59</span>
+            <svg class="play" viewBox="0 0 68 68" aria-hidden="true"><circle cx="34" cy="34" r="29" fill="#EFEADF" stroke="#15121B" stroke-width="5"/><path d="M27 20l22 14-22 14z" fill="#15121B"/></svg>
+            <span class="mention"><span class="sr-only">Lire la vidéo « Dark progressive : patches, tips et tricks ». </span>▶ Lire la vidéo charge YouTube (Google)</span>
+          </button>
+        </div>
+        <div class="mc-info">
+          <h3>Dark progressive : patches, tips &amp; tricks</h3>
+          <p class="who">OddWave (Hadra Records)</p>
+          <p class="meta">08.08.2020 · 1h59</p>
+          <span class="lvl">Confirmé·e·s</span>
+          <div class="tags"><span>Ableton</span><span>Serum</span></div>
+        </div>
+      </li>
+      <li class="mc">
+        <span class="tape" aria-hidden="true"></span>
+        <div class="vthumb">
+          <button class="vid" type="button" data-id="6QuNr6Te8jA" data-title="Liveset &amp; improvisation (EN)">
+            <span class="art a2" aria-hidden="true"></span><span class="word" aria-hidden="true">Live<br>set</span>
+            <span class="dur" aria-hidden="true">1h17</span>
+            <svg class="play" viewBox="0 0 68 68" aria-hidden="true"><circle cx="34" cy="34" r="29" fill="#EFEADF" stroke="#15121B" stroke-width="5"/><path d="M27 20l22 14-22 14z" fill="#15121B"/></svg>
+            <span class="mention"><span class="sr-only">Lire la vidéo « Liveset et improvisation (EN) ». </span>▶ Lire la vidéo charge YouTube (Google)</span>
+          </button>
+        </div>
+        <div class="mc-info">
+          <h3>Liveset &amp; improvisation (EN)</h3>
+          <p class="who">69DB (Spiral Tribe / SP23)</p>
+          <p class="meta">19.09.2020 · 1h17</p>
+          <span class="lvl">Débutant·e·s</span>
+          <div class="tags"><span>Ableton</span><span>NI</span></div>
+        </div>
+      </li>
+      <li class="mc">
+        <span class="tape" aria-hidden="true"></span>
+        <div class="vthumb">
+          <button class="vid" type="button" data-id="CTBWyPEV634" data-title="Concert évolutif (BPM) &amp; mix harmonique">
+            <span class="art a3" aria-hidden="true"></span><span class="word" aria-hidden="true">BPM</span>
+            <span class="dur" aria-hidden="true">1h58</span>
+            <svg class="play" viewBox="0 0 68 68" aria-hidden="true"><circle cx="34" cy="34" r="29" fill="#EFEADF" stroke="#15121B" stroke-width="5"/><path d="M27 20l22 14-22 14z" fill="#15121B"/></svg>
+            <span class="mention"><span class="sr-only">Lire la vidéo « Concert évolutif (BPM) et mix harmonique ». </span>▶ Lire la vidéo charge YouTube (Google)</span>
+          </button>
+        </div>
+        <div class="mc-info">
+          <h3>Concert évolutif (BPM) &amp; mix harmonique</h3>
+          <p class="who">Dj Bigmat</p>
+          <p class="meta">07.02.2021 · 1h58</p>
+          <span class="lvl">Tous niveaux</span>
+          <div class="tags"><span>DJing</span><span>Scratch</span></div>
+        </div>
+      </li>
+      <li class="mc">
+        <span class="tape" aria-hidden="true"></span>
+        <div class="vthumb">
+          <button class="vid" type="button" data-id="XOTpP8gJnbM" data-title="Initiation DJing sur CDJ &amp; DJM">
+            <span class="art a4" aria-hidden="true"></span>
+            <span class="dur" aria-hidden="true">1h24</span>
+            <svg class="play" viewBox="0 0 68 68" aria-hidden="true" style="right:auto;left:50%;margin-left:-34px;margin-top:-34px;top:46%"><circle cx="34" cy="34" r="29" fill="#EFEADF" stroke="#15121B" stroke-width="5"/><path d="M27 20l22 14-22 14z" fill="#15121B"/></svg>
+            <span class="mention"><span class="sr-only">Lire la vidéo « Initiation DJing sur CDJ et DJM ». </span>▶ Lire la vidéo charge YouTube (Google)</span>
+          </button>
+        </div>
+        <div class="mc-info">
+          <h3>Initiation DJing sur CDJ &amp; DJM</h3>
+          <p class="who">Bernadette (Move Ur Gambettes)</p>
+          <p class="meta">13.12.2023 · 1h24</p>
+          <span class="lvl">Débutant·e·s</span>
+        </div>
+      </li>
+    </ul>
+
+    <a class="btn inv" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">Toutes les masterclass sur YouTube ↗</a>
+  </div>
+</section>
+
+<!-- ============ 03 À PROPOS ============ -->
+<section class="sec apropos" id="apropos" aria-labelledby="h-ap">
+  <svg class="splat" aria-hidden="true" focusable="false" viewBox="0 0 160 140"><use href="#splat"/></svg>
+  <div class="wrap">
+    <header class="sh">
+      <h2 id="h-ap"><span class="hl">À propos<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></h2>
+      <p class="sub">Universitek fait de la musique électronique un terrain d’apprentissage, de création et de partage.</p>
+    </header>
+
+    <div class="pillars">
+      <article class="pillar f">
+        <span class="tape" aria-hidden="true"></span>
+        <h3>Formation</h3>
+        <ul class="bul">
+          <li>Masterclass en ligne, en direct ou en replay</li>
+          <li>Sessions en présentiel</li>
+          <li>Stages intensifs</li>
+        </ul>
+      </article>
+      <article class="pillar p">
+        <h3>Production</h3>
+        <ul class="bul">
+          <li>Soirées club et concerts</li>
+          <li>Formats en espace public</li>
+          <li>Festival : faire briller la scène locale et underground</li>
+        </ul>
+      </article>
+    </div>
+    <p class="edu">Pédagogie inspirée de l’éducation populaire, exigence professionnelle.</p>
+
+    <ul class="chiffres" aria-label="Chiffres clés">
+      <li><b>~20</b><span>intervenant·e·s</span></li>
+      <li><b>70&nbsp;h+</b><span>de formation</span></li>
+      <li><b>~20</b><span>événements</span></li>
+      <li><b>12</b><span>lieux</span></li>
+      <li><b>1</b><span>festival à Victoire&nbsp;2</span></li>
+      <li><b>FR<small style="font-size:.5em"> &amp; </small>EN</b><span>cours dans les deux langues</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 04 ARTISTES ============ -->
+<section class="sec violet torn-b" id="artistes" aria-labelledby="h-ar">
+  <div class="wrap">
+    <header class="sh">
+      <h2 id="h-ar">Artistes associé·e·s</h2>
+    </header>
+    <ul class="artists">
+      <li><div><h3>Meremix</h3><span class="gn">Groovy techno · Dark acid disco</span></div><a class="sc" href="#" aria-label="Meremix sur SoundCloud">SoundCloud ↗</a></li>
+      <li><div><h3>Wildtrack</h3><span class="gn">Psytrance · Forest</span></div><a class="sc" href="#" aria-label="Wildtrack sur SoundCloud">SoundCloud ↗</a></li>
+      <li><div><h3>Zöta</h3><span class="gn">Techno · Acid house</span></div><a class="sc" href="#" aria-label="Zöta sur SoundCloud">SoundCloud ↗</a></li>
+      <li><div><h3>Cosmic Bazaar</h3><span class="gn">Groovy techno · Psytechno</span></div><a class="sc" href="#" aria-label="Cosmic Bazaar sur SoundCloud">SoundCloud ↗</a></li>
+      <li><div><h3>Liminaal</h3><span class="gn">Cold techno · Slow rave</span></div><a class="sc" href="#" aria-label="Liminaal sur SoundCloud">SoundCloud ↗</a></li>
+      <li><div><h3>Hurluberlu</h3><span class="gn">VJing · Mapping</span></div><a class="sc" href="#" aria-label="Hurluberlu sur SoundCloud">SoundCloud ↗</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 05 ARCHIVES ============ -->
+<section class="sec night torn-a" id="archives" aria-labelledby="h-arch">
+  <div class="wrap">
+    <header class="sh">
+      <h2 id="h-arch"><span class="hl">Archives<svg class="swash" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><use href="#swash"/></svg></span></h2>
+      <p class="sub">Les événements passés, de décembre 2024 à fin 2025.</p>
+    </header>
+    <ul class="arch">
+      <li><span class="d">31.10.2025</span><span class="t">Panacée Horror Show</span><span class="l">Café de la Panacée</span></li>
+      <li><span class="d">26.09.2025</span><span class="t">Concert pour la paix</span><span class="l">Parc Clemenceau</span></li>
+      <li><span class="d">29-30.08.2025</span><span class="t">Ateliers scratch</span><span class="l">Hadra Trance Festival</span></li>
+      <li><span class="d">22.08.2025</span><span class="t">Boiler Groove #4</span><span class="l">Tropisme</span></li>
+      <li><span class="d">13.07.2025</span><span class="t">Universitek × Solaation</span><span class="l">MOBA</span></li>
+      <li><span class="d">12.07.2025</span><span class="t">Boiler Groove #3</span><span class="l">Panorama, Corum</span></li>
+      <li><span class="d">21.06.2025</span><span class="t">Fête de la musique</span><span class="l">Bistrot Gilles</span></li>
+      <li class="fest"><span class="d">31.05.2025</span><span class="t">Universitek Festival #1</span><span class="l">Victoire 2<small>16h-4h · 2 scènes · 18 artistes</small></span></li>
+      <li><span class="d">07.05.2025</span><span class="t">Blastfest</span><span class="l">Université Paul-Valéry</span></li>
+      <li><span class="d">02.05.2025</span><span class="t">Elements of Baraka</span><span class="l">Le Salon des Indépendants</span></li>
+      <li><span class="d">04.04.2025</span><span class="t">Boiler Groove #2</span><span class="l">MO.CO. Faune</span></li>
+      <li><span class="d">21.02.2025</span><span class="t">Boiler Groove #1</span><span class="l">MO.CO. Faune</span></li>
+      <li><span class="d">07.12.2024</span><span class="t">Universitek invite Puzzle Puzzle</span><span class="l">Mélomane Club</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FOCUS CINEMATEK ============ -->
+<section class="sec cine" id="cinematek" aria-labelledby="h-cine">
+  <div class="wrap">
+    <div class="flyer">
+      <span class="tape" aria-hidden="true"></span>
+      <p class="eb">Focus · branche cinéma</p>
+      <h2 id="h-cine">Cinematek</h2>
+      <p class="tx">« Créée en 2025, CINEMATEK est la branche d’Universitek dédiée aux métiers du cinéma et de l’audiovisuel. Dans la continuité du projet de transmission développé par Universitek depuis 2017 elle propose des formations professionnalisantes dans le registre du cinéma. »</p>
+      <a class="go" href="https://www.cinematek.fr/" target="_blank" rel="noopener">+ d’infos sur cinematek.fr ↗</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ PIED DE PAGE ============ -->
+<footer class="sec night foot torn-c" id="contact">
+  <h2 class="sr-only">Pied de page</h2>
+  <div class="wrap">
+    <div class="fcols">
+      <section aria-labelledby="f-contact">
+        <h3 id="f-contact">Contact</h3>
+        <p>Une question, un projet, une date à proposer ?</p>
+        <a href="mailto:contact@universitek.com">contact@universitek.com</a>
+      </section>
+      <section aria-labelledby="f-res">
+        <h3 id="f-res">Réseaux</h3>
+        <ul class="bul">
+          <li><a href="https://www.instagram.com/universitek_/" target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">YouTube ↗</a></li>
+        </ul>
+      </section>
+      <section aria-labelledby="f-adh">
+        <h3 id="f-adh">Adhésion</h3>
+        <p>Soutenir l’association, c’est 10&nbsp;€ par an.</p>
+        <a class="btn inv" href="https://www.helloasso.com/associations/universitek/adhesions/j-adhere-a-universitek" target="_blank" rel="noopener">Adhérer · 10 €/an ↗</a>
+      </section>
+      <section aria-labelledby="f-of">
+        <h3 id="f-of">Organisme de formation</h3>
+        <a class="btn v" href="https://drive.google.com/drive/folders/1zArshubiv1V8xgagEm6ryqpQ_6pF1rAo" target="_blank" rel="noopener">Informations liées à l’organisme de formation ↗</a>
+        <div class="qualiopi"><b>[logo Qualiopi]</b>La certification qualité a été délivrée au titre de la catégorie d’action suivante : actions de formation.</div>
+      </section>
+    </div>
+    <div class="legal">
+      <span><svg class="bub" aria-hidden="true" focusable="false" viewBox="0 0 64 64"><use href="#bub"/></svg>© 2026 Universitek, Montpellier</span>
+      <a href="#">Mentions légales</a>
+      <a href="#">Confidentialité</a>
+      <a href="#top">Retour en haut ↑</a>
+    </div>
+  </div>
+  <h2 class="big" aria-hidden="true">Universitek</h2>
+</footer>
+
+<div class="badge" aria-hidden="true">Piste B · maquette</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- menu mobile ---------- */
+  var burger = document.querySelector('.burger'), nav = document.getElementById('nav');
+  var inertEls = [document.getElementById('main'), document.getElementById('contact')];
+  var mqNav = window.matchMedia('(max-width:1080px)');
+  function setMenu(open) {
+    burger.setAttribute('aria-expanded', String(open));
+    burger.querySelector('span').textContent = open ? 'Fermer' : 'Menu';
+    nav.classList.toggle('open', open);
+    document.body.classList.toggle('lock', open);
+    inertEls.forEach(function (el) { if (el) el.inert = open; });
+  }
+  burger.addEventListener('click', function () { setMenu(burger.getAttribute('aria-expanded') !== 'true'); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a') && mqNav.matches) setMenu(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') { setMenu(false); burger.focus(); }
+  });
+  mqNav.addEventListener('change', function () { setMenu(false); });
+
+  /* ---------- façades YouTube : rien n'est chargé avant le clic ---------- */
+  document.querySelectorAll('.vid').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + b.dataset.id + '?autoplay=1';
+      f.title = b.dataset.title;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      b.parentNode.replaceChildren(f);
+      f.focus();
+    });
+  });
+
+  /* ---------- bulles photocopiées ---------- */
+  var hero = document.getElementById('hero'), cv = document.getElementById('bubbles');
+  var surfEl = hero.querySelector('.surface'), ctx = cv.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var INK = '#15121B', VIO = '#6838B8', VIV = '#8B3DFF';
+  var W = 0, H = 0, dpr = 1, surf = 100, maxB = 40;
+  var bs = [], ds = [], rs = [], nu = [], spr = {};
+  var vis = false, raf = 0, last = 0, rt = 0;
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function lcg(s) { return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+
+  /* sprite : anneau tracé au feutre + trame demi-teinte (ombre bas-droite) */
+  function makeSprite(px, kind, col, seed) {
+    var c = document.createElement('canvas'); c.width = c.height = px;
+    var g = c.getContext('2d'), R = lcg(seed), mid = px / 2;
+    var lw = Math.max(1.8, px * 0.065), r = mid - lw - 1;
+    g.strokeStyle = g.fillStyle = col; g.lineCap = g.lineJoin = 'round';
+    if (kind !== 0) {
+      var step = Math.max(3.4, px / 12), a = 0.5236, ca = Math.cos(a), sa = Math.sin(a);
+      var hx = mid - r * 0.38, hy = mid - r * 0.42;
+      g.save(); g.beginPath(); g.arc(mid, mid, r, 0, 6.2832); g.clip();
+      for (var i = -22; i <= 22; i++) for (var j = -22; j <= 22; j++) {
+        var x = mid + (i * ca - j * sa) * step, y = mid + (i * sa + j * ca) * step;
+        var d = Math.hypot(x - hx, y - hy) / (r * 1.55);
+        var t = Math.max(0, Math.min(1, (d - (kind === 2 ? 0.18 : 0.42)) / 0.7));
+        if (kind === 1) t = Math.pow(t, 1.5) * 0.85;
+        var rad = t * step * 0.62;
+        if (rad > 0.5) { g.beginPath(); g.arc(x, y, rad, 0, 6.2832); g.fill(); }
+      }
+      g.restore();
+    }
+    for (var p = 0; p < 2; p++) {
+      g.lineWidth = lw * (p ? 0.55 : 1); g.beginPath();
+      var n = 34, off = R() * 6.2832, wob = px * (0.014 + 0.012 * p), ph = R() * 6;
+      for (var k = 0; k <= n + 3; k++) {
+        var ang = off + k / n * 6.2832 * (p ? 1.03 : 1);
+        var rr = r + (R() - 0.5) * wob * 1.6 + Math.sin(ang * 3 + ph) * wob;
+        var X = mid + Math.cos(ang) * rr, Y = mid + Math.sin(ang) * rr;
+        if (k) g.lineTo(X, Y); else g.moveTo(X, Y);
+      }
+      g.stroke();
+    }
+    g.lineWidth = Math.max(1.6, px * 0.05); g.beginPath(); g.arc(mid, mid, r * 0.68, 3.55, 4.45); g.stroke();
+    return c;
+  }
+  function buildSprites() {
+    [32, 64, 128].forEach(function (px) {
+      spr[px] = [];
+      [INK, VIO].forEach(function (col, ci) {
+        for (var kind = 0; kind < 3; kind++) for (var s = 0; s < 2; s++) spr[px].push(makeSprite(px, kind, col, 11 + px + ci * 37 + kind * 5 + s * 91));
+      });
+    });
+  }
+
+  function spawn(n) {
+    var r0 = rnd(2.8, 7.5) * (Math.random() < 0.16 ? 1.8 : 1);
+    bs.push({ x0: n.x + rnd(-1.5, 1.5), x: n.x, y: H + r0, r0: r0, r: r0, grow: rnd(1.5, 2.15), v0: rnd(46, 74),
+      ph: rnd(0, 6.28), fr: rnd(3, 6.4), am: rnd(1, 3.2), t: 0, ys: surf + rnd(-4, 12), rot: rnd(0, 6.28), s: (Math.random() * 12) | 0 });
+  }
+  function pop(b) {
+    rs.push({ x: b.x, y: b.y, r: b.r, t: 0, col: b.s < 6 ? INK : VIV });
+    var cnt = Math.round(4 + b.r * 0.32);
+    for (var i = 0; i < cnt && ds.length < 420; i++) {
+      var a = -Math.PI / 2 + rnd(-1.2, 1.2), sp = rnd(70, 190) * (0.65 + b.r / 32);
+      ds.push({ x: b.x, y: b.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, r: rnd(1.2, 3.3), life: rnd(0.45, 0.95), t: 0, col: Math.random() < 0.72 ? VIV : VIO });
+    }
+  }
+  function step(dt) {
+    for (var i = 0; i < nu.length; i++) {
+      var n = nu[i]; n.t -= dt;
+      if (n.t <= 0) { if (bs.length < maxB) spawn(n); n.t = n.gap * rnd(0.6, 1.5); }
+    }
+    for (i = bs.length - 1; i >= 0; i--) {
+      var b = bs[i], p = Math.min(1, Math.max(0, (H - b.y) / (H - b.ys)));
+      b.r = b.r0 * (1 + (b.grow - 1) * p);
+      b.y -= b.v0 * (1 + 2.1 * p) * (0.75 + 0.25 * b.r / b.r0) * dt;
+      b.t += dt; b.x = b.x0 + Math.sin(b.ph + b.t * b.fr) * b.am * (0.35 + 1.2 * p);
+      if (b.y <= b.ys) { pop(b); bs.splice(i, 1); }
+    }
+    for (i = ds.length - 1; i >= 0; i--) {
+      var d = ds[i]; d.t += dt; d.vy += 520 * dt; d.x += d.vx * dt; d.y += d.vy * dt;
+      if (d.t > d.life) ds.splice(i, 1);
+    }
+    for (i = rs.length - 1; i >= 0; i--) { rs[i].t += dt; if (rs[i].t > 0.24) rs.splice(i, 1); }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var i, b, d, q;
+    for (i = 0; i < bs.length; i++) {
+      b = bs[i]; d = b.r * 2; q = d * dpr;
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.rot);
+      ctx.drawImage(spr[q <= 32 ? 32 : q <= 64 ? 64 : 128][b.s], -b.r, -b.r, d, d);
+      ctx.restore();
+    }
+    ctx.lineCap = 'round';
+    for (i = 0; i < rs.length; i++) {
+      q = rs[i]; var k = q.t / 0.24;
+      ctx.globalAlpha = 1 - k; ctx.strokeStyle = q.col; ctx.lineWidth = 3 - 2 * k;
+      ctx.beginPath(); ctx.arc(q.x, q.y, q.r * (1 + 0.9 * k), 0, 6.2832); ctx.stroke();
+    }
+    for (i = 0; i < ds.length; i++) {
+      d = ds[i]; ctx.globalAlpha = Math.min(1, 1.6 * (1 - d.t / d.life));
+      ctx.strokeStyle = d.col; ctx.lineWidth = d.r * 2;
+      ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - d.vx * 0.028, d.y - d.vy * 0.028); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function canRun() { return vis && !document.hidden && !reduce.matches; }
+  function frame(ts) {
+    raf = 0; if (!canRun()) return;
+    var dt = Math.min(0.05, (ts - last) / 1000 || 0); last = ts;
+    step(dt); draw(); raf = requestAnimationFrame(frame);
+  }
+  function kick() {
+    if (canRun()) { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }
+  function layout() {
+    var r = hero.getBoundingClientRect(); W = Math.round(r.width); H = Math.round(r.height);
+    if (!W || !H) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    surf = surfEl.offsetTop + 14;
+    maxB = Math.max(20, Math.min(100, Math.round(W * H / 12000)));
+    var N = Math.max(4, Math.min(11, Math.round(W / 125))), per = maxB / N;
+    nu = []; bs = []; ds = []; rs = [];
+    for (var i = 0; i < N; i++) nu.push({ x: (i + 0.5 + rnd(-0.28, 0.28)) * W / N, gap: 5.4 / per * rnd(0.8, 1.2), t: rnd(0, 2.5) });
+    var T = reduce.matches ? rnd(5.2, 7) : 5.4;           /* pré-roulage : le verre est déjà en train de pétiller */
+    for (var s = 0; s < T; s += 1 / 30) step(1 / 30);
+    draw();
+  }
+  buildSprites(); layout();
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { vis = es[0].isIntersecting; kick(); }, { threshold: 0 }).observe(hero);
+  else { vis = true; kick(); }
+  document.addEventListener('visibilitychange', kick);
+  if (reduce.addEventListener) reduce.addEventListener('change', function () { layout(); kick(); });
+  if ('ResizeObserver' in window) new ResizeObserver(function () { clearTimeout(rt); rt = setTimeout(function () { layout(); kick(); }, 160); }).observe(hero);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { layout(); kick(); });
+})();
+</script>
+</body>
+</html>

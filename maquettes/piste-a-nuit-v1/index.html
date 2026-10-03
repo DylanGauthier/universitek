@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Universitek — Soirées électroniques et formation, Montpellier</title>
+<meta name="description" content="Universitek, collectif de soirées électroniques underground et organisme de formation musicale à Montpellier. Prochain événement : Encore et Encor, Le Château Cosco, Liminaal, le 16 octobre 2026.">
+<meta name="theme-color" content="#0A0710">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0710'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23B99DFF' stroke-width='2.5'/%3E%3Ccircle cx='12.5' cy='12.5' r='2' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Martian+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0710; --bg2:#130D1F; --ink:#F2EBE1; --mut:#ABA1BD; --line:rgba(242,235,225,.2);
+  --volt:#7524FF;      /* violet électrique : aplats uniquement, texte blanc dessus */
+  --lilac:#B99DFF;     /* violet clair : texte d'accent */
+  --halo:#D8C6FF;      /* ton lumineux : halos, bulles */
+  --gut:clamp(16px,3.2vw,44px); --max:1480px; --hh:72px;
+  --display:'Anybody','Arial Black',Impact,sans-serif;
+  --body:'Schibsted Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Martian Mono',ui-monospace,Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.7,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 12px);-webkit-text-size-adjust:100%;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:400 clamp(1rem,.96rem + .2vw,1.125rem)/1.55 var(--body);overflow-x:clip;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+img,svg,canvas{display:block;max-width:100%}
+ul,ol{list-style:none}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--volt);color:#fff}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:16px;top:-120px;z-index:300;background:var(--volt);color:#fff;padding:14px 18px;font:600 .8125rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+.skip:focus{top:12px}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gut)}
+.mono{font:500 .75rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- grain + vignette + badge ---------- */
+.fx{position:fixed;inset:0;z-index:100;pointer-events:none}
+.fx::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 125% 95% at 50% 45%,transparent 58%,rgba(0,0,0,.42) 100%)}
+.fx::after{content:"";position:absolute;inset:0;opacity:.085;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.badge{position:fixed;left:12px;bottom:12px;z-index:120;pointer-events:none;font:500 .75rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:rgba(10,7,16,.9);border:1px solid var(--line);padding:9px 11px}
+
+/* ---------- boutons ---------- */
+.btn{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:.8em;min-height:48px;padding:0 22px;background:var(--volt);color:#fff;border:2px solid var(--volt);font:600 .8125rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;text-align:center;transition:color .3s}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:#fff;transform:translateY(101%);transition:transform .38s var(--ease)}
+.btn:hover,.btn:focus-visible{color:var(--bg)}
+.btn:hover::before,.btn:focus-visible::before{transform:none}
+.btn.ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn.ghost::before{background:var(--volt)}
+.btn.ghost:hover,.btn.ghost:focus-visible{color:#fff;border-color:var(--volt)}
+.arr{display:inline-block;transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translate(3px,-3px)}
+.link{color:var(--ink);text-decoration:underline;text-decoration-color:var(--lilac);text-decoration-thickness:1px;text-underline-offset:.3em;transition:color .2s}
+.link:hover{color:var(--lilac)}
+
+/* ---------- en-tête ---------- */
+.top{position:sticky;top:0;z-index:70;background:rgba(10,7,16,.8);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:clamp(16px,2.4vw,36px);height:var(--hh)}
+.logo{display:inline-flex;align-items:center;gap:.7rem;min-height:44px;text-decoration:none;font:900 1.1rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin-right:auto}
+.logo i{width:20px;height:20px;border:2px solid var(--lilac);border-radius:50%;position:relative;flex:none}
+.logo i::after{content:"";position:absolute;left:3px;top:3px;width:5px;height:5px;border-radius:50%;background:#fff}
+.nav ul{display:flex;gap:clamp(8px,1.6vw,26px)}
+.nav a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding-inline:4px;text-decoration:none;font:500 .75rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;transition:color .2s}
+.nav a::after{content:"";position:absolute;left:4px;right:4px;bottom:9px;height:2px;background:var(--lilac);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav a:hover{color:var(--lilac)}
+.nav a:hover::after{transform:scaleX(1)}
+.top .btn{min-height:44px;padding:0 18px}
+.burger{display:none;align-items:center;gap:12px;min-height:48px;min-width:48px;padding:0 4px 0 12px;font:600 .8125rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.burger .bars{width:26px;height:12px;position:relative;flex:none}
+.burger .bars::before,.burger .bars::after{content:"";position:absolute;left:0;right:0;height:2px;background:var(--ink);transition:transform .35s var(--ease),top .35s var(--ease)}
+.burger .bars::before{top:0}.burger .bars::after{top:10px}
+.burger[aria-expanded="true"] .bars::before{top:5px;transform:rotate(45deg)}
+.burger[aria-expanded="true"] .bars::after{top:5px;transform:rotate(-45deg)}
+.menu{position:fixed;inset:var(--hh) 0 0 0;z-index:65;background:var(--bg);overflow:auto;padding:12px var(--gut) 32px;display:flex;flex-direction:column}
+.menu[hidden]{display:none}
+.menu ul{border-top:1px solid var(--line)}
+.menu li a{display:flex;align-items:baseline;gap:16px;min-height:60px;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;font:900 clamp(1.7rem,8.4vw,2.8rem)/1 var(--display);text-transform:uppercase;transition:color .2s,padding .3s var(--ease)}
+.menu li a small{font:500 .75rem/1 var(--mono);letter-spacing:.1em;color:var(--lilac)}
+.menu li a:hover{color:var(--lilac);padding-left:10px}
+.menu .btn{margin-top:28px;min-height:56px}
+.menu .m-foot{margin-top:20px;color:var(--mut)}
+@media (max-width:1040px){
+  .nav{display:none}
+  .burger{display:inline-flex}
+  .top .btn{display:none}
+}
+@media (min-width:1041px){.menu{display:none!important}}
+@media (min-width:561px) and (max-width:1040px){.top .btn{display:inline-flex;margin-left:auto;order:1}.logo{margin-right:0}.burger{order:2}.top-in{justify-content:space-between}.top .btn{margin-left:auto}.logo{margin-right:auto}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;min-height:max(600px,calc(100svh - var(--hh)));border-bottom:1px solid var(--line)}
+#bubbles{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero::before{content:"";position:absolute;left:0;right:0;top:0;height:34%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 75% 100% at 50% 0,rgba(140,90,255,.2),transparent 72%)}
+.hero::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;z-index:-1;background:linear-gradient(90deg,transparent,rgba(216,198,255,.6),transparent)}
+.hero-in{flex:1;display:flex;flex-direction:column;padding-top:clamp(18px,2.6vw,30px);padding-bottom:clamp(18px,2.6vw,30px);gap:clamp(24px,4vw,56px)}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:8px 24px;flex-wrap:wrap}
+.live{display:inline-flex;align-items:center;gap:.8em;color:var(--lilac)}
+.dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--lilac);position:relative;flex:none}
+.dot::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--lilac);animation:ping 2.2s ease-out infinite}
+@keyframes ping{from{transform:scale(.4);opacity:.9}to{transform:scale(1.5);opacity:0}}
+.hero-title{position:relative;margin-block:auto;container-type:inline-size;--f3:calc(100cqw / 12.4)}
+.poster{font:900 1em/.86 var(--display);text-transform:uppercase;letter-spacing:-.012em;display:block}
+.ln{display:block;white-space:nowrap;font-size:clamp(1.4rem,calc(100cqw / var(--n)),15rem);animation:rise 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 120ms + 80ms)}
+.l3{font-size:var(--f3)}
+.ln.out{color:transparent;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+.date{position:absolute;right:0;bottom:0;font:900 var(--f3)/.86 var(--display);letter-spacing:-.012em;color:var(--lilac);animation:rise 1s cubic-bezier(.2,.8,.2,1) .46s both}
+@keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.hero-info{display:grid;grid-template-columns:1.25fr 1fr auto;gap:20px clamp(24px,4vw,64px);align-items:end;border-top:1px solid var(--line);padding-top:20px}
+.hero-info .tag{font:500 clamp(1.15rem,1.9vw,1.6rem)/1.2 var(--body);max-width:22ch}
+.hero-info .where{font-style:normal}
+.hero-info .where b{display:block;font:600 .75rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--lilac);margin-bottom:6px}
+.buy{display:flex;align-items:center;gap:20px}
+.price{display:flex;flex-direction:column;line-height:1}
+.price b{font:900 clamp(1.9rem,3vw,2.6rem)/1 var(--display)}
+.price span{color:var(--mut);margin-top:6px}
+
+/* ---------- bandeau ---------- */
+.marquee{background:var(--volt);color:#fff;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.25)}
+.mq-track{display:flex;width:max-content;animation:slide 46s linear infinite;will-change:transform}
+.mq-group{display:flex;align-items:center;flex:none;white-space:nowrap;padding-block:clamp(14px,1.6vw,20px);font:900 clamp(1.05rem,2vw,1.55rem)/1 var(--display);text-transform:uppercase;letter-spacing:.01em}
+.bub{display:inline-block;width:.85em;height:.85em;border:2px solid #fff;border-radius:50%;position:relative;margin-inline:clamp(1.1rem,2.4vw,2.2rem);flex:none}
+.bub::after{content:"";position:absolute;left:16%;top:14%;width:24%;height:24%;border-radius:50%;background:#fff}
+@keyframes slide{to{transform:translateX(-50%)}}
+.marquee:hover .mq-track{animation-play-state:paused}
+
+/* ---------- sections ---------- */
+.sec{padding-block:clamp(64px,10vw,140px)}
+.sh{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:12px 32px;flex-wrap:wrap;border-top:1px solid var(--ink);padding-top:clamp(16px,2vw,26px);margin-bottom:clamp(28px,4vw,56px)}
+.sh::before{content:"";position:absolute;left:0;top:-3px;width:72px;height:5px;background:var(--volt)}
+.sh h2{font:900 clamp(2rem,7vw,6.2rem)/.86 var(--display);text-transform:uppercase;letter-spacing:-.012em}
+.sh h2 .n{display:inline-block;font-size:.4em;color:var(--lilac);margin-right:.5em;vertical-align:top;letter-spacing:.02em;line-height:1.2}
+.sh h2 .sub{display:inline-block;margin-left:.8em;vertical-align:top;font:500 .75rem/1.5 var(--mono);letter-spacing:.1em;color:var(--mut);text-transform:uppercase}
+.sh .meta{color:var(--mut);padding-bottom:6px}
+
+/* lignes + aplat montant */
+.rows{border-top:1px solid var(--line)}
+.row{position:relative;isolation:isolate;padding:clamp(16px,2vw,26px) 12px;border-bottom:1px solid var(--line);--mut:#ABA1BD;--acc:var(--lilac);transition:color .3s}
+.row::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--volt);transform:scaleY(0);transform-origin:50% 100%;transition:transform .5s var(--ease)}
+.row:focus-within::before,.row:active::before{transform:scaleY(1)}
+.row:focus-within,.row:active{--mut:#fff;--acc:#fff;color:#fff}
+@media (hover:hover){
+  .row:hover::before{transform:scaleY(1)}
+  .row:hover{--mut:#fff;--acc:#fff;color:#fff}
+}
+.row a.cover{text-decoration:none}
+.row a.cover::after{content:"";position:absolute;inset:0}
+.row a.cover:focus-visible{outline:none}
+.row a.cover:focus-visible::after{outline:3px solid #fff;outline-offset:-4px}
+
+/* agenda */
+.ev{display:grid;grid-template-columns:minmax(150px,200px) 1fr minmax(200px,250px) minmax(130px,170px) auto;gap:16px clamp(20px,3vw,44px);align-items:start;padding-block:clamp(24px,3vw,40px)}
+.ev-date b{display:block;font:900 clamp(2.4rem,5vw,4.2rem)/.9 var(--display);color:var(--acc)}
+.ev-date span{display:block;margin-top:10px;color:var(--mut)}
+.ev-main h3{font:900 clamp(1.3rem,2.5vw,2.2rem)/1.02 var(--display);text-transform:uppercase;letter-spacing:-.005em}
+.ev-main p{margin-top:12px;color:var(--mut);font-size:1.0625rem}
+.ev-where{font-style:normal;color:var(--mut)}
+.ev-where b{display:block;font:600 .75rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:6px}
+.ev-price b{display:block;font:900 clamp(1.7rem,2.6vw,2.2rem)/1 var(--display)}
+.ev-price .mono{display:block;margin-top:8px;color:var(--mut)}
+.ev-price p{margin-top:10px;font-size:.9375rem;line-height:1.4;color:var(--mut)}
+.ev .btn{align-self:center}
+.ev .btn::before{background:#fff}
+.ev:hover .btn,.ev:focus-within .btn{background:#fff;color:var(--bg);border-color:#fff}
+.lineup{grid-column:2 / -1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px clamp(20px,3vw,44px);margin-top:clamp(8px,1vw,16px);padding-top:20px;border-top:1px solid var(--line)}
+.lineup h4{font:900 1.05rem/1.1 var(--display);text-transform:uppercase;margin-bottom:8px;color:var(--acc)}
+.lineup p{color:var(--mut);font-size:.9375rem;line-height:1.45}
+.next{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between;padding:20px 12px;border-bottom:1px dashed var(--line);color:var(--mut)}
+.next a{min-height:24px}
+
+/* masterclass */
+.mc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(28px,3vw,44px) clamp(18px,2vw,30px)}
+.mc{border-top:1px solid var(--line);padding-top:16px}
+.mc-media{position:relative;aspect-ratio:16/9;background:var(--bg2);margin-bottom:16px}
+.mc-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.facade{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;isolation:isolate;text-align:left;
+  background:
+   radial-gradient(circle at var(--x1) var(--y1),transparent calc(var(--s1) - 1.2px),rgba(216,198,255,.5) calc(var(--s1) - 1.2px) var(--s1),transparent var(--s1)),
+   radial-gradient(circle at var(--x2) var(--y2),transparent calc(var(--s2) - 1.2px),rgba(216,198,255,.4) calc(var(--s2) - 1.2px) var(--s2),transparent var(--s2)),
+   radial-gradient(circle at var(--x3) var(--y3),transparent calc(var(--s3) - 1.2px),rgba(216,198,255,.55) calc(var(--s3) - 1.2px) var(--s3),transparent var(--s3)),
+   radial-gradient(circle at var(--x4) var(--y4),transparent calc(var(--s4) - 1.2px),rgba(216,198,255,.35) calc(var(--s4) - 1.2px) var(--s4),transparent var(--s4)),
+   radial-gradient(120% 110% at 50% 115%,#2A1163,var(--bg2) 68%)}
+.facade::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--volt);transform:scaleY(0);transform-origin:50% 100%;transition:transform .5s var(--ease)}
+.facade:hover::before,.facade:focus-visible::before{transform:scaleY(1)}
+.facade .num{position:absolute;left:12px;top:8px;font:900 clamp(2rem,3.4vw,3rem)/1 var(--display);color:rgba(242,235,225,.92)}
+.facade .play{position:absolute;left:50%;top:48%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;border:1.5px solid rgba(235,222,255,.85);background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.34),rgba(255,255,255,.05) 38%,transparent 58%),rgba(150,110,255,.14);box-shadow:0 0 26px rgba(160,120,255,.4),inset 0 0 16px rgba(200,170,255,.2);transition:transform .4s var(--ease)}
+.facade .play::after{content:"";position:absolute;left:27px;top:20px;border-style:solid;border-width:13px 0 13px 21px;border-color:transparent transparent transparent #fff}
+.facade:hover .play{transform:scale(1.12)}
+.facade .note{position:absolute;left:12px;right:12px;bottom:9px;font:500 .75rem/1.35 var(--mono);letter-spacing:.04em;color:#fff;text-transform:none}
+.mc .meta{color:var(--mut)}
+.mc .meta b{color:var(--lilac);font-weight:600}
+.mc h3{font:700 1.25rem/1.2 var(--body);margin-top:8px}
+.mc .who{margin-top:6px;color:var(--mut)}
+.mc .tags{margin-top:10px;color:var(--lilac)}
+.more{margin-top:clamp(28px,4vw,48px);display:flex;justify-content:flex-end}
+
+/* à propos */
+.about-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:32px clamp(32px,5vw,88px);align-items:start}
+.lead{font:500 clamp(1.5rem,3vw,2.5rem)/1.16 var(--body);letter-spacing:-.01em}
+.lead em{font-style:normal;color:var(--lilac)}
+.lead + p{margin-top:24px;color:var(--mut);max-width:48ch}
+.pil{display:grid;grid-template-columns:auto 1fr;gap:6px 24px;align-items:baseline}
+.pil .mono{grid-column:1/-1;color:var(--acc)}
+.pil h3{font:900 clamp(1.7rem,3.2vw,2.8rem)/.95 var(--display);text-transform:uppercase}
+.pil p{grid-column:1/-1;color:var(--mut);max-width:44ch;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:clamp(40px,6vw,88px)}
+.stat{background:var(--bg);padding:22px 14px 20px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.stat b{font:900 clamp(2rem,4.4vw,3.8rem)/.9 var(--display);color:var(--acc);white-space:nowrap}
+.stat span{color:var(--mut)}
+
+/* artistes */
+.art{display:grid;grid-template-columns:60px minmax(0,1.3fr) minmax(0,1fr) auto;gap:12px clamp(16px,3vw,40px);align-items:center;min-height:92px}
+.art .idx{color:var(--mut)}
+.art h3{font:900 clamp(1.6rem,3.8vw,3.2rem)/.95 var(--display);text-transform:uppercase;letter-spacing:-.01em}
+.art .genres{color:var(--mut)}
+.art .go{display:inline-flex;align-items:center;min-height:44px;color:var(--acc);font-weight:600}
+
+/* archives */
+.arc{display:grid;grid-template-columns:minmax(120px,170px) minmax(0,1.6fr) minmax(0,1fr);gap:6px clamp(16px,3vw,40px);align-items:baseline;padding-block:clamp(14px,1.6vw,20px)}
+.arc time{color:var(--mut)}
+.arc h3{font:900 clamp(1rem,1.9vw,1.55rem)/1.1 var(--display);text-transform:uppercase}
+.arc h3 small{display:inline-block;margin-left:.9em;font:500 .75rem/1.4 var(--mono);letter-spacing:.08em;color:var(--acc);text-transform:uppercase;white-space:normal}
+.arc .lieu{color:var(--mut)}
+.yr{padding:26px 12px 10px;color:var(--lilac);border-bottom:1px solid var(--line)}
+
+/* cinematek (seule zone autorisée à porter le vert) */
+.cine{--g:#39FF14;position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:20px clamp(20px,3vw,40px);align-items:center;max-width:1040px;margin:0 auto;border:1px solid var(--g);padding:clamp(20px,2.6vw,32px) clamp(20px,2.6vw,32px) clamp(20px,2.6vw,32px) calc(clamp(20px,2.6vw,32px) + 22px)}
+.cine::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;border-right:1px solid var(--g);background:repeating-linear-gradient(to bottom,transparent 0 7px,var(--g) 7px 13px,transparent 13px 20px);background-size:6px 20px;background-repeat:repeat-y;background-position:4px 0}
+.cine .lab{color:var(--g);font-weight:600}
+.cine h2{font:900 clamp(1.4rem,2.4vw,2rem)/1 var(--display);color:var(--g);text-transform:uppercase;margin-top:8px}
+.cine p{font-size:1rem;max-width:60ch;color:var(--ink)}
+.cine a.cl{display:inline-flex;align-items:center;gap:.6em;min-height:48px;padding:0 18px;border:1px solid var(--g);color:var(--g);font:600 .8125rem/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .25s,color .25s}
+.cine a.cl:hover,.cine a.cl:focus-visible{background:var(--g);color:var(--bg)}
+.cine a.cl:focus-visible{outline-color:var(--g)}
+
+/* pied de page */
+.foot{border-top:1px solid var(--ink);padding-top:clamp(40px,6vw,80px);padding-bottom:calc(clamp(28px,4vw,48px) + 36px)}
+.mark-wrap{container-type:inline-size;margin-bottom:clamp(32px,5vw,72px)}
+.mark{font:900 clamp(1.8rem,calc(100cqw / 10.7),16rem)/.86 var(--display);text-transform:uppercase;letter-spacing:-.012em;color:transparent;-webkit-text-stroke:1.5px rgba(216,198,255,.75);white-space:nowrap;user-select:none}
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:36px clamp(20px,3vw,48px)}
+.fh{color:var(--lilac);font-weight:600;margin-bottom:14px}
+.fgrid p{color:var(--mut);margin-bottom:14px;max-width:34ch}
+.fgrid li a{display:inline-flex;align-items:center;min-height:44px}
+.fgrid .mail{display:inline-flex;align-items:center;min-height:44px;overflow-wrap:anywhere}
+.fgrid .btn{width:100%}
+.qual{margin-top:18px;border:2px dashed rgba(171,161,189,.7);padding:16px;color:var(--mut);font-size:.9375rem;line-height:1.45}
+.qual b{display:block;font:600 .75rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.legal{display:flex;flex-wrap:wrap;gap:6px 28px;justify-content:space-between;align-items:center;margin-top:clamp(36px,5vw,64px);padding-top:18px;border-top:1px solid var(--line);color:var(--mut)}
+.legal a{display:inline-flex;align-items:center;min-height:44px;text-underline-offset:.3em}
+.legal div{display:flex;flex-wrap:wrap;gap:0 28px}
+
+/* révélations */
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms)}
+.js .rv.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .ev{grid-template-columns:minmax(130px,170px) 1fr minmax(180px,220px) auto}
+  .ev .ev-price{grid-column:2;grid-row:2;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
+  .ev .ev-price p{flex-basis:100%;margin-top:0}
+  .ev .btn{grid-row:1;grid-column:4}
+  .lineup{grid-column:1 / -1}
+  .mc-grid{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .about-grid{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:860px){
+  .hero-info{grid-template-columns:1fr 1fr}
+  .hero-info .tag{grid-column:1/-1;max-width:none}
+  .ev{grid-template-columns:1fr auto;gap:14px 20px}
+  .ev .ev-date{grid-column:1;grid-row:1}
+  .ev .ev-main{grid-column:1/-1;grid-row:2}
+  .ev .ev-where{grid-column:1/-1;grid-row:3}
+  .ev .ev-price{grid-column:1/-1;grid-row:4}
+  .ev .btn{grid-column:1/-1;grid-row:5;width:100%}
+  .lineup{grid-row:6;grid-template-columns:1fr}
+  .art{grid-template-columns:44px 1fr auto}
+  .art .genres{grid-column:2/-1;grid-row:2}
+  .arc{grid-template-columns:1fr}
+  .cine{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  :root{--hh:64px}
+  .hero{min-height:max(640px,calc(100svh - var(--hh)))}
+  .ln{font-size:clamp(1.4rem,calc(100cqw / var(--m)),15rem)}
+  .l3{font-size:clamp(1.4rem,calc(100cqw / var(--m)),15rem)}
+  .date{position:static;display:block;margin-top:14px;font-size:calc(100cqw / 6.2);text-align:left}
+  .hero-info{grid-template-columns:1fr}
+  .buy{justify-content:space-between}
+  .buy .btn{flex:1}
+  .mc-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .fgrid{grid-template-columns:1fr}
+  .row{padding-inline:8px}
+  .facade .play{width:76px;height:76px;margin:-38px 0 0 -38px}
+  .facade .play::after{left:30px;top:23px}
+  .sh h2 .n{display:block;margin:0 0 .5em}
+  .legal{padding-bottom:0}
+}
+
+/* ---------- mouvement réduit ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0ms!important}
+  .mq-track{animation:none!important;transform:none!important}
+  .mq-group[aria-hidden="true"]{display:none}
+  .js .rv{opacity:1;transform:none}
+  .dot::after{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<div class="fx" aria-hidden="true"></div>
+<div class="badge" aria-hidden="true">PISTE A · maquette</div>
+
+<header class="top" id="top">
+  <div class="wrap top-in">
+    <a class="logo" href="#top" aria-label="Universitek, retour en haut"><i aria-hidden="true"></i>Universitek</a>
+    <nav class="nav" aria-label="Navigation principale">
+      <ul>
+        <li><a href="#agenda">Agenda</a></li>
+        <li><a href="#masterclass">Masterclass</a></li>
+        <li><a href="#apropos">À propos</a></li>
+        <li><a href="#artistes">Artistes</a></li>
+        <li><a href="#archives">Archives</a></li>
+        <li><a href="#cinematek">Cinematek</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie <span class="arr" aria-hidden="true">↗</span></a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu"><span class="bl">Menu</span><span class="bars" aria-hidden="true"></span></button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Menu mobile" hidden>
+  <ul>
+    <li><a href="#agenda"><small>01</small>Agenda</a></li>
+    <li><a href="#masterclass"><small>02</small>Masterclass</a></li>
+    <li><a href="#apropos"><small>03</small>À propos</a></li>
+    <li><a href="#artistes"><small>04</small>Artistes</a></li>
+    <li><a href="#archives"><small>05</small>Archives</a></li>
+    <li><a href="#cinematek"><small>+</small>Cinematek</a></li>
+  </ul>
+  <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie <span class="arr" aria-hidden="true">↗</span></a>
+  <p class="mono m-foot">Montpellier · transmission &amp; célébrations</p>
+</nav>
+
+<main id="main">
+  <section class="hero" id="hero" aria-labelledby="h1">
+    <canvas id="bubbles" aria-hidden="true"></canvas>
+    <div class="wrap hero-in">
+      <div class="hero-top mono">
+        <span class="live"><i class="dot" aria-hidden="true"></i>Prochain événement</span>
+        <time datetime="2026-10-16T21:00">Ven. 16 octobre 2026 · 21h</time>
+      </div>
+
+      <div class="hero-title">
+        <h1 class="poster" id="h1">
+          <span class="ln l1" style="--n:14.7;--i:0"><span class="w" style="--m:6.5">Encore</span> <span class="w" style="--m:7.9">et Encor</span></span>
+          <span class="vh"> · </span>
+          <span class="ln l2 out" style="--n:15.6;--i:1"><span class="w" style="--m:9.75">Le Château</span> <span class="w" style="--m:5.55">Cosco</span></span>
+          <span class="vh"> · </span>
+          <span class="ln l3" style="--i:2"><span class="w" style="--m:7.75">Liminaal</span></span>
+        </h1>
+        <span class="date" aria-hidden="true">16.10</span>
+      </div>
+
+      <div class="hero-info">
+        <p class="tag">Live machines modulaire · Techno DIY · Cold techno</p>
+        <address class="where"><b>Le Salon des Indépendants</b>4 rue Lunaret, Montpellier</address>
+        <div class="buy">
+          <p class="price"><b>10 €</b><span class="mono">Tarif unique</span></p>
+          <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie <span class="arr" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="mq-track">
+      <div class="mq-group"><span>Transmission &amp; célébrations</span><i class="bub"></i><span>Musique électronique</span><i class="bub"></i><span>Formation</span><i class="bub"></i><span>Production</span><i class="bub"></i><span>Depuis 2017</span><i class="bub"></i><span>Montpellier</span><i class="bub"></i><span>Scène locale &amp; underground</span><i class="bub"></i></div>
+      <div class="mq-group" aria-hidden="true"><span>Transmission &amp; célébrations</span><i class="bub"></i><span>Musique électronique</span><i class="bub"></i><span>Formation</span><i class="bub"></i><span>Production</span><i class="bub"></i><span>Depuis 2017</span><i class="bub"></i><span>Montpellier</span><i class="bub"></i><span>Scène locale &amp; underground</span><i class="bub"></i></div>
+    </div>
+  </div>
+
+  <section class="sec" id="agenda" aria-labelledby="t-agenda">
+    <div class="wrap">
+      <header class="sh rv"><h2 id="t-agenda"><span class="n">01 //</span>Agenda</h2><p class="mono meta">1 événement à venir</p></header>
+      <div class="rows rv">
+        <article class="row ev">
+          <div class="ev-date"><b>16.10</b><span class="mono">Ven. 2026 · 21h</span></div>
+          <div class="ev-main">
+            <h3>Encore et Encor · Le Château Cosco · Liminaal</h3>
+            <p>Live machines modulaire · Techno DIY · Cold techno</p>
+          </div>
+          <address class="ev-where"><b>Le Salon des Indépendants</b>4 rue Lunaret, Montpellier</address>
+          <div class="ev-price"><b>10 €</b><span class="mono">Tarif unique</span><p>Prix bas pour rémunérer correctement les artistes et soutenir la scène indépendante.</p></div>
+          <a class="btn" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie <span class="arr" aria-hidden="true">↗</span></a>
+          <div class="lineup">
+            <div><h4>Encore et Encor</h4><p>Live machines sans timecode, techno 130-145 BPM, hypnotique et rave.</p></div>
+            <div><h4>Le Château Cosco</h4><p>Trio noise rock / techno DIY, transe répétitive et cérémonielle.</p></div>
+            <div><h4>Liminaal</h4><p>Cold techno, slow rave, acid, textures cold wave. Mixe avec le collectif depuis 2024.</p></div>
+          </div>
+        </article>
+        <p class="next mono"><span>Prochaines dates : à annoncer</span><a class="link" href="https://www.instagram.com/universitek_/" target="_blank" rel="noopener">Suivre l'agenda sur Instagram ↗</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="masterclass" aria-labelledby="t-mc" style="padding-top:0">
+    <div class="wrap">
+      <header class="sh rv"><h2 id="t-mc"><span class="n">02 //</span>Masterclass</h2><p class="mono meta">Replays YouTube · 4 vidéos</p></header>
+      <div class="mc-grid">
+        <article class="mc rv">
+          <div class="mc-media"><button class="facade" type="button" data-yt="-XEUyl_Y-5s" data-title="Dark progressive : patches, tips &amp; tricks" style="--x1:18%;--y1:72%;--s1:20px;--x2:30%;--y2:40%;--s2:9px;--x3:78%;--y3:62%;--s3:26px;--x4:64%;--y4:24%;--s4:7px">
+            <span class="num" aria-hidden="true">01</span><span class="play" aria-hidden="true"></span>
+            <span class="vh">Masterclass : Dark progressive, patches, tips &amp; tricks. </span><span class="note">Lire la vidéo charge YouTube (Google)</span></button></div>
+          <p class="mono meta">08.08.2020 · 1h59 · <b>Confirmé·e·s</b></p>
+          <h3>Dark progressive : patches, tips &amp; tricks</h3>
+          <p class="who">OddWave (Hadra Records)</p>
+          <p class="mono tags">Ableton · Serum</p>
+        </article>
+        <article class="mc rv" style="--d:90ms">
+          <div class="mc-media"><button class="facade" type="button" data-yt="6QuNr6Te8jA" data-title="Liveset &amp; improvisation (EN)" style="--x1:82%;--y1:70%;--s1:15px;--x2:55%;--y2:34%;--s2:24px;--x3:22%;--y3:58%;--s3:8px;--x4:40%;--y4:80%;--s4:12px">
+            <span class="num" aria-hidden="true">02</span><span class="play" aria-hidden="true"></span>
+            <span class="vh">Masterclass : Liveset et improvisation, en anglais. </span><span class="note">Lire la vidéo charge YouTube (Google)</span></button></div>
+          <p class="mono meta">19.09.2020 · 1h17 · <b>Débutant·e·s</b></p>
+          <h3>Liveset &amp; improvisation (EN)</h3>
+          <p class="who">69DB (Spiral Tribe / SP23)</p>
+          <p class="mono tags">Ableton · NI</p>
+        </article>
+        <article class="mc rv" style="--d:180ms">
+          <div class="mc-media"><button class="facade" type="button" data-yt="CTBWyPEV634" data-title="Concert évolutif (BPM) &amp; mix harmonique" style="--x1:30%;--y1:78%;--s1:28px;--x2:70%;--y2:30%;--s2:11px;--x3:86%;--y3:74%;--s3:9px;--x4:12%;--y4:36%;--s4:16px">
+            <span class="num" aria-hidden="true">03</span><span class="play" aria-hidden="true"></span>
+            <span class="vh">Masterclass : Concert évolutif (BPM) et mix harmonique. </span><span class="note">Lire la vidéo charge YouTube (Google)</span></button></div>
+          <p class="mono meta">07.02.2021 · 1h58 · <b>Tous niveaux</b></p>
+          <h3>Concert évolutif (BPM) &amp; mix harmonique</h3>
+          <p class="who">Dj Bigmat</p>
+          <p class="mono tags">DJing · scratch</p>
+        </article>
+        <article class="mc rv" style="--d:270ms">
+          <div class="mc-media"><button class="facade" type="button" data-yt="XOTpP8gJnbM" data-title="Initiation DJing sur CDJ &amp; DJM" style="--x1:62%;--y1:76%;--s1:18px;--x2:20%;--y2:30%;--s2:25px;--x3:48%;--y3:50%;--s3:7px;--x4:88%;--y4:36%;--s4:12px">
+            <span class="num" aria-hidden="true">04</span><span class="play" aria-hidden="true"></span>
+            <span class="vh">Masterclass : Initiation DJing sur CDJ et DJM. </span><span class="note">Lire la vidéo charge YouTube (Google)</span></button></div>
+          <p class="mono meta">13.12.2023 · 1h24 · <b>Débutant·e·s</b></p>
+          <h3>Initiation DJing sur CDJ &amp; DJM</h3>
+          <p class="who">Bernadette (Move Ur Gambettes)</p>
+          <p class="mono tags">DJing · CDJ</p>
+        </article>
+      </div>
+      <p class="more rv"><a class="btn ghost" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">Toutes les masterclass sur YouTube <span class="arr" aria-hidden="true">↗</span></a></p>
+    </div>
+  </section>
+
+  <section class="sec" id="apropos" aria-labelledby="t-ap" style="padding-top:0">
+    <div class="wrap">
+      <header class="sh rv"><h2 id="t-ap"><span class="n">03 //</span>À propos</h2><p class="mono meta">Transmission &amp; célébrations</p></header>
+      <div class="about-grid">
+        <div class="rv">
+          <p class="lead">Universitek fait de la <em>musique électronique</em> un terrain d'apprentissage, de création et de partage.</p>
+          <p>Pédagogie inspirée de l'éducation populaire, exigence professionnelle.</p>
+        </div>
+        <ul class="rows rv" style="--d:100ms">
+          <li class="row pil"><span class="mono">Pilier 1 / 2</span><h3>Formation</h3><p>Masterclass en ligne en direct ou en replay, sessions en présentiel, stages intensifs.</p></li>
+          <li class="row pil"><span class="mono">Pilier 2 / 2</span><h3>Production</h3><p>Soirées club, concerts, formats en espace public, festival : pour faire briller la scène locale et underground.</p></li>
+        </ul>
+      </div>
+      <ul class="stats rv">
+        <li class="row stat"><b>~20</b><span class="mono">intervenant·e·s</span></li>
+        <li class="row stat"><b>70H+</b><span class="mono">de formation</span></li>
+        <li class="row stat"><b>~20</b><span class="mono">événements</span></li>
+        <li class="row stat"><b>12</b><span class="mono">lieux</span></li>
+        <li class="row stat"><b>1</b><span class="mono">festival à Victoire 2</span></li>
+        <li class="row stat"><b>FR/EN</b><span class="mono">cours en FR &amp; EN</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="artistes" aria-labelledby="t-art" style="padding-top:0">
+    <div class="wrap">
+      <header class="sh rv"><h2 id="t-art"><span class="n">04 //</span>Artistes <span class="sub">associé·e·s</span></h2><p class="mono meta">6 artistes</p></header>
+      <ul class="rows rv">
+        <li class="row art"><span class="idx mono">01</span><h3>Meremix</h3><span class="genres mono">Groovy techno · dark acid disco</span><a class="cover go mono" href="#" aria-label="Meremix sur SoundCloud">SoundCloud ↗</a></li>
+        <li class="row art"><span class="idx mono">02</span><h3>Wildtrack</h3><span class="genres mono">Psytrance · forest</span><a class="cover go mono" href="#" aria-label="Wildtrack sur SoundCloud">SoundCloud ↗</a></li>
+        <li class="row art"><span class="idx mono">03</span><h3>Zöta</h3><span class="genres mono">Techno · acid house</span><a class="cover go mono" href="#" aria-label="Zöta sur SoundCloud">SoundCloud ↗</a></li>
+        <li class="row art"><span class="idx mono">04</span><h3>Cosmic Bazaar</h3><span class="genres mono">Groovy techno · psytechno</span><a class="cover go mono" href="#" aria-label="Cosmic Bazaar sur SoundCloud">SoundCloud ↗</a></li>
+        <li class="row art"><span class="idx mono">05</span><h3>Liminaal</h3><span class="genres mono">Cold techno · slow rave</span><a class="cover go mono" href="#" aria-label="Liminaal sur SoundCloud">SoundCloud ↗</a></li>
+        <li class="row art"><span class="idx mono">06</span><h3>Hurluberlu</h3><span class="genres mono">VJing · mapping</span><a class="cover go mono" href="#" aria-label="Hurluberlu sur SoundCloud">SoundCloud ↗</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="archives" aria-labelledby="t-arc" style="padding-top:0">
+    <div class="wrap">
+      <header class="sh rv"><h2 id="t-arc"><span class="n">05 //</span>Archives</h2><p class="mono meta">13 événements passés</p></header>
+      <ul class="rows rv">
+        <li class="yr mono" aria-hidden="true">2025</li>
+        <li class="row arc"><time class="mono" datetime="2025-10-31">31.10.2025</time><h3>Panacée Horror Show</h3><span class="lieu mono">Café de la Panacée</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-09-26">26.09.2025</time><h3>Concert pour la paix</h3><span class="lieu mono">Parc Clemenceau</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-08-29">29-30.08.2025</time><h3>Ateliers scratch</h3><span class="lieu mono">Hadra Trance Festival</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-08-22">22.08.2025</time><h3>Boiler Groove #4</h3><span class="lieu mono">Tropisme</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-07-13">13.07.2025</time><h3>Universitek × Solaation</h3><span class="lieu mono">MOBA</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-07-12">12.07.2025</time><h3>Boiler Groove #3</h3><span class="lieu mono">Panorama, Corum</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-06-21">21.06.2025</time><h3>Fête de la musique</h3><span class="lieu mono">Bistrot Gilles</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-05-31">31.05.2025</time><h3>Universitek Festival #1 <small>16h-4h · 2 scènes · 18 artistes</small></h3><span class="lieu mono">Victoire 2</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-05-07">07.05.2025</time><h3>Blastfest</h3><span class="lieu mono">Université Paul-Valéry</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-05-02">02.05.2025</time><h3>Elements of Baraka</h3><span class="lieu mono">Le Salon des Indépendants</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-04-04">04.04.2025</time><h3>Boiler Groove #2</h3><span class="lieu mono">MO.CO. Faune</span></li>
+        <li class="row arc"><time class="mono" datetime="2025-02-21">21.02.2025</time><h3>Boiler Groove #1</h3><span class="lieu mono">MO.CO. Faune</span></li>
+        <li class="yr mono" aria-hidden="true">2024</li>
+        <li class="row arc"><time class="mono" datetime="2024-12-07">07.12.2024</time><h3>Universitek invite Puzzle Puzzle</h3><span class="lieu mono">Mélomane Club</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="cinematek" aria-labelledby="t-cine" style="padding-top:0">
+    <div class="wrap">
+      <div class="cine rv">
+        <div><p class="mono lab">Focus</p><h2 id="t-cine">Cinematek</h2></div>
+        <p>Créée en 2025, CINEMATEK est la branche d'Universitek dédiée aux métiers du cinéma et de l'audiovisuel. Dans la continuité du projet de transmission développé par Universitek depuis 2017 elle propose des formations professionnalisantes dans le registre du cinéma.</p>
+        <a class="cl" href="https://www.cinematek.fr/" target="_blank" rel="noopener">+ d'infos sur cinematek.fr <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="mark-wrap" aria-hidden="true"><p class="mark">Universitek</p></div>
+    <div class="fgrid">
+      <div>
+        <h2 class="mono fh">Contact</h2>
+        <a class="mail link" href="mailto:contact@universitek.com">contact@universitek.com</a>
+        <p>Montpellier</p>
+      </div>
+      <div>
+        <h2 class="mono fh">Réseaux</h2>
+        <ul>
+          <li><a class="link" href="https://www.instagram.com/universitek_/" target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a class="link" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">YouTube ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="mono fh">Adhésion</h2>
+        <p>Rejoindre l'association et soutenir la scène locale.</p>
+        <a class="btn" href="https://www.helloasso.com/associations/universitek/adhesions/j-adhere-a-universitek" target="_blank" rel="noopener">Adhérer · 10 €/an <span class="arr" aria-hidden="true">↗</span></a>
+      </div>
+      <div>
+        <h2 class="mono fh">Organisme de formation</h2>
+        <a class="btn ghost" href="https://drive.google.com/drive/folders/1zArshubiv1V8xgagEm6ryqpQ_6pF1rAo" target="_blank" rel="noopener">Informations liées à l'organisme de formation <span class="arr" aria-hidden="true">↗</span></a>
+        <div class="qual"><b>[logo Qualiopi]</b>La certification qualité a été délivrée au titre de la catégorie d'action suivante : actions de formation</div>
+      </div>
+    </div>
+    <div class="legal mono">
+      <span>© 2026 Universitek · Montpellier</span>
+      <div><a class="link" href="#">Mentions légales</a><a class="link" href="#">Confidentialité</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  document.documentElement.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---------- menu mobile ---------- */
+  var burger = document.getElementById('burger'), menu = document.getElementById('menu');
+  var bl = burger.querySelector('.bl');
+  function setMenu(open){
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    bl.textContent = open ? 'Fermer' : 'Menu';
+    menu.hidden = !open;
+    document.body.classList.toggle('lock', open);
+  }
+  burger.addEventListener('click', function(){ setMenu(burger.getAttribute('aria-expanded') !== 'true'); });
+  menu.addEventListener('click', function(e){ if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true'){ setMenu(false); burger.focus(); }
+  });
+  window.matchMedia('(min-width:1041px)').addEventListener('change', function(m){ if (m.matches) setMenu(false); });
+
+  /* ---------- révélations au scroll ---------- */
+  var rv = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window){
+    var ro = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -6% 0px' });
+    rv.forEach(function(el){ ro.observe(el); });
+  } else { rv.forEach(function(el){ el.classList.add('in'); }); }
+
+  /* ---------- façade YouTube : rien ne charge avant le clic ---------- */
+  document.querySelectorAll('.facade').forEach(function(b){
+    b.addEventListener('click', function(){
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(b.dataset.yt) + '?autoplay=1';
+      f.title = 'Masterclass : ' + b.dataset.title;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.setAttribute('allowfullscreen', '');
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      b.replaceWith(f);
+      f.focus();
+    });
+  });
+
+  /* ---------- bulles : verre sous lumière UV ---------- */
+  var hero = document.getElementById('hero'), cv = document.getElementById('bubbles');
+  if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext('2d'), TAU = Math.PI * 2;
+  var W = 0, H = 0, dpr = 1, cap = 60, sites = [], bubs = [], pops = [], drops = [];
+  var running = false, raf = 0, last = 0, inView = true, boost = 0, simT = 0, lastY = window.scrollY, lastT = performance.now();
+  function rn(a, b){ return a + Math.random() * (b - a); }
+
+  var halo = document.createElement('canvas'); halo.width = halo.height = 64;
+  (function(){
+    var g = halo.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(200,166,255,.6)'); gr.addColorStop(.35, 'rgba(150,100,255,.22)'); gr.addColorStop(1, 'rgba(120,60,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  })();
+
+  function spawn(s){
+    var big = Math.random() < .1, r0 = big ? rn(5, 8) : rn(2, 4.6);
+    return { x0: s.x + rn(-2, 2), x: s.x, y: H + r0, r0: r0, r: r0, ph: rn(0, TAU), fq: rn(1.4, 3), amp: rn(2, 5) + r0 * .7, gain: rn(1.6, 2.4), popY: rn(8, 36), vm: rn(.88, 1.14) };
+  }
+  function pop(b){
+    pops.push({ x: b.x, y: b.y, r: b.r, t: 0 });
+    var n = b.r > 9 ? 7 : 4;
+    for (var i = 0; i < n; i++){
+      var a = -Math.PI * rn(.1, .9), v = rn(40, 110);
+      drops.push({ x: b.x + Math.cos(a) * b.r * .8, y: b.y + Math.sin(a) * b.r * .8, vx: Math.cos(a) * v, vy: Math.sin(a) * v, l: rn(.35, .6), t: 0 });
+    }
+  }
+  function step(dt){
+    simT += dt;
+    var i, s, b;
+    for (i = 0; i < sites.length; i++){
+      s = sites[i]; s.t -= dt; s.glow = Math.max(0, s.glow - dt * 3);
+      if (s.t <= 0){
+        if (bubs.length < cap){ bubs.push(spawn(s)); s.glow = 1; }
+        if (s.burst > 0){ s.burst--; s.t = rn(.1, .3); }
+        else { s.burst = Math.floor(rn(2, 7)); s.t = rn(.9, 2.8) / (.55 + .45 * Math.sin(simT * .4 * s.fq + s.ph) + .45); }
+      }
+    }
+    var sp = 1 + boost;
+    for (i = bubs.length - 1; i >= 0; i--){
+      b = bubs[i];
+      var p = Math.min(1, Math.max(0, (H - b.y) / (H - b.popY)));
+      b.r = b.r0 * (1 + b.gain * p);
+      b.y -= (24 + b.r0 * 5 + (150 + b.r0 * 16) * Math.pow(p, 1.25)) * b.vm * sp * dt;
+      b.x = b.x0 + Math.sin(b.ph + p * b.fq * TAU) * b.amp * (.25 + .9 * p);
+      if (b.y <= b.popY){ pop(b); bubs.splice(i, 1); }
+    }
+    for (i = pops.length - 1; i >= 0; i--){ pops[i].t += dt; if (pops[i].t > .24) pops.splice(i, 1); }
+    for (i = drops.length - 1; i >= 0; i--){
+      var d = drops[i]; d.t += dt; d.vy += 180 * dt; d.x += d.vx * dt; d.y += d.vy * dt;
+      if (d.t > d.l) drops.splice(i, 1);
+    }
+  }
+  function draw(){
+    var i, b, R;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    for (i = 0; i < bubs.length; i++){
+      b = bubs[i]; R = b.r * 2.7;
+      ctx.globalAlpha = .2 + .14 * Math.min(1, b.r / 12);
+      ctx.drawImage(halo, b.x - R, b.y - R, R * 2, R * 2);
+    }
+    for (i = 0; i < sites.length; i++){
+      var s = sites[i];
+      ctx.globalAlpha = .4 + .55 * s.glow;
+      ctx.drawImage(halo, s.x - 16, H - 28, 32, 32);
+      ctx.globalAlpha = .9; ctx.fillStyle = '#EBDDFF';
+      ctx.fillRect(s.x - 1, H - 13, 2, 2);
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    /* corps : voile + contour fin */
+    ctx.beginPath();
+    for (i = 0; i < bubs.length; i++){ b = bubs[i]; ctx.moveTo(b.x + b.r, b.y); ctx.arc(b.x, b.y, b.r, 0, TAU); }
+    ctx.fillStyle = 'rgba(176,140,255,.075)'; ctx.fill();
+    ctx.lineWidth = 1.1; ctx.strokeStyle = 'rgba(226,212,255,.66)'; ctx.stroke();
+    /* reflet en arc + petit point lumineux */
+    ctx.beginPath();
+    for (i = 0; i < bubs.length; i++){
+      b = bubs[i]; if (b.r < 3.4) continue;
+      var hr = b.r * .66;
+      ctx.moveTo(b.x + Math.cos(3.55) * hr, b.y + Math.sin(3.55) * hr); ctx.arc(b.x, b.y, hr, 3.55, 4.35);
+    }
+    ctx.lineWidth = 1.5; ctx.lineCap = 'round'; ctx.strokeStyle = 'rgba(255,255,255,.82)'; ctx.stroke();
+    ctx.beginPath();
+    for (i = 0; i < bubs.length; i++){
+      b = bubs[i]; if (b.r < 5) continue;
+      var dr = Math.max(.9, b.r * .075), dx = b.x + b.r * .42, dy = b.y + b.r * .46;
+      ctx.moveTo(dx + dr, dy); ctx.arc(dx, dy, dr, 0, TAU);
+    }
+    ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fill();
+    /* éclatements : anneau + gouttelettes */
+    ctx.globalCompositeOperation = 'lighter';
+    for (i = 0; i < pops.length; i++){
+      var q = pops[i], e = q.t / .24;
+      ctx.beginPath(); ctx.arc(q.x, q.y, q.r * (1 + .9 * e), 0, TAU);
+      ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(226,212,255,' + (.8 * (1 - e)).toFixed(3) + ')'; ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(230,218,255,.85)';
+    for (i = 0; i < drops.length; i++){ var d = drops[i]; ctx.globalAlpha = 1 - d.t / d.l; ctx.fillRect(d.x - .75, d.y - .75, 1.6, 1.6); }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
+  function warm(){ simT = 0; for (var i = 0; i < 270; i++) step(1 / 30); pops.length = 0; drops.length = 0; }
+  function layout(){
+    var rc = hero.getBoundingClientRect(), w = Math.round(rc.width), h = Math.round(rc.height);
+    if (!w || !h) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2); W = w; H = h;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.max(3, Math.min(11, Math.round(W / 135)));
+    cap = Math.round(Math.max(36, Math.min(150, W * H / 9500)));
+    sites = []; bubs = [];
+    for (var i = 0; i < n; i++) sites.push({ x: (i + .5) / n * W + rn(-.28, .28) * W / n, t: rn(0, 2.5), burst: 0, glow: 0, fq: rn(.8, 1.6), ph: rn(0, TAU) });
+    warm(); draw();
+  }
+  function sync(){
+    var go = inView && !document.hidden && !reduce.matches;
+    if (go && !running){ running = true; last = performance.now(); raf = requestAnimationFrame(loop); }
+    else if (!go && running){ running = false; cancelAnimationFrame(raf); }
+  }
+  function loop(t){
+    if (!running) return;
+    var dt = Math.min(.05, (t - last) / 1000); last = t;
+    boost *= Math.exp(-dt * 2.4);
+    step(dt); draw();
+    raf = requestAnimationFrame(loop);
+  }
+  window.addEventListener('scroll', function(){
+    var now = performance.now(), y = window.scrollY, v = Math.abs(y - lastY) / Math.max(16, now - lastT) * 1000;
+    lastY = y; lastT = now;
+    boost = Math.min(.7, boost + (Math.min(.7, v / 2200) - boost) * .35 * (v / 2200 > boost ? 1 : 0));
+  }, { passive: true });
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ inView = es[0].isIntersecting; sync(); }, { threshold: 0 }).observe(hero);
+  }
+  document.addEventListener('visibilitychange', sync);
+  reduce.addEventListener('change', function(){ if (reduce.matches){ layout(); } sync(); });
+  var rt = 0, lastW = 0;
+  if ('ResizeObserver' in window){
+    new ResizeObserver(function(){ cancelAnimationFrame(rt); rt = requestAnimationFrame(layout); }).observe(hero);
+  } else { window.addEventListener('resize', layout); }
+  layout(); sync();
+})();
+</script>
+</body>
+</html>

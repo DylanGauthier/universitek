@@ -1,0 +1,13 @@
+# Notes brutes du client (liens Drive internes) : hors dépôt public
+PITCH.md
+
+# Réglages locaux
+.claude/settings.local.json
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Référence téléchargée pendant la recherche (charte d’usage Qualiopi)
+charte-usage-qualiopi.pdf
