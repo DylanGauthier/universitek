@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Universitek — Piste C · Liquide</title>
-<meta name="description" content="Universitek, Montpellier : soirées électroniques underground et organisme de formation. Prochain événement : Encore et Encor · Le Château Cosco · Liminaal, 16 octobre 2026.">
+<title>Universitek · Montpellier (maquette C)</title>
+<meta name="description" content="Universitek, association à Montpellier : soirées de musique électronique, masterclass et organisme de formation. Prochain événement : Encore et Encor, Le Château Cosco, Liminaal, 16 octobre 2026.">
 <meta name="theme-color" content="#0a0314">
 <meta name="color-scheme" content="dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +26,7 @@
   --f-m:'Martian Mono',ui-monospace,Consolas,monospace;
   --f-t:'Bricolage Grotesque',system-ui,sans-serif;
   --ease:cubic-bezier(.2,.85,.25,1);
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='14'%3E%3Cpath d='M0 14V8Q20 0 40 8T80 8T120 8T160 8V14Z'/%3E%3C/svg%3E");
 }
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--void);scroll-padding-top:84px;-webkit-text-size-adjust:100%;overflow-x:clip}
@@ -47,6 +48,9 @@ ul{padding:0;list-style:none}
 
 /* ---------- fond : canvas + grain + jauge ---------- */
 #fizz{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+/* traînée gooey du pointeur (souris uniquement) : canvas basse définition + seuil d'alpha */
+#trail{position:fixed;inset:0;width:100%;height:100%;z-index:39;pointer-events:none;filter:url(#goo);opacity:.55}
+.svg-defs{position:absolute;width:0;height:0;overflow:hidden}
 .veil{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.3;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px),
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E")}
@@ -104,14 +108,16 @@ main,.foot,.top{position:relative;z-index:1}
 /* ---------- hero : titre à gauche, billet (infos clés) à droite ---------- */
 .hero{position:relative;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:clamp(20px,3.6vw,56px);align-items:center;
   padding:calc(68px + clamp(14px,3vh,36px)) var(--pad) clamp(24px,4.5vh,48px);overflow:hidden;overflow:clip}
+/* couche de métaballes : canvas basse définition, le filtre SVG seuille l'alpha (les gouttes fusionnent et se séparent) */
+#lava{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;filter:url(#goo);opacity:.95}
 .hero-main{position:relative;z-index:2;min-width:0}
 .hero h1{font-weight:400}
-.h1a{display:block;font:400 clamp(2.4rem,7.4vw,6.4rem)/1 var(--f-d);text-transform:uppercase;letter-spacing:-.01em;font-variation-settings:'YEAR' 1979;transition:font-variation-settings 2.2s var(--ease)}
+/* le titre « fond » très légèrement : feTurbulence + feDisplacementMap (échelle pilotée en JS) */
+.h1a{display:block;font:400 clamp(2.4rem,7.4vw,6.4rem)/1 var(--f-d);text-transform:uppercase;letter-spacing:-.01em;font-variation-settings:'YEAR' 1979;transition:font-variation-settings 2.2s var(--ease);filter:url(#melt)}
 .melt .h1a{font-variation-settings:'YEAR' 2038}
 .ln{display:block;width:fit-content;max-width:100%;padding-bottom:.08em}
 .h1b{display:block;margin-top:clamp(.5rem,1.2vw,1rem);font:400 clamp(1.05rem,2.1vw,1.85rem)/1.2 var(--f-d);text-transform:uppercase;color:var(--ice);letter-spacing:.02em;text-shadow:0 1px 14px rgba(10,3,20,.85)}
 .h1b i{font-style:normal;color:var(--lilac);margin:0 .25em}
-.lead{margin-top:clamp(.7rem,1.6vw,1.2rem);font:600 clamp(1.1rem,1.6vw,1.4rem)/1.35 var(--f-t);max-width:38ch;text-shadow:0 1px 14px rgba(10,3,20,.85)}
 .ticket{position:relative;z-index:2;display:grid;gap:clamp(12px,1.4vw,16px);padding:clamp(18px,2vw,26px);
   background:var(--panel);border:1px solid rgba(225,242,255,.45);border-radius:28px;
   box-shadow:0 0 70px rgba(110,70,255,.35),inset 0 0 40px rgba(134,236,255,.08)}
@@ -141,42 +147,63 @@ main,.foot,.top{position:relative;z-index:1}
 }
 
 /* ---------- bandeaux ---------- */
-.bands{position:relative;overflow:hidden;padding:1rem 0 1.4rem;margin-top:-1px}
-.band{display:flex;width:112%;margin-left:-6%;overflow:hidden;white-space:nowrap;padding:.7rem 0;font:600 .85rem/1 var(--f-m);letter-spacing:.18em;text-transform:uppercase}
-.band.b1{background:var(--ice);color:var(--ink);transform:rotate(-1.4deg);position:relative;z-index:2}
-.band.b2{background:#0a0314;color:var(--ice);border-block:1px solid var(--ice);transform:rotate(1deg);margin-top:-1.2rem}
-.track{display:flex;flex:none;animation:slide 34s linear infinite}
-.b2 .track{animation-direction:reverse;animation-duration:46s}
+.bands{position:relative;z-index:2;margin-top:2px}
+.band{display:flex;overflow:hidden;white-space:nowrap;padding:.75rem 0;font:600 .85rem/1 var(--f-m);letter-spacing:.14em;text-transform:uppercase}
+.band.b1{background:var(--ice);color:var(--ink)}
+.track{display:flex;flex:none;animation:slide 40s linear infinite}
 .track span{padding-right:2.2rem}
 @keyframes slide{to{transform:translateX(-50%)}}
 .band .track span+span{padding-left:0}
 
 /* ---------- sections : conteneur centré, titres pleins, blocs en verre ---------- */
-.sec{position:relative;padding:var(--sec) 0 0}
+.sec{position:relative;padding:calc(var(--sec) + 14px) 0 0}
 .sec>*{width:min(var(--wrap),calc(100% - 2*var(--gut)));margin-inline:auto}
 .g1{background:radial-gradient(55% 38% at 96% 6%,rgba(120,85,255,.2),transparent 70%)}
 .g2{background:radial-gradient(50% 36% at 0 14%,rgba(134,236,255,.08),transparent 70%)}
-.sec-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem 1.5rem;padding:0 0 clamp(18px,2.4vw,30px)}
-.sec-h .num{flex:0 0 100%;color:var(--ice)}
+.sec-h{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.5rem;padding:0 0 clamp(18px,2.4vw,30px)}
 .sec-h h2{font:400 clamp(2rem,4.8vw,4rem)/1.05 var(--f-d);text-transform:uppercase;color:var(--fg);text-shadow:0 2px 16px rgba(10,3,20,.75)}
-.sec-h .note{color:var(--mut);max-width:46ch}
+.sec-h .note{background:var(--volt);color:#fff;padding:.34rem .9rem;border-radius:999px;max-width:none}
+
+/* ---------- coulures : plafond liquide + gouttes (SVG généré en JS, une goutte s'étire et tombe de temps en temps) ---------- */
+.drip{position:absolute;left:0;top:0;width:100%;height:0;pointer-events:none;z-index:0;color:var(--dc,var(--ice))}
+.sec>:not(.drip){position:relative;z-index:1}
+.sec>.drip{width:100%;margin:0;top:18px}
+.bands>.drip{top:100%}
+.drip.volt{--dc:#6330f0}
+.drip.lilac{--dc:#b69cff}
+.drip svg{position:absolute;left:0;top:0;max-width:none;overflow:visible}
+.drip .dp,.drip .dd{fill:currentColor}
+.drip .dd{opacity:0;transform-box:fill-box;transform-origin:50% 0}
 
 .rise{opacity:1}
 .js .rise{opacity:0;transform:translateY(14px);transition:opacity .4s ease,transform .5s var(--ease)}
 .js .rise.in{opacity:1;transform:none}
-.js .row.rise{transition:opacity .4s ease,transform .5s var(--ease),color .3s ease .08s}
+.js .row.rise,.js .ar.rise{transition:opacity .4s ease,transform .5s var(--ease),color .3s ease .12s}
 
-/* ---------- cartes en verre (aplat liquide qui monte au survol) ---------- */
+/* ---------- surfaces : aplats (glace, volt, voile) ; au survol un liquide monte, bord ondulé ---------- */
 .rows{display:grid;gap:var(--gap)}
-.row{position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);--c:var(--fg);--m:var(--mut);color:var(--c);transition:color .3s ease .08s}
-.row::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ice);transform:scaleY(0);transform-origin:50% 100%;transition:transform .55s var(--ease)}
-.row:focus-within{--c:var(--ink);--m:var(--ink2)}
-.row:focus-within::before{transform:scaleY(1)}
-@media (hover:hover){.row:hover{--c:var(--ink);--m:var(--ink2)}.row:hover::before{transform:scaleY(1)}}
+.row,.ar{position:relative;isolation:isolate;overflow:hidden;--c:var(--fg);--m:var(--mut);--fill:var(--ice);--bb:var(--ice);--bt:var(--ink);color:var(--c);transition:color .3s ease .12s}
+.row{border-radius:var(--r);background:var(--bg,rgba(13,5,34,.72))}
+.row::before,.ar::before{content:"";position:absolute;left:0;right:0;top:-12px;bottom:0;z-index:-1;background:var(--fill);
+  -webkit-mask:var(--wave) repeat-x 0 0/160px 14px,linear-gradient(#000,#000) 0 13px/100% 100% no-repeat;
+  mask:var(--wave) repeat-x 0 0/160px 14px,linear-gradient(#000,#000) 0 13px/100% 100% no-repeat;
+  transform:translateY(100%);transition:transform .65s var(--ease)}
+@keyframes slosh{from{-webkit-mask-position:0 0,0 13px;mask-position:0 0,0 13px}to{-webkit-mask-position:-160px 0,0 13px;mask-position:-160px 0,0 13px}}
+/* surfaces */
+.row.volt{--bg:var(--volt);--c:#fff;--m:#e8e0ff}
+.row.glass{--bg:rgba(134,236,255,.13)}
+.row.ice,.row.lilac{--bg:var(--ice);--c:var(--ink);--m:var(--ink2);--fill:var(--volt);--bb:var(--ink);--bt:var(--ice);--c-h:#fff;--m-h:var(--lilac);--bbh:var(--ice);--bth:var(--ink)}
+.row.lilac{--bg:var(--lilac)}
+/* état actif : survol ou focus clavier */
+.row:focus-within,.ar:focus-within{--c:var(--c-h,var(--ink));--m:var(--m-h,var(--ink2));--bb:var(--bbh,var(--ink));--bt:var(--bth,var(--ice))}
+.row:focus-within::before,.ar:focus-within::before{transform:none}
+@media (hover:hover){
+  .row:hover,.ar:hover{--c:var(--c-h,var(--ink));--m:var(--m-h,var(--ink2));--bb:var(--bbh,var(--ink));--bt:var(--bth,var(--ice))}
+  .row:hover::before,.ar:hover::before{transform:none;animation:slosh .9s linear 1}
+}
 .row.dead::before{display:none}
 .row.dead:hover,.row.dead:focus-within{--c:var(--fg);--m:var(--mut)}
-.row:focus-within .btn:not(.alt){background:var(--ink);border-color:var(--ink);color:var(--ice)}
-@media (hover:hover){.row:hover .btn:not(.alt){background:var(--ink);border-color:var(--ink);color:var(--ice)}}
+.row .btn:not(.alt){background:var(--bb);border-color:var(--bb);color:var(--bt)}
 .row-in{display:grid;gap:clamp(.7rem,1.4vw,1.2rem);align-items:center;padding:clamp(16px,1.8vw,24px)}
 .m{color:var(--m);transition:color .3s ease .08s}
 .lnk{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;border-bottom:2px solid currentColor;font:600 .8125rem var(--f-m);letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
@@ -193,7 +220,8 @@ main,.foot,.top{position:relative;z-index:1}
 .ev .where{margin-top:.45rem;font-size:.875rem}
 .ev .buy{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;margin-top:1rem}
 .ev .price{font:400 clamp(1.6rem,2.4vw,2.2rem)/1 var(--f-d);white-space:nowrap}
-.row.ghost{border-style:dashed;background:rgba(13,5,34,.62)}
+.row.ev-main{border-radius:34px 34px 34px 88px}
+.row.ghost{--bg:rgba(99,48,240,.18);border:2px dashed rgba(200,184,255,.55)}
 .row.ghost .row-in{grid-template-columns:1fr;gap:.5rem}
 .row.ghost .dt{color:var(--lilac)}
 .row.ghost .buy{margin-top:.6rem}
@@ -201,6 +229,8 @@ main,.foot,.top{position:relative;z-index:1}
 .sub-l{margin-top:clamp(24px,3vw,40px);padding-bottom:12px;color:var(--ice);display:flex;justify-content:space-between;gap:.4rem 1rem;flex-wrap:wrap}
 .sub-l span:last-child{color:var(--mut)}
 .lu-g{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lu-g>.row:nth-child(odd){border-radius:42px 16px 42px 16px}
+.lu-g>.row:nth-child(even){border-radius:16px 42px 16px 42px}
 .lu{grid-template-columns:1fr;gap:.5rem;align-content:start;align-items:start;height:100%}
 .lu h3{font:400 clamp(1.2rem,1.9vw,1.7rem)/1.1 var(--f-d);text-transform:uppercase;padding-bottom:.05em}
 .lu p{font-size:1.0625rem}
@@ -227,7 +257,7 @@ main,.foot,.top{position:relative;z-index:1}
   repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 4px),
   linear-gradient(155deg,#3b1596 0%,#1a0842 55%,#0a0314 100%)}
 .vid:hover .art{transform:scale(1.08)}
-.vid .nm{position:absolute;left:10px;bottom:6px;font:400 clamp(1.8rem,3vw,2.6rem)/1 var(--f-d);color:var(--fg);text-shadow:0 2px 10px rgba(10,3,20,.8)}
+.vid .nm{position:absolute;left:12px;right:12px;bottom:10px;white-space:nowrap;overflow:hidden;font:400 clamp(.82rem,1.2vw,1.1rem)/1.15 var(--f-d);text-transform:uppercase;color:var(--fg);text-shadow:0 2px 10px rgba(10,3,20,.8)}
 .vid .dur{position:absolute;right:8px;top:8px;background:#0a0314;color:var(--ice);padding:3px 8px;border:1px solid var(--ice);border-radius:999px;font:600 .8125rem var(--f-m);letter-spacing:.06em}
 .vid .play{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:var(--ice);display:grid;place-items:center;transition:transform .35s var(--ease)}
 .vid .play::before{content:"";margin-left:4px;border-style:solid;border-width:10px 0 10px 16px;border-color:transparent transparent transparent var(--ink)}
@@ -236,57 +266,103 @@ main,.foot,.top{position:relative;z-index:1}
 .mc h3{font:700 clamp(1.1rem,1.5vw,1.3rem)/1.2 var(--f-t);letter-spacing:-.005em;margin:.4rem 0 .3rem}
 .mc .who{font-weight:600;font-size:1.0625rem}
 .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.7rem}
-.tags li{border:1px solid currentColor;border-radius:999px;color:var(--m);padding:.15rem .65rem;font:400 .8125rem var(--f-m);letter-spacing:.06em;text-transform:uppercase}
+.tags li{background:rgba(255,255,255,.14);background:color-mix(in srgb,currentColor 16%,transparent);border-radius:999px;color:var(--m);padding:.2rem .75rem;font:600 .8125rem var(--f-m);letter-spacing:.06em;text-transform:uppercase;transition:color .3s ease .12s}
 .more{margin-top:var(--gap)}
 @media (max-width:1000px){.mc{grid-template-columns:1fr}}
 @media (max-width:600px){.mc .row-in{grid-template-columns:1fr}}
 
 /* à propos */
-.ap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--gap);align-items:stretch}
-.ap-main{display:grid;gap:var(--gap);align-content:start}
-.about-t{padding:clamp(18px,2.2vw,28px);background:var(--panel);border:1px solid var(--line);border-radius:var(--r);font:600 clamp(1.3rem,2.3vw,2rem)/1.2 var(--f-t);letter-spacing:-.01em}
+.ap{display:grid;grid-template-columns:1fr;gap:clamp(20px,2.4vw,32px)}
+.ap-main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr);gap:var(--gap);align-items:stretch}
+.about-t{margin:0;padding:clamp(18px,2.2vw,28px);background:linear-gradient(140deg,rgba(99,48,240,.92),rgba(85,34,207,.4));border-radius:var(--r) var(--r) var(--r) 60px;font:600 clamp(1.3rem,2.1vw,1.85rem)/1.2 var(--f-t);letter-spacing:-.01em}
 .about-t em{font-style:normal;color:var(--ice)}
-.pillars{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
-.pil{padding:clamp(18px,2vw,26px);display:grid;gap:.6rem;align-content:start;border:1px solid var(--line);border-radius:var(--r)}
+.pillars{display:contents}
+.pil{padding:clamp(18px,2vw,26px);display:grid;gap:.6rem;align-content:start;border-radius:var(--r)}
 .pil h3{font:400 clamp(1.4rem,2.2vw,2rem)/1.05 var(--f-d);text-transform:uppercase}
-.pil.f{background:var(--ice);color:var(--ink);border-color:var(--ice)}
+.pil.f{background:var(--ice);color:var(--ink)}
 .pil.f .mono{color:var(--ink2)}
-.pil.p{background:var(--panel);color:var(--fg)}
-.pil.p .mono{color:var(--ice)}
-.edu{color:var(--mut)}
-.stats{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:var(--gap)}
-.stat{display:flex;flex-direction:column;justify-content:center;gap:.3rem;padding:clamp(14px,1.8vw,24px);background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
-.stat dd{order:-1}
-.stat .v{font:400 clamp(1.8rem,3.2vw,2.8rem)/1 var(--f-d);text-transform:uppercase;color:var(--ice);padding-bottom:.05em}
+.pil.p{background:var(--lilac);color:var(--ink)}
+.pil.p .mono{color:var(--ink2)}
+.edu{grid-column:1/-1;margin:0;color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;background:rgba(10,3,32,.66);border-radius:var(--r)}
+.stat{display:flex;flex-direction:column;justify-content:flex-start;gap:.35rem;margin:0;padding:clamp(16px,1.8vw,24px);border-left:1px solid var(--line)}
+.stat:first-child{border-left:0}
+.stat dd{order:-1;margin:0}
+.stat .v{font:400 clamp(1.45rem,2.2vw,2.2rem)/1 var(--f-d);white-space:nowrap;text-transform:uppercase;color:var(--ice);padding-bottom:.05em}
 .stat .mono{color:var(--fg)}
-@media (max-width:899px){
-  .ap{grid-template-columns:1fr}
-  .stats{grid-template-columns:repeat(3,1fr)}
+@media (max-width:1000px){
+  .ap-main{grid-template-columns:1fr 1fr}
+  .about-t{grid-column:1/-1}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stat:nth-child(3n+1){border-left:0}
+  .stat:nth-child(n+4){border-top:1px solid var(--line)}
 }
 @media (max-width:600px){
-  .pillars{grid-template-columns:1fr}
+  .ap-main{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr}
+  .stat{border-left:1px solid var(--line);border-top:0}
+  .stat:nth-child(odd){border-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--line)}
 }
 
-/* artistes */
-.art-g{grid-template-columns:repeat(3,minmax(0,1fr))}
-.ar-row{grid-template-columns:1fr;gap:.5rem;align-content:start;align-items:start;height:100%}
-.ar-row h3{font:400 clamp(1.3rem,2.1vw,1.85rem)/1.1 var(--f-d);text-transform:uppercase;padding-bottom:.05em}
-.ar-row .lnk{justify-self:start}
-@media (max-width:1000px){.art-g{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.art-g{grid-template-columns:1fr}}
+/* artistes : liste typographique, un remplissage liquide glace monte derrière le nom au survol */
+.roster{margin:0;padding:0;list-style:none;border-top:2px solid rgba(200,184,255,.3)}
+.ar{display:grid;grid-template-columns:minmax(max-content,1.6fr) minmax(0,1fr) auto;align-items:center;gap:.3rem clamp(14px,2.4vw,36px);padding:clamp(10px,1.3vw,18px) clamp(6px,1.4vw,20px);border-bottom:2px solid rgba(200,184,255,.3);--m:var(--lilac)}
+.ar h3{font:400 clamp(1.6rem,4vw,3.4rem)/1.05 var(--f-d);text-transform:uppercase;color:var(--c);padding-bottom:.04em;white-space:nowrap;transition:transform .5s var(--ease)}
+.ar .as{font-size:1rem;letter-spacing:.04em;color:var(--m);transition:color .3s ease .12s}
+.ar .lnk{justify-self:end}
+@media (hover:hover){.ar:hover h3{transform:translateX(12px)}}
+@media (max-width:760px){
+  .ar{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n n" "s l"}
+  .ar h3{grid-area:n;font-size:clamp(1.6rem,7.2vw,2.6rem)}
+  .ar .as{grid-area:s}
+  .ar .lnk{grid-area:l}
+}
 
-/* archives */
-.arc-g{grid-template-columns:repeat(3,minmax(0,1fr))}
-.arch{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"t t" "d p";gap:.3rem .9rem;align-items:baseline;align-content:start;height:100%;padding:clamp(14px,1.6vw,20px)}
-.arch h3{grid-area:t;font:700 clamp(1.05rem,1.4vw,1.2rem)/1.25 var(--f-t)}
-.arch .mono.m{grid-area:d}
-.arch>p:last-child{grid-area:p}
-.arch .m{font-size:1rem}
-.arch .mono.m{font-size:.8125rem}
-.arch.fest h3::after{content:" ★";color:inherit}
-@media (max-width:1000px){.arc-g{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.arc-g{grid-template-columns:1fr}.arch{padding:12px 16px}}
+/* archives : frise verticale en coulure, une bulle par événement, groupée par année */
+.frise{position:relative;--dw:clamp(7.5rem,13vw,11rem);--rw:48px;padding-bottom:36px}
+.frise::before{content:"";position:absolute;top:14px;bottom:0;left:calc(var(--dw) + var(--rw)/2 - 9px);width:18px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='140'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%2386ecff'/%3E%3Cstop offset='1' stop-color='%23b69cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M6.5 0C6.5 30 5.6 45 4 58C2.2 64 2.2 72 4 78C5.6 90 6.5 110 6.5 140H11.5C11.5 110 12.4 90 14 78C15.8 72 15.8 64 14 58C12.4 45 11.5 30 11.5 0Z'/%3E%3C/svg%3E") 50% 0/18px 140px repeat-y}
+.frise::after{content:"";position:absolute;left:calc(var(--dw) + var(--rw)/2 - 7px);bottom:-4px;width:14px;height:18px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:var(--ice);transform-origin:50% 0;animation:bead 9s ease-in infinite}
+@keyframes bead{0%{transform:scale(.2);opacity:1}14%,48%{transform:scale(1);opacity:1}62%{transform:scale(.92,1.9) translateY(2px);opacity:1}82%{transform:translate(0,70px) scale(.7,1);opacity:.9}90%,100%{transform:translate(0,96px) scale(.5,.7);opacity:0}}
+.fr-l{margin:0;padding:0;list-style:none}
+.yr,.fr{position:relative;display:grid;grid-template-columns:var(--dw) var(--rw) minmax(0,1fr);align-items:center;margin:0}
+.yr{margin-top:.2rem;padding-bottom:.4rem}
+.yr+.fr-l+.yr{margin-top:1.4rem}
+.yr .fb{grid-column:2;width:36px;height:36px;background:radial-gradient(circle at 32% 30%,#fff 0 3px,transparent 4px),var(--ice);box-shadow:0 0 0 7px rgba(134,236,255,.18),0 0 26px rgba(134,236,255,.55)}
+.yr .yt{grid-column:3;font:400 clamp(2.2rem,5vw,4rem)/1 var(--f-d);color:var(--ice);padding-bottom:.05em}
+.fr{padding:.5rem 0}
+.fd{font:400 clamp(1.1rem,1.7vw,1.5rem)/1 var(--f-d);color:var(--ice);text-align:right;padding-right:.4rem;white-space:nowrap}
+.fb{position:relative;z-index:1;justify-self:center;width:22px;height:22px;border-radius:50%;border:2px solid var(--ice);background:radial-gradient(circle at 32% 30%,#fff 0 2px,transparent 3px),#1a0a3c;box-shadow:0 0 14px rgba(134,236,255,.4);transition:transform .35s var(--ease),background-color .25s}
+.ft{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:.1rem 1.4rem;align-items:baseline;transition:transform .4s var(--ease)}
+.ft h4{margin:0;font:700 clamp(1.1rem,1.5vw,1.3rem)/1.25 var(--f-t)}
+.ft p{margin:0;font-size:1rem;color:var(--mut)}
+@media (hover:hover){
+  .fr:hover .fb{transform:scale(1.3);background-color:var(--ice)}
+  .fr:hover .ft{transform:translateX(6px)}
+  .fr:hover .ft h4{color:var(--ice)}
+}
+.fr.fest{padding:.9rem 0}
+.fr.fest .fd{font-size:clamp(1.3rem,2.2vw,2rem)}
+.fr.fest .fb{width:32px;height:32px;background:radial-gradient(circle at 32% 30%,#fff 0 3px,transparent 4px),var(--ice);box-shadow:0 0 0 6px rgba(134,236,255,.2),0 0 24px rgba(134,236,255,.6)}
+.fr.fest .ft{background:var(--ice);color:var(--ink);border-radius:26px 26px 26px 8px;padding:16px 24px}
+.fr.fest .ft h4{font:400 clamp(1rem,1.7vw,1.55rem)/1.15 var(--f-d);text-transform:uppercase}
+.fr.fest .ft h4::after{content:"\00a0★"}
+.fr.fest .ft p{color:var(--ink2);font-weight:600}
+@media (hover:hover){.fr.fest:hover .ft h4{color:var(--ink)}.fr.fest:hover .ft{transform:translateX(6px) rotate(-.4deg)}}
+@media (max-width:760px){
+  .frise{--dw:0px;--rw:34px}
+  .yr{grid-template-columns:var(--rw) minmax(0,1fr)}
+  .yr .fb{grid-column:1;width:30px;height:30px}
+  .yr .yt{grid-column:2;padding-left:.6rem}
+  .fr{grid-template-columns:var(--rw) minmax(0,1fr);grid-template-areas:"r d" "r t";align-items:start;row-gap:.1rem}
+  .fb{grid-area:r;margin-top:2px}
+  .fd{grid-area:d;text-align:left;padding:0 0 0 .6rem}
+  .ft{grid-area:t;grid-template-columns:minmax(0,1fr);padding-left:.6rem}
+  .fr.fest .ft{margin-left:.6rem;padding:14px 18px}
+  .fr.fest .fb{width:28px;height:28px}
+  .fr.fest .fd{padding-left:.6rem}
+}
 
 /* cinematek */
 .cine{padding:var(--sec) var(--pad) 0}
@@ -319,16 +395,28 @@ main,.foot,.top{position:relative;z-index:1}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .js .rise{opacity:1;transform:none}
-  .band{white-space:normal;flex-wrap:wrap;width:100%;margin-left:0;transform:none!important}
-  .b2{display:none}
+  .band{white-space:normal;flex-wrap:wrap}
   .track{flex-wrap:wrap}
   .track+.track{display:none}
+  .h1a{filter:none}
+  #trail,.frise::after,.drip .dd{display:none}
 }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Aller au contenu</a>
+<svg class="svg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- métaballes : le canvas somme des champs mous (alpha) ; le filtre les seuille et les colore par isocontours (liseré glace, cœur violet) -->
+    <filter id="goo" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 1 0  0 0 0 1 0  0 0 0 1 0  0 0 0 1 0"/><feComponentTransfer><feFuncR type="table" tableValues="0.5255 0.5255 0.5255 0.5255 0.5255 0.5255 0.5255 0.5255 0.5255 0.5882 0.4706 0.3922 0.3608 0.3373 0.3333 0.3137 0.2980 0.2745 0.2588 0.2431 0.2275"/><feFuncG type="table" tableValues="0.9255 0.9255 0.9255 0.9255 0.9255 0.9255 0.9255 0.9255 0.9255 0.9608 0.6667 0.4706 0.3137 0.2196 0.1569 0.1333 0.1176 0.1059 0.0980 0.0902 0.0863"/><feFuncB type="table" tableValues="1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 1.0000 0.9725 0.9216 0.8706 0.8314 0.8039 0.7647 0.7255 0.6902 0.6588 0.6275"/><feFuncA type="linear" slope="26" intercept="-10.4"/></feComponentTransfer></filter>
+    <!-- flou + seuil : les gouttes SVG se raccordent par un col, puis se détachent -->
+    <filter id="gooD" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" x="-20" y="-20" width="4000" height="300"><feGaussianBlur in="SourceGraphic" stdDeviation="3.2" result="b"/><feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter>
+    <!-- le titre du hero fond très légèrement -->
+    <filter id="melt" x="-4%" y="-8%" width="108%" height="118%" color-interpolation-filters="sRGB"><feTurbulence id="meltT" type="fractalNoise" baseFrequency="0.011 0.034" numOctaves="2" seed="7" result="n"/><feDisplacementMap id="meltD" in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
+  </defs>
+</svg>
 <canvas id="fizz" aria-hidden="true"></canvas>
+<canvas id="trail" aria-hidden="true"></canvas>
 <div class="veil" aria-hidden="true"></div>
 <div id="gauge" aria-hidden="true"><i></i></div>
 <div class="badge mono">PISTE C · maquette</div>
@@ -353,12 +441,12 @@ main,.foot,.top{position:relative;z-index:1}
 <main id="main" tabindex="-1">
 
 <section class="hero" id="hero" aria-labelledby="h1">
+  <canvas id="lava" aria-hidden="true"></canvas>
   <div class="hero-main">
     <h1 id="h1">
       <span class="h1a"><span class="ln chrome">Encore</span><span class="ln chrome">et Encor</span></span>
       <span class="h1b">Le Château Cosco<i>·</i>Liminaal</span>
     </h1>
-    <p class="lead">Live machines modulaire · Techno DIY · Cold techno</p>
   </div>
   <aside class="ticket" aria-label="Prochain événement : infos pratiques">
     <div class="ticket-top">
@@ -377,19 +465,19 @@ main,.foot,.top{position:relative;z-index:1}
   </aside>
 </section>
 
-<div class="bands" aria-hidden="true">
-  <div class="band b1"><div class="track"><span>ENCORE ET ENCOR // 16.10.2026 // LE SALON DES INDÉPENDANTS // 10 € // LE CHÂTEAU COSCO // LIMINAAL //</span><span>ENCORE ET ENCOR // 16.10.2026 // LE SALON DES INDÉPENDANTS // 10 € // LE CHÂTEAU COSCO // LIMINAAL //</span></div><div class="track"><span>ENCORE ET ENCOR // 16.10.2026 // LE SALON DES INDÉPENDANTS // 10 € // LE CHÂTEAU COSCO // LIMINAAL //</span><span>ENCORE ET ENCOR // 16.10.2026 // LE SALON DES INDÉPENDANTS // 10 € // LE CHÂTEAU COSCO // LIMINAAL //</span></div></div>
-  <div class="band b2"><div class="track"><span>TRANSMISSION &amp; CÉLÉBRATIONS // FORMATION // PRODUCTION // MASTERCLASS // SOIRÉES // ÉDUCATION POPULAIRE //</span><span>TRANSMISSION &amp; CÉLÉBRATIONS // FORMATION // PRODUCTION // MASTERCLASS // SOIRÉES // ÉDUCATION POPULAIRE //</span></div><div class="track"><span>TRANSMISSION &amp; CÉLÉBRATIONS // FORMATION // PRODUCTION // MASTERCLASS // SOIRÉES // ÉDUCATION POPULAIRE //</span><span>TRANSMISSION &amp; CÉLÉBRATIONS // FORMATION // PRODUCTION // MASTERCLASS // SOIRÉES // ÉDUCATION POPULAIRE //</span></div></div>
+<div class="bands">
+  <div class="band b1" aria-hidden="true"><div class="track"><span>PROCHAIN ÉVÉNEMENT · ENCORE ET ENCOR · 16.10.2026 · LE SALON DES INDÉPENDANTS · 10 € · LE CHÂTEAU COSCO · LIMINAAL ·</span><span>PROCHAIN ÉVÉNEMENT · ENCORE ET ENCOR · 16.10.2026 · LE SALON DES INDÉPENDANTS · 10 € · LE CHÂTEAU COSCO · LIMINAAL ·</span></div><div class="track"><span>PROCHAIN ÉVÉNEMENT · ENCORE ET ENCOR · 16.10.2026 · LE SALON DES INDÉPENDANTS · 10 € · LE CHÂTEAU COSCO · LIMINAAL ·</span><span>PROCHAIN ÉVÉNEMENT · ENCORE ET ENCOR · 16.10.2026 · LE SALON DES INDÉPENDANTS · 10 € · LE CHÂTEAU COSCO · LIMINAAL ·</span></div></div>
+  <div class="drip" aria-hidden="true"></div>
 </div>
 
-<!-- 01 AGENDA -->
+<!-- AGENDA -->
 <section class="sec g1" id="agenda" aria-labelledby="agenda-t">
   <header class="sec-h rise">
     <h2 id="agenda-t">Agenda</h2>
-    <p class="note mono">À venir · un seul rendez-vous pour l’instant</p>
+    <p class="note mono">Prochain événement</p>
   </header>
   <div class="rows ag">
-    <article class="row rise" data-fizz>
+    <article class="row ice ev-main rise" data-fizz>
       <div class="row-in ev">
         <p class="when"><span class="dt">16.10</span><span class="mono">Ven. 2026 · 21h</span></p>
         <div class="what">
@@ -400,40 +488,41 @@ main,.foot,.top{position:relative;z-index:1}
         </div>
       </div>
     </article>
-    <article class="row ghost dead rise" aria-label="Gabarit : prochaine date">
+    <article class="row ghost dead rise" aria-label="Prochaine date">
       <div class="row-in ev">
         <p class="when"><span class="dt">--.--</span><span class="mono">Jour · heure</span></p>
         <div class="what">
           <h3>Prochaine date à annoncer</h3>
           <p class="where mono m">Lieu — adresse, ville</p>
-          <div class="buy"><span class="price">— €</span><a class="lnk" href="https://www.instagram.com/universitek_/" target="_blank" rel="noopener">Suivre l’annonce ↗</a></div>
+          <div class="buy"><span class="price">— €</span><a class="lnk" href="https://www.instagram.com/universitek_/" target="_blank" rel="noopener">Instagram ↗</a></div>
         </div>
       </div>
     </article>
   </div>
-  <p class="fine mono rise">Tarif unique 10 € : un prix bas pour rémunérer correctement les artistes et soutenir la scène indépendante.</p>
+  <p class="fine mono rise">Tarif unique : 10 €. Billetterie en ligne sur HelloAsso.</p>
 
   <p class="sub-l mono rise"><span>Line-up · 16.10</span><span>3 projets</span></p>
   <div class="rows lu-g">
-    <article class="row rise" data-fizz><div class="row-in lu"><h3>Encore et Encor</h3><p class="m">Live machines sans timecode, techno 130-145 BPM, hypnotique et rave.</p></div></article>
-    <article class="row rise" data-fizz><div class="row-in lu"><h3>Le Château Cosco</h3><p class="m">Trio noise rock / techno DIY : transe répétitive et cérémonielle.</p></div></article>
-    <article class="row rise" data-fizz><div class="row-in lu"><h3>Liminaal</h3><p class="m">Cold techno, slow rave, acid, textures cold wave. Mixe avec le collectif depuis 2024.</p></div></article>
+    <article class="row volt rise" data-fizz><div class="row-in lu"><h3>Encore et Encor</h3><p class="m">Live machines sans timecode, techno 130-145 BPM, hypnotique et rave.</p></div></article>
+    <article class="row glass rise" data-fizz><div class="row-in lu"><h3>Le Château Cosco</h3><p class="m">Trio noise rock / techno DIY : transe répétitive et cérémonielle.</p></div></article>
+    <article class="row ice rise" data-fizz><div class="row-in lu"><h3>Liminaal</h3><p class="m">Cold techno, slow rave, acid, textures cold wave. Mixe avec le collectif depuis 2024.</p></div></article>
   </div>
 </section>
 
-<!-- 02 MASTERCLASS -->
+<!-- MASTERCLASS -->
 <section class="sec g2" id="masterclass" aria-labelledby="mc-t">
+  <div class="drip volt" aria-hidden="true"></div>
   <header class="sec-h rise">
     <h2 id="mc-t">Masterclass</h2>
-    <p class="note mono">En replay sur YouTube · 4 vidéos</p>
+    <p class="note mono">Replays YouTube · 4 vidéos</p>
   </header>
   <div class="rows mc">
-    <article class="row rise" data-fizz>
+    <article class="row volt rise" data-fizz>
       <div class="row-in">
         <div class="mc-media">
           <button class="vid" type="button" data-id="-XEUyl_Y-5s" data-title="Dark progressive : patches, tips &amp; tricks" aria-label="Lire la vidéo : Dark progressive, patches, tips et tricks (charge YouTube)">
             <span class="art" style="--a:18% 34%;--ra:46px;--b:74% 70%;--rb:84px;--c:52% 14%;--rc:24px" aria-hidden="true"></span>
-            <span class="nm" aria-hidden="true">01</span><span class="dur" aria-hidden="true">1h59</span><span class="play" aria-hidden="true"></span>
+            <span class="nm" aria-hidden="true">OddWave</span><span class="dur" aria-hidden="true">1h59</span><span class="play" aria-hidden="true"></span>
           </button>
           <p class="note-y">Lire la vidéo charge YouTube (Google)</p>
         </div>
@@ -445,12 +534,12 @@ main,.foot,.top{position:relative;z-index:1}
         </div>
       </div>
     </article>
-    <article class="row rise" data-fizz>
+    <article class="row ice rise" data-fizz>
       <div class="row-in">
         <div class="mc-media">
           <button class="vid" type="button" data-id="6QuNr6Te8jA" data-title="Liveset &amp; improvisation (EN)" aria-label="Lire la vidéo : Liveset et improvisation, en anglais (charge YouTube)">
             <span class="art" style="--a:80% 28%;--ra:60px;--b:22% 72%;--rb:36px;--c:58% 84%;--rc:70px" aria-hidden="true"></span>
-            <span class="nm" aria-hidden="true">02</span><span class="dur" aria-hidden="true">1h17</span><span class="play" aria-hidden="true"></span>
+            <span class="nm" aria-hidden="true">69DB</span><span class="dur" aria-hidden="true">1h17</span><span class="play" aria-hidden="true"></span>
           </button>
           <p class="note-y">Lire la vidéo charge YouTube (Google)</p>
         </div>
@@ -462,12 +551,12 @@ main,.foot,.top{position:relative;z-index:1}
         </div>
       </div>
     </article>
-    <article class="row rise" data-fizz>
+    <article class="row ice rise" data-fizz>
       <div class="row-in">
         <div class="mc-media">
           <button class="vid" type="button" data-id="CTBWyPEV634" data-title="Concert évolutif (BPM) &amp; mix harmonique" aria-label="Lire la vidéo : Concert évolutif (BPM) et mix harmonique (charge YouTube)">
             <span class="art" style="--a:34% 62%;--ra:90px;--b:86% 22%;--rb:30px;--c:12% 14%;--rc:44px" aria-hidden="true"></span>
-            <span class="nm" aria-hidden="true">03</span><span class="dur" aria-hidden="true">1h58</span><span class="play" aria-hidden="true"></span>
+            <span class="nm" aria-hidden="true">Dj Bigmat</span><span class="dur" aria-hidden="true">1h58</span><span class="play" aria-hidden="true"></span>
           </button>
           <p class="note-y">Lire la vidéo charge YouTube (Google)</p>
         </div>
@@ -479,12 +568,12 @@ main,.foot,.top{position:relative;z-index:1}
         </div>
       </div>
     </article>
-    <article class="row rise" data-fizz>
+    <article class="row volt rise" data-fizz>
       <div class="row-in">
         <div class="mc-media">
           <button class="vid" type="button" data-id="XOTpP8gJnbM" data-title="Initiation DJing sur CDJ &amp; DJM" aria-label="Lire la vidéo : Initiation DJing sur CDJ et DJM (charge YouTube)">
             <span class="art" style="--a:64% 40%;--ra:70px;--b:18% 80%;--rb:52px;--c:90% 86%;--rc:26px" aria-hidden="true"></span>
-            <span class="nm" aria-hidden="true">04</span><span class="dur" aria-hidden="true">1h24</span><span class="play" aria-hidden="true"></span>
+            <span class="nm" aria-hidden="true">Bernadette</span><span class="dur" aria-hidden="true">1h24</span><span class="play" aria-hidden="true"></span>
           </button>
           <p class="note-y">Lire la vidéo charge YouTube (Google)</p>
         </div>
@@ -500,11 +589,12 @@ main,.foot,.top{position:relative;z-index:1}
   <p class="more rise"><a class="btn alt" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">Toutes les masterclass sur YouTube ↗</a></p>
 </section>
 
-<!-- 03 A PROPOS -->
+<!-- A PROPOS -->
 <section class="sec g1" id="apropos" aria-labelledby="ap-t">
+  <div class="drip" aria-hidden="true"></div>
   <header class="sec-h rise">
     <h2 id="ap-t">À propos</h2>
-    <p class="note mono">Depuis 2017 · Montpellier</p>
+    <p class="note mono">Transmission &amp; célébrations</p>
   </header>
   <div class="ap">
     <div class="ap-main">
@@ -513,7 +603,7 @@ main,.foot,.top{position:relative;z-index:1}
         <div class="pil f"><p class="mono">Pilier A</p><h3>Formation</h3><p>Masterclass en ligne, en direct ou en replay, sessions en présentiel et stages intensifs.</p></div>
         <div class="pil p"><p class="mono">Pilier B</p><h3>Production</h3><p>Soirées club, concerts, formats en espace public et festival, pour faire briller la scène locale et underground.</p></div>
       </div>
-      <p class="edu mono rise">Pédagogie inspirée de l’éducation populaire, exigence professionnelle.</p>
+      <p class="edu mono rise">Depuis 2017, à Montpellier. Pédagogie inspirée de l’éducation populaire.</p>
     </div>
     <dl class="stats">
       <div class="stat rise"><dt class="mono">intervenant·e·s</dt><dd class="v">~20</dd></div>
@@ -526,46 +616,54 @@ main,.foot,.top{position:relative;z-index:1}
   </div>
 </section>
 
-<!-- 04 ARTISTES -->
+<!-- ARTISTES -->
 <section class="sec g2" id="artistes" aria-labelledby="art-t">
+  <div class="drip lilac" aria-hidden="true"></div>
   <header class="sec-h rise">
     <h2 id="art-t">Artistes</h2>
-    <p class="note mono">Associé·e·s au collectif</p>
+    <p class="note mono">6 artistes associé·e·s</p>
   </header>
-  <div class="rows art-g">
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Meremix</h3><p class="mono m">Groovy techno · dark acid disco</p><a class="lnk" href="#" aria-label="Écouter Meremix sur SoundCloud">SoundCloud ↗</a></div></article>
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Wildtrack</h3><p class="mono m">Psytrance · forest</p><a class="lnk" href="#" aria-label="Écouter Wildtrack sur SoundCloud">SoundCloud ↗</a></div></article>
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Zöta</h3><p class="mono m">Techno · acid house</p><a class="lnk" href="#" aria-label="Écouter Zöta sur SoundCloud">SoundCloud ↗</a></div></article>
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Cosmic Bazaar</h3><p class="mono m">Groovy techno · psytechno</p><a class="lnk" href="#" aria-label="Écouter Cosmic Bazaar sur SoundCloud">SoundCloud ↗</a></div></article>
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Liminaal</h3><p class="mono m">Cold techno · slow rave</p><a class="lnk" href="#" aria-label="Écouter Liminaal sur SoundCloud">SoundCloud ↗</a></div></article>
-    <article class="row rise" data-fizz><div class="row-in ar-row"><h3>Hurluberlu</h3><p class="mono m">VJing · mapping</p><a class="lnk" href="#" aria-label="Voir Hurluberlu sur SoundCloud">SoundCloud ↗</a></div></article>
-  </div>
+  <ul class="roster">
+    <li class="ar rise" data-fizz><h3>Meremix</h3><p class="as mono">Groovy techno · dark acid disco</p><a class="lnk" href="#" aria-label="Écouter Meremix sur SoundCloud">SoundCloud ↗</a></li>
+    <li class="ar rise" data-fizz><h3>Wildtrack</h3><p class="as mono">Psytrance · forest</p><a class="lnk" href="#" aria-label="Écouter Wildtrack sur SoundCloud">SoundCloud ↗</a></li>
+    <li class="ar rise" data-fizz><h3>Zöta</h3><p class="as mono">Techno · acid house</p><a class="lnk" href="#" aria-label="Écouter Zöta sur SoundCloud">SoundCloud ↗</a></li>
+    <li class="ar rise" data-fizz><h3>Cosmic Bazaar</h3><p class="as mono">Groovy techno · psytechno</p><a class="lnk" href="#" aria-label="Écouter Cosmic Bazaar sur SoundCloud">SoundCloud ↗</a></li>
+    <li class="ar rise" data-fizz><h3>Liminaal</h3><p class="as mono">Cold techno · slow rave</p><a class="lnk" href="#" aria-label="Écouter Liminaal sur SoundCloud">SoundCloud ↗</a></li>
+    <li class="ar rise" data-fizz><h3>Hurluberlu</h3><p class="as mono">VJing · mapping</p><a class="lnk" href="#" aria-label="Voir Hurluberlu sur SoundCloud">SoundCloud ↗</a></li>
+  </ul>
 </section>
 
-<!-- 05 ARCHIVES -->
+<!-- ARCHIVES -->
 <section class="sec g1" id="archives" aria-labelledby="arc-t">
+  <div class="drip" aria-hidden="true"></div>
   <header class="sec-h rise">
     <h2 id="arc-t">Archives</h2>
-    <p class="note mono">Déc. 2024 → oct. 2025 · 13 dates</p>
+    <p class="note mono">Événements passés, déc. 2024 – oct. 2025</p>
   </header>
-  <div class="rows arc-g">
-    <article class="row arch-w rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-10-31">31.10.2025</time></p><h3>Panacée Horror Show</h3><p class="m">Café de la Panacée</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-09-26">26.09.2025</time></p><h3>Concert pour la paix</h3><p class="m">Parc Clemenceau</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-08-29">29-30.08.2025</time></p><h3>Ateliers scratch</h3><p class="m">Hadra Trance Festival</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-08-22">22.08.2025</time></p><h3>Boiler Groove #4</h3><p class="m">Tropisme</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-07-13">13.07.2025</time></p><h3>Universitek × Solaation</h3><p class="m">MOBA</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-07-12">12.07.2025</time></p><h3>Boiler Groove #3</h3><p class="m">Panorama, Corum</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-06-21">21.06.2025</time></p><h3>Fête de la musique</h3><p class="m">Bistrot Gilles</p></div></article>
-    <article class="row rise"><div class="row-in arch fest"><p class="mono m"><time datetime="2025-05-31">31.05.2025</time></p><h3>Universitek Festival #1</h3><p class="m">Victoire 2 · 16h-4h, 2 scènes, 18 artistes</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-05-07">07.05.2025</time></p><h3>Blastfest</h3><p class="m">Université Paul-Valéry</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-05-02">02.05.2025</time></p><h3>Elements of Baraka</h3><p class="m">Le Salon des Indépendants</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-04-04">04.04.2025</time></p><h3>Boiler Groove #2</h3><p class="m">MO.CO. Faune</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2025-02-21">21.02.2025</time></p><h3>Boiler Groove #1</h3><p class="m">MO.CO. Faune</p></div></article>
-    <article class="row rise"><div class="row-in arch"><p class="mono m"><time datetime="2024-12-07">07.12.2024</time></p><h3>Universitek invite Puzzle Puzzle</h3><p class="m">Mélomane Club</p></div></article>
+  <div class="frise">
+    <h3 class="yr rise"><i class="fb" aria-hidden="true"></i><span class="yt">2025</span></h3>
+    <ol class="fr-l" reversed>
+      <li class="fr rise"><time class="fd" datetime="2025-10-31">31.10</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Panacée Horror Show</h4><p>Café de la Panacée</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-09-26">26.09</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Concert pour la paix</h4><p>Parc Clemenceau</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-08-29">29–30.08</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Ateliers scratch</h4><p>Hadra Trance Festival</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-08-22">22.08</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Boiler Groove #4</h4><p>Tropisme</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-07-13">13.07</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Universitek × Solaation</h4><p>MOBA</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-07-12">12.07</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Boiler Groove #3</h4><p>Panorama, Corum</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-06-21">21.06</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Fête de la musique</h4><p>Bistrot Gilles</p></div></li>
+      <li class="fr fest rise"><time class="fd" datetime="2025-05-31">31.05</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Universitek Festival #1</h4><p>Victoire 2 · 16h-4h, 2 scènes, 18 artistes</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-05-07">07.05</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Blastfest</h4><p>Université Paul-Valéry</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-05-02">02.05</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Elements of Baraka</h4><p>Le Salon des Indépendants</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-04-04">04.04</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Boiler Groove #2</h4><p>MO.CO. Faune</p></div></li>
+      <li class="fr rise"><time class="fd" datetime="2025-02-21">21.02</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Boiler Groove #1</h4><p>MO.CO. Faune</p></div></li>
+    </ol>
+    <h3 class="yr rise"><i class="fb" aria-hidden="true"></i><span class="yt">2024</span></h3>
+    <ol class="fr-l" reversed>
+      <li class="fr rise"><time class="fd" datetime="2024-12-07">07.12</time><i class="fb" aria-hidden="true"></i><div class="ft"><h4>Universitek invite Puzzle Puzzle</h4><p>Mélomane Club</p></div></li>
+    </ol>
   </div>
 </section>
 
-<!-- FOCUS CINEMATEK -->
+<!-- CINEMATEK -->
 <section class="cine" id="cinematek" aria-labelledby="cine-t">
   <div class="cine-box rise">
     <div class="cine-h"><p class="mono tag">Focus · branche cinéma et audiovisuel</p>
@@ -705,6 +803,156 @@ $$('[data-fizz]').forEach(el=>el.addEventListener('pointerenter',e=>{
   if(e.pointerType!=='mouse') return; const t=performance.now();
   if(t-(cool.get(el)||0)<700) return; cool.set(el,t); fizz.burst(el);
 }));
+
+/* ================= effet « fondu » : matière qui fond, coule, fusionne ================= */
+/* goutte partagée : champ blanc à décroissance douce ((1-t²)²), sommé en « lighter » ; le filtre #goo seuille et colore */
+const blob=(()=>{
+  const S=160, c=document.createElement('canvas'); c.width=c.height=S; const g=c.getContext('2d'), m=S/2;
+  const gr=g.createRadialGradient(m,m,0,m,m,m);
+  for(let i=0;i<=16;i++){ const t=i/16, a=(1-t*t)**2; gr.addColorStop(t,`rgba(255,255,255,${a.toFixed(3)})`); }
+  g.fillStyle=gr; g.fillRect(0,0,S,S); return c;
+})();
+
+/* 1. métaballes du hero : lampe à lave, une nappe en bas, des gouttes qui montent, fusionnent et se détachent */
+const lava=(()=>{
+  const cv=$('#lava'), hero=$('#hero'); if(!cv||!hero) return {};
+  const ctx=cv.getContext('2d');
+  let W=0,H=0,items=[],pool=[],raf=0,inView=true,tt=6,last=0;
+  const on=()=>!mq.matches&&inView&&!document.hidden;
+  function build(){
+    const w=hero.clientWidth,h=hero.clientHeight; if(!w||!h) return;
+    const sm=innerWidth<700, s=sm?.38:.5; W=Math.round(w*s); H=Math.round(h*s); cv.width=W; cv.height=H;
+    items=[]; const nF=sm?3:6, nS=sm?3:6;
+    for(let i=0;i<nF;i++) items.push({x:(i+.5+rnd(-.3,.3))/nF,ax:rnd(.03,.07),fx:rnd(.04,.1),r:rnd(.17,.26),T:rnd(20,36),ph:rnd(0,6.28),pr:rnd(0,6.28)});
+    for(let i=0;i<nS;i++) items.push({x:rnd(.05,.95),ax:rnd(.02,.05),fx:rnd(.06,.14),r:rnd(.08,.12),T:rnd(10,17),ph:rnd(0,6.28),pr:rnd(0,6.28)});
+    const nP=Math.ceil(w/(sm?95:150))+1; pool=[];
+    for(let i=0;i<nP;i++) pool.push({x:i/(nP-1),r:.3+rnd(-.03,.03),ph:rnd(0,6.28),fq:rnd(.16,.4)});
+    draw(tt);
+  }
+  function draw(t){
+    ctx.clearRect(0,0,W,H); ctx.globalCompositeOperation='lighter'; const u=H;
+    for(const p of pool){ const r=p.r*u*(1+.09*Math.sin(t*p.fq*2+p.ph)), y=u+r*.3+Math.sin(t*p.fq+p.ph)*.05*u; ctx.drawImage(blob,p.x*W-r,y-r,2*r,2*r); }
+    for(const o of items){
+      const ph=.5-.5*Math.cos(t*6.2832/o.T+o.ph), r=o.r*u*(1+.08*Math.sin(t*.8+o.pr));
+      const x=(o.x+o.ax*Math.sin(t*o.fx*6.2832+o.pr))*W, y=u*(1.12-1.07*ph);
+      ctx.drawImage(blob,x-r,y-r,2*r,2*r);
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+  function frame(ts){
+    raf=0; if(!on()) return;
+    const el=(ts-last)/1000; if(el<.033){raf=requestAnimationFrame(frame);return;}
+    last=ts; tt+=Math.min(.1,el); draw(tt); raf=requestAnimationFrame(frame);
+  }
+  const start=()=>{ if(!raf&&on()){last=performance.now(); raf=requestAnimationFrame(frame);} };
+  new IntersectionObserver(([e])=>{inView=e.isIntersecting; if(inView)start();}).observe(hero);
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) start(); });
+  mq.addEventListener('change',()=>{ if(mq.matches) draw(6); else start(); });
+  let rt=0; new ResizeObserver(()=>{clearTimeout(rt); rt=setTimeout(()=>{build(); start();},140);}).observe(hero);
+  build(); if(!mq.matches) start();
+  return {};
+})();
+
+/* 2. coulures entre sections : plafond liquide + gouttes (SVG), une goutte s'étire puis tombe de temps en temps */
+const drips=(()=>{
+  const els=$$('.drip'); if(!els.length) return {};
+  const lcg=sd=>()=>(sd=(Math.imul(sd,1664525)+1013904223)>>>0)/4294967296;
+  function build(el,idx){
+    const W=Math.round(el.getBoundingClientRect().width||innerWidth); if(W<100) return;
+    const k=clamp(W/1100,.5,1), r=lcg(idx*7919+31), b=Math.round(9*clamp(W/700,.7,1));
+    let d=`M0 -3L0 ${b}`, x=0, best=null;
+    for(;;){
+      x+=(75+r()*80)*k; const w=(5.5+r()*5)*k; if(x+3*w>W-20) break;
+      const L=(15+r()*44)*k+2.4*w, cy=b+L-w, ny=cy-.785*w;
+      d+=`L${(x-2.6*w).toFixed(1)} ${b}C${(x-w).toFixed(1)} ${b} ${(x-.62*w).toFixed(1)} ${(b+(ny-b)*.35).toFixed(1)} ${(x-.62*w).toFixed(1)} ${ny.toFixed(1)}`
+        +`A${w.toFixed(1)} ${w.toFixed(1)} 0 1 0 ${(x+.62*w).toFixed(1)} ${ny.toFixed(1)}`
+        +`C${(x+.62*w).toFixed(1)} ${(b+(ny-b)*.35).toFixed(1)} ${(x+w).toFixed(1)} ${b} ${(x+2.6*w).toFixed(1)} ${b}`;
+      if(!best||L>best.L) best={x,cy,w,L};
+      x+=2.6*w;
+    }
+    d+=`L${W} ${b}L${W} -3Z`;
+    const dd=best?`<ellipse class="dd" cx="${best.x.toFixed(1)}" cy="${best.cy.toFixed(1)}" rx="${(best.w*.92).toFixed(1)}" ry="${(best.w*.92).toFixed(1)}"/>`:'';
+    el.innerHTML=`<svg viewBox="0 0 ${W} 170" width="${W}" height="170" aria-hidden="true" focusable="false"><g filter="url(#gooD)"><path class="dp" d="${d}"/>${dd}</g></svg>`;
+    el._fall=Math.round(el.parentElement.classList.contains('sec')?(W<700?44:72):42);
+  }
+  function fall(el){
+    const dd=el.querySelector('.dd'); if(!dd||!el._on||mq.matches||document.hidden){ plan(el,2500); return; }
+    const D=el._fall;
+    const a=dd.animate([
+      {transform:'translateY(0) scale(1,1)',opacity:1,offset:0,easing:'ease-in'},
+      {transform:`translateY(${D*.05}px) scale(1.1,1.75)`,opacity:1,offset:.3,easing:'ease-in'},
+      {transform:`translateY(${D*.32}px) scale(.96,1.5)`,opacity:1,offset:.52,easing:'ease-in'},
+      {transform:`translateY(${D*.9}px) scale(.8,1.15)`,opacity:1,offset:.88},
+      {transform:`translateY(${D}px) scale(.6,.8)`,opacity:0,offset:1}
+    ],{duration:3600,easing:'linear'});
+    a.onfinish=a.oncancel=()=>{ a.onfinish=a.oncancel=null; plan(el,rnd(6000,13000)); };
+  }
+  const plan=(el,ms)=>setTimeout(()=>fall(el),ms);
+  const own=new Map(), io=new IntersectionObserver(es=>es.forEach(e=>{ const d=own.get(e.target); if(d) d._on=e.isIntersecting; }));
+  els.forEach((el,i)=>{ build(el,i); own.set(el.parentElement,el); io.observe(el.parentElement); el._on=false; plan(el,rnd(1500,6000)+i*900); });
+  const sync=()=>{ els.forEach((el,i)=>build(el,i)); };
+  let rt=0; addEventListener('resize',()=>{clearTimeout(rt); rt=setTimeout(sync,200);});
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(sync);
+  return {};
+})();
+
+/* 3. le titre du hero fond très légèrement (échelle 3-6), un peu plus au survol */
+const melt=(()=>{
+  const nt=$('#meltT'), nd=$('#meltD'), h1=$('#h1'), hero=$('#hero'); if(!nt||!nd||!h1||!hero) return {};
+  let hv=0,tg=0,raf=0,inView=true,last=0,tm=0;
+  const on=()=>!mq.matches&&inView&&!document.hidden;
+  const apply=()=>{
+    nt.setAttribute('baseFrequency',`${(.0105+.0035*Math.sin(tm*.45)).toFixed(4)} ${(.033+.011*Math.sin(tm*.33+1.3)).toFixed(4)}`);
+    nd.setAttribute('scale',(3.4+2.6*hv).toFixed(2));
+  };
+  function frame(ts){
+    raf=0; if(!on()) return;
+    if(ts-last<50){raf=requestAnimationFrame(frame);return;}
+    tm+=Math.min(.1,(ts-last)/1000); last=ts; hv+=(tg-hv)*.2; apply(); raf=requestAnimationFrame(frame);
+  }
+  const start=()=>{ if(!raf&&on()){last=performance.now(); raf=requestAnimationFrame(frame);} };
+  h1.addEventListener('pointerenter',e=>{ if(e.pointerType==='mouse') tg=1; });
+  h1.addEventListener('pointerleave',()=>{ tg=0; });
+  new IntersectionObserver(([e])=>{inView=e.isIntersecting; if(inView)start();}).observe(hero);
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) start(); });
+  mq.addEventListener('change',()=>{ if(mq.matches){hv=0;tg=0;apply();} else start(); });
+  apply(); start();
+  return {};
+})();
+
+/* 4. traînée gooey discrète derrière le pointeur (souris uniquement) */
+const trail=(()=>{
+  const cv=$('#trail'); if(!cv) return {};
+  if(!matchMedia('(hover:hover) and (pointer:fine)').matches){ cv.remove(); return {}; }
+  const ctx=cv.getContext('2d'), S=.4, N=14, pts=[];
+  let W=0,H=0,tx=0,ty=0,raf=0,lastMove=0,seen=false;
+  const size=()=>{ W=innerWidth; H=innerHeight; cv.width=Math.round(W*S); cv.height=Math.round(H*S); };
+  const on=()=>!mq.matches&&!document.hidden;
+  function frame(ts){
+    raf=0; if(!on()) return;
+    let mv=0;
+    for(let i=0;i<N;i++){
+      const p=pts[i], q=i?pts[i-1]:{x:tx,y:ty}, f=i?.34:.45;
+      const nx=p.x+(q.x-p.x)*f, ny=p.y+(q.y-p.y)*f; mv+=Math.abs(nx-p.x)+Math.abs(ny-p.y); p.x=nx; p.y=ny;
+    }
+    ctx.clearRect(0,0,cv.width,cv.height); ctx.globalCompositeOperation='lighter';
+    for(let i=0;i<N;i++){ const R=lerp(21,7,i/(N-1))*S, p=pts[i]; ctx.drawImage(blob,p.x*S-R,p.y*S-R,2*R,2*R); }
+    ctx.globalCompositeOperation='source-over';
+    if(mv<.6&&ts-lastMove>700){ ctx.clearRect(0,0,cv.width,cv.height); return; }
+    raf=requestAnimationFrame(frame);
+  }
+  addEventListener('pointermove',e=>{
+    if(e.pointerType!=='mouse'||!on()) return;
+    tx=e.clientX; ty=e.clientY; lastMove=performance.now();
+    if(!seen){ seen=true; for(let i=0;i<N;i++) pts[i]={x:tx,y:ty}; }
+    if(!raf) raf=requestAnimationFrame(frame);
+  },{passive:true});
+  document.documentElement.addEventListener('pointerleave',()=>{ lastMove=0; });
+  let rt=0; addEventListener('resize',()=>{clearTimeout(rt); rt=setTimeout(size,150);});
+  mq.addEventListener('change',()=>{ if(mq.matches) ctx.clearRect(0,0,cv.width,cv.height); });
+  size();
+  return {};
+})();
 
 /* ================= défilement ================= */
 const gauge=$('#gauge i'); let tk=false;
