@@ -829,7 +829,7 @@ var DEMO=[
   {date:'2027-05-29',heure:'20:00',lineup:[{nom:'Artiste I',style:'Psytrance'},{nom:'Artiste J',style:'Forest'},{nom:'Artiste K',style:'Goa'}],lieu:'Lieu exemple',adresse:'1 rue de l’Exemple, Montpellier',tarif:'15 €'}
 ];
 var demoN=0;
-try{demoN=Math.max(0,Math.min(DEMO.length,(parseInt(new URLSearchParams(window.location.search).get('demo'),10)||0)-1))}catch(e){}
+try{var dq=new URLSearchParams(window.location.search).get('demo');demoN=dq===null?1:Math.max(0,Math.min(DEMO.length,(parseInt(dq,10)||0)-1))}catch(e){demoN=1}   /* maquette : 1 exemple par défaut ; ?demo=1 = vraie date seule */
 DEMO.slice(0,demoN).forEach(function(d,i){
   d.id='exemple-'+(i+1);d.demo=true;d.url='#';d.affiche=null;EVENTS.push(d);
 });
