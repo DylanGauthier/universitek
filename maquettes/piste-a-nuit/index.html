@@ -345,6 +345,17 @@ footer{border-top:var(--cl);background:rgba(21,17,31,.6)}
 .fx-ov{position:fixed;inset:0;width:100%;height:100%;z-index:30;pointer-events:none;display:none}
 .fx-sep{position:absolute;left:0;top:-9px;width:100%;height:18px;z-index:2;pointer-events:none;display:block}
 .fx-head{position:absolute;left:0;width:100%;z-index:-1;pointer-events:none;display:block}   /* trace d'en-tête : au-dessus du fond du bandeau, sous son texte */
+.fx-sp{position:fixed;left:0;top:0;width:128px;height:128px;z-index:90;pointer-events:none;display:none;contain:strict}   /* étincelle : un petit calque par clic, au-dessus de tout, jamais cliquable */
+.fx-row input[type="radio"]{border-radius:50%}
+.fx-row input[type="radio"]:checked::before{width:6px;height:6px;margin:0;border:0;border-radius:50%;background:#fff;transform:none}
+/* logo : tracé / onde / décodage / LED (SVG + Web Animations ; seule la LED tourne en continu, en CSS) */
+.logo svg{overflow:visible}
+.logo span.lg{display:inline-block;margin:0}
+.logo svg .lg-fx{pointer-events:none}
+.logo svg .lg-fx .lg-dot,.logo svg .lg-fx .lg-led,.logo svg .lg-fx path{opacity:0}
+.logo svg .lg-fx path{fill:none;stroke:#B79CFF;stroke-width:.8;stroke-linecap:round}
+.logo[data-lg="led"] svg .lg-led{animation:lg-led .4348s ease-out infinite;transform-box:fill-box;transform-origin:center}   /* 138 BPM */
+@keyframes lg-led{0%{opacity:1;transform:scale(1.2)}100%{opacity:.3;transform:scale(.85)}}
 html.fx-onde .sec-head{position:relative;isolation:isolate}
 .fx-mx{background-image:radial-gradient(circle,rgba(183,156,255,.13) 0,rgba(183,156,255,.13) 1.1px,transparent 1.7px)}
 html.fx-onde main>section{position:relative}
@@ -1086,7 +1097,7 @@ function reduced(){return reduceMQ.matches}
 <script id="fx">
 /* =====================================================================
    EFFETS · sélecteur + boucle requestAnimationFrame partagée
-   signal · onde · matrice · decodage
+   signal · onde · matrice · decodage · étincelle (+ animations du logo)
    Aucune dépendance. Chaque effet : enable / disable / frame / still.
    ===================================================================== */
 (function(){
@@ -1095,11 +1106,14 @@ var doc=document,root=doc.documentElement,TAU=Math.PI*2;
 var hero=doc.getElementById('hero');
 if(!hero)return;
 
-var KEYS=['signal','onde','matrice','decodage'];
-var LABEL={signal:'Signal dans la grille',onde:'Oscilloscope',matrice:'Matrice de points',decodage:'Décodage des étiquettes'};
+var KEYS=['signal','onde','matrice','decodage','etincelle'];
+var LABEL={signal:'Signal dans la grille',onde:'Oscilloscope',matrice:'Matrice de points',decodage:'Décodage des étiquettes',etincelle:'Étincelle au clic'};
 var PRESETS=[['all','Tout',KEYS.slice()],['none','Aucun',[]]];
-var DEFAULT=KEYS.slice();                               /* état par défaut : les 4 effets */
-var LS_KEY='universitek-piste-a-fx-v4d';
+var DEFAULT=KEYS.slice();                               /* état par défaut : tous les effets */
+var LS_KEY='universitek-piste-a-fx-v4e';
+var LS_LOGO=LS_KEY+'-logo';
+var LOGOS=[['trace-onde','Tracé + onde'],['trace','Tracé du U'],['onde','Onde dans le mot'],['decodage','Décodage'],['led','LED'],['aucune','Aucune']];
+var LOGO_DEFAULT='trace-onde';
 var BEAT=60/138,STILL_T=BEAT*5.04;                    /* 138 BPM ; instant « image fixe » (juste après un temps fort) */
 var reduceMQ=window.matchMedia('(prefers-reduced-motion: reduce)');
 var touchMQ=window.matchMedia('(hover: none), (pointer: coarse)');
@@ -1259,13 +1273,30 @@ var Geo={dirty:true,nodes:[],edges:[],hooks:[],
   },
   /* marche aléatoire le long des arêtes, départ dans la bande verticale [vy0,vy1] */
   path:function(minLen,vy0,vy1){
-    var E=this.edges,N=this.nodes,cand=[],i;
+    var E=this.edges,cand=[],i;
     if(!E.length)return null;
     for(i=0;i<E.length;i++){var my=(E[i].y0+E[i].y1)/2;if(my>=vy0&&my<=vy1)cand.push(i)}
     if(!cand.length)return null;
-    var ei=cand[(Math.random()*cand.length)|0],e=E[ei],fwd=Math.random()<.5;
-    var cur=fwd?e.b:e.a,last=ei,len=e.len,guard=0;
+    return this.walk(cand[(Math.random()*cand.length)|0],Math.random()<.5,null,minLen,vy0,vy1);
+  },
+  /* arête la plus proche d'un point (coordonnées document), à moins de maxD px ; null sinon */
+  nearest:function(x,y,maxD){
+    var E=this.edges,best=null,bd=maxD*maxD,i,e,px,py,dx,dy,d;
+    for(i=0;i<E.length;i++){
+      e=E[i];
+      px=clamp(x,Math.min(e.x0,e.x1),Math.max(e.x0,e.x1));py=clamp(y,Math.min(e.y0,e.y1),Math.max(e.y0,e.y1));
+      dx=x-px;dy=y-py;d=dx*dx+dy*dy;
+      if(d<bd){bd=d;best={ei:i,x:px,y:py}}
+    }
+    return best;
+  },
+  /* marche depuis l'arête ei (dans le sens fwd), éventuellement depuis le point sp posé sur cette arête */
+  walk:function(ei,fwd,sp,minLen,vy0,vy1){
+    var E=this.edges,N=this.nodes,e=E[ei],i;
+    var cur=fwd?e.b:e.a,last=ei,guard=0;
     var pts=fwd?[{x:e.x0,y:e.y0},{x:e.x1,y:e.y1}]:[{x:e.x1,y:e.y1},{x:e.x0,y:e.y0}];
+    if(sp)pts[0]=sp;
+    var len=sp?Math.abs(pts[1].x-sp.x)+Math.abs(pts[1].y-sp.y):e.len;
     while(len<minLen&&guard++<48){
       var nd=N[cur],opts=[],w=[],tot=0,prev=E[last],k,f,o,wt;
       for(i=0;i<nd.e.length;i++){
@@ -1308,14 +1339,24 @@ var Geo={dirty:true,nodes:[],edges:[],hooks:[],
    1 · SIGNAL : impulsions lumineuses sur les bordures de la grille
    ===================================================================== */
 var signal=(function(){
-  var pulses=[],next=0,stillP=null,ios=[],cnt=0;
+  var pulses=[],next=0,stillP=null,ios=[],cnt=0,pend=[];
   function maxP(){return Ov.w<760?2:3}
+  /* impulsion née d'un clic proche d'une arête (traitée à la frame suivante, une fois la grille construite) */
+  function inject(q){
+    var h=Geo.nearest(q.x,q.y,24),E,fwd,p;
+    if(!h)return;
+    E=Geo.edges[h.ei];fwd=Math.abs(E.x1-h.x)+Math.abs(E.y1-h.y)>=Math.abs(E.x0-h.x)+Math.abs(E.y0-h.y);
+    p=Geo.walk(h.ei,fwd,{x:h.x,y:h.y},620,view.sy-80,view.sy+Ov.h+80);
+    if(!p)return;
+    if(pulses.length>=8)pulses.shift();
+    pulses.push({path:p,s:0,v:rnd(300,380)*(Ov.w<760?.8:1),tail:rnd(70,100),inj:true});
+  }
   function spawn(){
     var p=Geo.path(1300,view.sy-80,view.sy+Ov.h+80);
     return p?{path:p,s:-rnd(0,40),v:rnd(250,360)*(Ov.w<760?.8:1),tail:rnd(80,115)}:null;
   }
   function drawPulse(ctx,p){
-    var s=p.s,N=14,k,a,fade=clamp(s/70,0,1)*clamp((p.path.L+p.tail-s)/p.tail,0,1);
+    var s=p.s,N=14,k,a,fade=(p.inj?1:clamp(s/70,0,1))*clamp((p.path.L+p.tail-s)/p.tail,0,1);   /* inj : impulsion née d'un clic, visible dès le point de contact */
     if(fade<=0)return;
     ctx.lineWidth=5;
     for(k=0;k<N;k++){
@@ -1332,7 +1373,7 @@ var signal=(function(){
   Geo.hooks.push(function(){pulses=[];stillP=null});
   var e={key:'signal',on:false,vis:true,wake:0,
     enable:function(){
-      Ov.add();pulses=[];stillP=null;next=0;cnt=0;
+      Ov.add();pulses=[];stillP=null;next=0;cnt=0;pend=[];
       qsa('main > section, footer').forEach(function(el){
         var was=false;
         ios.push(watch(el,function(v){if(v===was)return;was=v;cnt+=v?1:-1;e.vis=cnt>0;if(e.vis)kick()}));
@@ -1340,12 +1381,19 @@ var signal=(function(){
     },
     disable:function(){
       ios.forEach(function(io){if(io)io.disconnect()});ios=[];e.vis=true;
-      pulses=[];stillP=null;Ov.remove();
+      pulses=[];stillP=null;pend=[];Ov.remove();
+    },
+    /* point de contact en coordonnées document ; sans effet en animations réduites */
+    inject:function(x,y){
+      if(!e.on||isReduced())return;
+      if(pend.length<4)pend.push({x:x,y:y});
+      e.wake=0;
     },
     frame:function(T,dt){
       var ctx=Ov.use();if(!ctx)return;
       if(Geo.dirty)Geo.build();
       var i,p;
+      while(pend.length)inject(pend.shift());
       next-=dt;
       if(!pulses.length||(pulses.length<maxP()&&next<=0)){p=spawn();if(p)pulses.push(p);next=rnd(.6,2)}
       ctx.save();ctx.translate(-view.sx,-view.sy);ctx.globalCompositeOperation='lighter';ctx.lineCap='butt';
@@ -1841,7 +1889,111 @@ var portraits=(function(){
   return e;
 })();
 
-list=[signal,onde,matrice,decodage,portraits];
+/* =====================================================================
+   6 · ÉTINCELLE : au toucher / clic (pointerdown), 2 à 4 arcs en zigzag + anneau, ~220 ms
+   Un petit calque 128 px par étincelle (réutilisé), au-dessus de tout, pointer-events:none, aucun preventDefault.
+   Aucune boucle quand rien n'est vivant (wake infini). Si « Signal » est actif et que le contact tombe à
+   moins de 24 px d'une arête de la grille, une impulsion de signal part de ce point. Animations réduites : rien.
+   ===================================================================== */
+var etincelle=(function(){
+  var S=[],pool=[],BOX=128,HB=BOX/2,MAXS=8;
+  function acquire(dpr){
+    var cv=pool.pop();
+    if(!cv){
+      cv=doc.createElement('canvas');cv.className='fx-sp';cv.setAttribute('aria-hidden','true');
+      cv.__ctx=cv.getContext('2d');cv.__dpr=0;doc.body.appendChild(cv);
+    }
+    if(cv.__dpr!==dpr){sizeCanvas(cv,cv.__ctx,BOX,BOX,dpr);cv.__dpr=dpr}
+    return cv;
+  }
+  function release(i){
+    var s=S[i];S.splice(i,1);
+    s.cv.__ctx.clearRect(0,0,BOX,BOX);s.cv.style.display='none';pool.push(s.cv);
+  }
+  function zig(len,ang,n,amp){                              /* ligne brisée de n segments, points relatifs à l'origine */
+    var P=[0,0],ca=Math.cos(ang),sa=Math.sin(ang),i,d,j;
+    for(i=1;i<=n;i++){
+      d=len*i/n;j=i===n?rnd(-2,2):(i%2?1:-1)*rnd(amp*.45,amp);
+      P.push(ca*d-sa*j,sa*d+ca*j);
+    }
+    return P;
+  }
+  function make(hot){
+    var n=2+((Math.random()*3)|0)+(hot?1:0),a0=rnd(0,TAU),br=Math.random()<.6?((Math.random()*n)|0):-1,arcs=[],k,ang,P,m,bp,bx,by,i;
+    for(k=0;k<n;k++){
+      ang=a0+TAU*k/n+rnd(-.35,.35);
+      P=zig(rnd(20,40),ang,3+((Math.random()*2)|0),5.5);
+      arcs.push({P:P,d:0});
+      if(k===br){                                           /* mini-bifurcation partant d'un point intermédiaire */
+        m=1+((Math.random()*2)|0);bx=P[m*2];by=P[m*2+1];
+        bp=zig(rnd(8,14),ang+(Math.random()<.5?-1:1)*rnd(.6,1),2,3);
+        for(i=0;i<bp.length;i+=2){bp[i]+=bx;bp[i+1]+=by}
+        arcs.push({P:bp,d:.45});
+      }
+    }
+    return arcs;
+  }
+  function addArc(c,ox,oy,P,g){                             /* ajoute au chemin courant la fraction g (0-1) de la ligne brisée */
+    var n=P.length/2-1,m=g*n,k=Math.floor(m),f=m-k,i;
+    if(k>=n){k=n;f=0}
+    c.moveTo(ox+P[0],oy+P[1]);
+    for(i=1;i<=k;i++)c.lineTo(ox+P[i*2],oy+P[i*2+1]);
+    if(f>0)c.lineTo(ox+P[k*2]+(P[k*2+2]-P[k*2])*f,oy+P[k*2+1]+(P[k*2+3]-P[k*2+1])*f);
+  }
+  function draw(s,p){
+    var c=s.cv.__ctx,g=Math.min(1,p/.34),a=p<.3?1:Math.pow(1-(p-.3)/.7,1.5),i,ar,ge;
+    g=1-(1-g)*(1-g);
+    c.clearRect(0,0,BOX,BOX);
+    c.lineCap='round';c.lineJoin='round';
+    c.globalAlpha=.6*(1-p);c.lineWidth=1;c.strokeStyle='#B79CFF';           /* anneau : ≈ 0 → R px */
+    c.beginPath();c.arc(s.ox,s.oy,Math.max(.1,s.R*(1-Math.pow(1-p,2.2))),0,TAU);c.stroke();
+    c.beginPath();
+    for(i=0;i<s.arcs.length;i++){
+      ar=s.arcs[i];ge=clamp((g-ar.d)/(1-ar.d),0,1);
+      if(ge>0)addArc(c,s.ox,s.oy,ar.P,ge);
+    }
+    c.globalAlpha=.22*a;c.lineWidth=4;c.strokeStyle='#7A3CFF';c.stroke();   /* halo */
+    c.globalAlpha=a;c.lineWidth=s.w;c.strokeStyle='#B79CFF';c.stroke();      /* trait violet clair */
+    c.lineWidth=.6;c.strokeStyle='#E3CCFF';c.stroke();                       /* cœur lilas */
+    c.globalAlpha=1;
+  }
+  function spawn(x,y,hot){
+    var cv,rx=Math.round(x),ry=Math.round(y);
+    if(S.length>=MAXS)release(0);
+    cv=acquire(dprOf());
+    cv.style.transform='translate('+(rx-HB)+'px,'+(ry-HB)+'px)';cv.style.display='block';
+    S.push({cv:cv,ox:HB+(x-rx),oy:HB+(y-ry),t0:performance.now()/1000,dur:rnd(.18,.26),arcs:make(hot),R:hot?26:18,w:hot?1.5:1.3});
+  }
+  function onDown(ev){
+    if(isReduced()||doc.hidden)return;
+    if(ev.pointerType==='mouse'&&ev.button!==0)return;
+    var x=ev.clientX,y=ev.clientY,t=ev.target;
+    if(!(x>=0&&y>=0))return;
+    spawn(x,y,!!(t&&t.closest&&t.closest('.btn,a')));
+    if(signal.on)signal.inject(x+view.sx,y+view.sy);
+    e.wake=0;kick();
+  }
+  var e={key:'etincelle',on:false,vis:true,wake:Infinity,
+    enable:function(){e.wake=Infinity;doc.addEventListener('pointerdown',onDown,true)},
+    disable:function(){
+      doc.removeEventListener('pointerdown',onDown,true);
+      while(S.length)release(S.length-1);
+      e.wake=Infinity;
+    },
+    frame:function(T){
+      var i,s,p;
+      for(i=S.length-1;i>=0;i--){
+        s=S[i];p=(T-s.t0)/s.dur;
+        if(p>=1){release(i);continue}
+        draw(s,p<0?0:p);
+      }
+      if(!S.length)e.wake=Infinity;
+    }
+  };
+  return e;
+})();
+
+list=[signal,onde,matrice,decodage,etincelle,portraits];
 list.forEach(function(e){if(e!==portraits)byKey[e.key]=e});
 portraits.init();portraits.layout();
 
@@ -1881,7 +2033,151 @@ window.addEventListener('pointermove',function(ev){
 root.addEventListener('mouseleave',function(){Ptr.on=false;wakeMx()});
 window.addEventListener('blur',function(){Ptr.on=false;wakeMx()});
 
-/* ---------- état : URL (?fx=…) > localStorage > les 4 effets ---------- */
+/* =====================================================================
+   LOGO : tracé du U (faisceau), onde dans le mot, décodage, LED
+   Hors boucle partagée : SVG + Web Animations (transform / opacity / stroke-dashoffset), pas de canvas.
+   Seule la LED tourne en continu (CSS, compositeur). Le aria-label du lien reste la source accessible
+   (le mot et ses lettres sont aria-hidden). Animations réduites : logo statique.
+   ===================================================================== */
+var logoEl=qs('.site-header .logo'),lgSvg=logoEl&&qs('svg',logoEl),lgPath=lgSvg&&qs('path',lgSvg),lgWord=logoEl&&qs('span',logoEl);
+var lgOrig=lgWord?lgWord.textContent:'',lgMode=LOGO_DEFAULT,lgLetters=[],lgAnims=[],lgTimer=0,lgSpT=0,lgDec=0,lgUntil=0,lgWUntil=0;   /* lgUntil / lgWUntil : fin de l'animation en cours (horloge, pas d'événement : fiable même si le rendu est suspendu) */
+var lgFx=null,lgDot=null,lgLed=null,lgSp=[],lgLen=0,lgKfLin=null,lgKfEase=null;
+function lgEl(name,attrs,parent){
+  var x=doc.createElementNS('http://www.w3.org/2000/svg',name),k;
+  for(k in attrs)x.setAttribute(k,attrs[k]);
+  if(parent)parent.appendChild(x);
+  return x;
+}
+function lgKeep(a){
+  lgAnims=lgAnims.filter(function(x){return x.playState!=='finished'});
+  lgAnims.push(a);return a;
+}
+function lgFrames(ease){                                    /* trajet du point lumineux le long du U (échantillonné) */
+  var out=[],N=22,i,t,pt;
+  for(i=0;i<=N;i++){
+    t=i/N;pt=lgPath.getPointAtLength(lgLen*(ease?.5-.5*Math.cos(Math.PI*t):t));
+    out.push({offset:t,opacity:(i===0||i===N)?0:1,transform:'translate('+pt.x.toFixed(2)+'px,'+pt.y.toFixed(2)+'px)'});
+  }
+  return out;
+}
+function lgEnsure(){                                        /* éléments SVG du logo : point, étincelle de sortie, LED (créés une fois) */
+  if(lgFx||!lgSvg||!lgPath||!lgSvg.animate)return !!lgFx;
+  lgLen=lgPath.getTotalLength();lgPath.setAttribute('pathLength','100');
+  lgFx=lgEl('g',{'class':'lg-fx','aria-hidden':'true'},lgSvg);
+  lgLed=lgEl('g',{'class':'lg-led'},lgFx);
+  lgEl('circle',{cx:14,cy:2.4,r:3.2,fill:'rgba(122,60,255,.42)'},lgLed);
+  lgEl('circle',{cx:14,cy:2.4,r:1.4,fill:'#E3CCFF'},lgLed);
+  lgDot=lgEl('g',{'class':'lg-dot'},lgFx);
+  lgEl('circle',{cx:0,cy:0,r:3.6,fill:'rgba(122,60,255,.38)'},lgDot);
+  lgEl('circle',{cx:0,cy:0,r:1.7,fill:'#B79CFF'},lgDot);
+  lgEl('circle',{cx:0,cy:0,r:.7,fill:'#E3CCFF'},lgDot);
+  lgSp=[lgEl('path',{d:'M14.2 3L16.7 .3',pathLength:1},lgFx),lgEl('path',{d:'M13.8 3L12.9 -.3',pathLength:1},lgFx)];
+  lgKfLin=lgFrames(false);lgKfEase=lgFrames(true);
+  return true;
+}
+function lgSpark(){                                         /* mini-étincelle : 2 traits à l'extrémité ouverte */
+  lgSp.forEach(function(p,i){
+    lgKeep(p.animate([
+      {strokeDasharray:'1',strokeDashoffset:1,opacity:1},
+      {strokeDasharray:'1',strokeDashoffset:0,opacity:1,offset:.4},
+      {strokeDasharray:'1',strokeDashoffset:0,opacity:0}
+    ],{duration:280+i*50,easing:'ease-out'}));
+  });
+}
+function lgBeam(draw){                                      /* draw : le U se trace (chargement) ; sinon le point repasse seulement */
+  var now=performance.now(),dur=draw?700:540;
+  if(now<lgUntil||isReduced()||!lgEnsure())return;
+  lgUntil=now+dur+400;
+  if(draw)lgKeep(lgPath.animate([{strokeDasharray:'100',strokeDashoffset:100},{strokeDasharray:'100',strokeDashoffset:0}],{duration:dur,easing:'linear'}));
+  lgKeep(lgDot.animate(draw?lgKfLin:lgKfEase,{duration:dur,easing:'linear'}));
+  clearTimeout(lgSpT);lgSpT=setTimeout(lgSpark,dur-15);
+}
+function lgWave(){                                          /* vague de gauche à droite à travers les lettres, ~600 ms */
+  var now=performance.now();
+  if(now<lgWUntil||isReduced()||!lgLetters.length||!lgLetters[0].animate)return;
+  lgWUntil=now+640;
+  lgLetters.forEach(function(l,i){
+    lgKeep(l.animate([
+      {transform:'translateY(0)'},
+      {transform:'translateY(-2px)',offset:.35},
+      {transform:'translateY(1px)',offset:.7},
+      {transform:'translateY(0)'}
+    ],{duration:330,delay:i*30,easing:'ease-in-out'}));
+  });
+}
+function lgDecode(){                                        /* « niversitek » se décode une fois : ~400 ms de caractères aléatoires */
+  if(!lgWord||isReduced())return;
+  var t0=performance.now(),last=-1,CH='0123456789ABCDEF#_·/',n=lgOrig.length;
+  lgWord.style.minWidth=lgWord.getBoundingClientRect().width+'px';   /* largeur figée : pas de saut pendant le brouillage */
+  function scr(lock){
+    var o='',i;
+    for(i=0;i<n;i++)o+=i<lock?lgOrig.charAt(i):CH.charAt((Math.random()*CH.length)|0);
+    return o;
+  }
+  function step(now){
+    var p=(now-t0)/400,tk;
+    if(p>=1){lgWord.textContent=lgOrig;lgWord.style.minWidth='';lgDec=0;return}
+    tk=Math.floor(now/33);
+    if(tk!==last){last=tk;lgWord.textContent=scr(Math.floor(n*clamp((p-.2)/.8,0,1)))}
+    lgDec=requestAnimationFrame(step);
+  }
+  lgWord.textContent=scr(0);
+  lgDec=requestAnimationFrame(step);
+}
+function lgSched(){                                         /* le point repasse toutes les 8 à 10 s */
+  clearTimeout(lgTimer);
+  lgTimer=setTimeout(function(){lgTimer=0;if(!doc.hidden)lgBeam(false);lgSched()},rnd(8000,10000));
+}
+function lgStop(){
+  clearTimeout(lgTimer);lgTimer=0;clearTimeout(lgSpT);lgSpT=0;
+  if(lgDec){cancelAnimationFrame(lgDec);lgDec=0}
+  lgAnims.forEach(function(a){try{a.cancel()}catch(x){}});lgAnims=[];
+  lgUntil=lgWUntil=0;
+  if(lgWord){lgWord.style.minWidth='';lgWord.textContent=lgOrig;lgLetters=[]}
+}
+function logoApply(mode){
+  if(!logoEl||!lgWord)return;
+  lgStop();lgMode=mode;logoEl.setAttribute('data-lg',mode);
+  if(isReduced())return;
+  var tr=mode==='trace'||mode==='trace-onde',on=mode==='onde'||mode==='trace-onde';
+  if(on){                                                   /* lettres enveloppées (aria-hidden) : transform possible */
+    lgWord.textContent='';
+    lgOrig.split('').forEach(function(ch){
+      var s=doc.createElement('span');s.className='lg';s.setAttribute('aria-hidden','true');s.textContent=ch;
+      lgWord.appendChild(s);lgLetters.push(s);
+    });
+  }
+  if(tr){lgBeam(true);lgSched()}
+  else if(mode==='led')lgEnsure();
+  else if(mode==='decodage')lgDecode();
+}
+function lgHover(){
+  if(isReduced())return;
+  if(lgMode==='trace'||lgMode==='trace-onde')lgBeam(false);
+  if(lgMode==='onde'||lgMode==='trace-onde')lgWave();
+}
+if(logoEl){
+  logoEl.addEventListener('mouseenter',lgHover);
+  logoEl.addEventListener('focusin',lgHover);
+}
+function readLogo(){
+  var raw=null;
+  function ok(v){for(var i=0;i<LOGOS.length;i++)if(LOGOS[i][0]===v)return true;return false}
+  try{raw=new URLSearchParams(window.location.search).get('logo')}catch(x){}
+  if(raw!==null&&ok(String(raw).trim().toLowerCase()))return String(raw).trim().toLowerCase();
+  try{raw=window.localStorage.getItem(LS_LOGO)}catch(x){raw=null}
+  return raw!==null&&ok(raw)?raw:LOGO_DEFAULT;
+}
+function saveLogo(){
+  try{window.localStorage.setItem(LS_LOGO,lgMode)}catch(x){}
+  try{
+    var u=new URL(window.location.href);u.searchParams.set('logo',lgMode);
+    u.search=u.search.replace(/%2C/gi,',');
+    window.history.replaceState(null,'',u.toString());
+  }catch(x){}
+}
+
+/* ---------- état : URL (?fx=…) > localStorage > tous les effets ---------- */
 function parseList(raw){
   var out=[];
   String(raw).split(',').forEach(function(s){
@@ -1920,10 +2216,11 @@ function setAll(arr){
 }
 
 /* ---------- panneau ---------- */
-var dock=doc.getElementById('fx-dock'),btn,panel,boxes={},pres={},note;
+var dock=doc.getElementById('fx-dock'),btn,panel,boxes={},pres={},radios={},note;
 function syncUI(){
   var cur=current(),k;
   KEYS.forEach(function(k){if(boxes[k])boxes[k].checked=byKey[k].on});
+  if(radios[lgMode])radios[lgMode].checked=true;
   PRESETS.forEach(function(P){
     var same=P[2].length===cur.length&&P[2].every(function(k){return cur.indexOf(k)>-1});
     if(pres[P[0]])pres[P[0]].setAttribute('aria-pressed',same?'true':'false');
@@ -1955,6 +2252,15 @@ function buildUI(){
     pr.appendChild(b);pres[P[0]]=b;
   });
   panel.appendChild(pr);
+  var fl=doc.createElement('fieldset');fl.className='fx-set';
+  var ll=doc.createElement('legend');ll.textContent='Logo';fl.appendChild(ll);
+  LOGOS.forEach(function(L){
+    var lb=doc.createElement('label'),rd=doc.createElement('input'),sp=doc.createElement('span');
+    lb.className='fx-row';rd.type='radio';rd.name='fx-logo';rd.value=L[0];sp.textContent=L[1];
+    lb.appendChild(rd);lb.appendChild(sp);fl.appendChild(lb);radios[L[0]]=rd;
+    rd.addEventListener('change',function(){if(rd.checked){logoApply(L[0]);saveLogo()}});
+  });
+  panel.appendChild(fl);
   note=doc.createElement('p');note.className='fx-note';note.hidden=true;
   note.textContent='Animations réduites par le système : effets en image fixe.';
   panel.appendChild(note);
@@ -1971,6 +2277,7 @@ function buildUI(){
 var onReduce=function(){
   haltLoop();
   list.forEach(function(e){if(e.on){e.disable();e.wake=0;e.enable()}});
+  logoApply(lgMode);
   syncUI();kick();
 };
 if(reduceMQ.addEventListener)reduceMQ.addEventListener('change',onReduce);
@@ -1978,7 +2285,8 @@ else if(reduceMQ.addListener)reduceMQ.addListener(onReduce);
 
 buildUI();
 setAll(readState());
-window.__fx={Geo:Geo,signal:signal,onde:onde,matrice:matrice,decodage:decodage,Ov:Ov,loop:loop,list:list,view:view};
+logoApply(readLogo());syncUI();
+window.__fx={Geo:Geo,signal:signal,onde:onde,matrice:matrice,decodage:decodage,etincelle:etincelle,Ov:Ov,loop:loop,list:list,view:view};
 })();
 </script>
 </body>
