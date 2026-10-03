@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Universitek · Piste A v4</title>
+<title>Universitek · Piste A v3</title>
 <meta name="description" content="Maquette piste A (v3) du site d’Universitek : soirées électroniques et organisme de formation à Montpellier.">
 <meta name="theme-color" content="#0D0A14">
 <meta name="color-scheme" content="dark">
@@ -28,10 +28,6 @@
   --hdr:64px;
   --gut:clamp(16px,2.5vw,40px);
   --cl:1px solid var(--line);
-  /* mise en page mixte : colonne de contenu (1440 px max) + éléments pleine largeur dont le texte reste sur la colonne */
-  --wrap:1440px;
-  --m:clamp(20px,5vw,96px);
-  --pad:max(var(--m),calc((100% - var(--wrap))/2));
 }
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--hdr) + 8px)}
@@ -71,27 +67,20 @@ a{color:inherit}
 .marks{position:absolute;left:0;top:0;width:0;height:0;overflow:visible;pointer-events:none;z-index:25}
 .marks i{position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;opacity:.8;background:linear-gradient(#CDBBFF,#CDBBFF) 50% 50%/100% 1px no-repeat,linear-gradient(#CDBBFF,#CDBBFF) 50% 50%/1px 100% no-repeat}
 
-/* ---------- structure : séparateurs pleine largeur, contenu en colonne ----------
-   pleine largeur : width:100% + padding-inline:var(--pad) (le texte reste sur la colonne) ;
-   colonne : width:min(var(--wrap),100% - 2*var(--m)) + margin-inline:auto ; --pad ne s'emploie que sur un élément pleine largeur */
+/* ---------- structure : grille pleine largeur + lignes fines ---------- */
 .frame{width:100%}
 section{scroll-margin-top:var(--hdr)}
-main>section+section{border-top:var(--cl)}
-main>#agenda{border-top:0}
-.sec-head,.mc-grid,.mc-note,.about-grid,.figures,.poster-cell,.cine,.foot-grid{width:min(var(--wrap),100% - 2*var(--m));margin-inline:auto}
-#agenda,#masterclass,#a-propos{padding-bottom:clamp(32px,4.4vw,72px)}
-#cinematek{padding-block:clamp(32px,4.4vw,72px)}
+.tagbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;padding:8px var(--gut);background:rgba(21,17,31,.62);border-top:var(--cl)}
 .tag{display:inline-flex;align-items:center;gap:10px;font:500 12px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l)}
 .tag::before{content:"";flex:none;width:8px;height:8px;background:var(--violet)}
-.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding:clamp(28px,4.2vw,68px) 0 clamp(24px,3vw,48px)}
-.sec-head .btn{flex:none}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,min(520px,36%));gap:16px 32px;align-items:end;padding:clamp(28px,4.2vw,68px) var(--gut) clamp(24px,3vw,48px);border-top:var(--cl)}
 .h-title{font-family:var(--f-title);font-weight:800;text-transform:uppercase;line-height:.96;letter-spacing:-.01em}
 .h2{font-size:clamp(2.4rem,6.6vw,7.6rem);text-wrap:balance}
+.sec-sub{font-size:1rem;line-height:1.55;color:var(--text-2);max-width:46ch;text-wrap:pretty}
 .mono-up{font:500 13px/1.45 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
-/* les grilles de la colonne tracent leurs lignes par les bordures des cellules (fond transparent) et se ferment par le cadre du conteneur */
-.mc-grid,.about-grid,.figures{display:grid;border-right:var(--cl)}
-.mc-grid,.figures{border-bottom:var(--cl)}
-.mc,.about-grid>*,.fig{border-left:var(--cl);border-top:var(--cl)}
+/* les grilles tracent leurs lignes par les bordures des cellules (fond transparent) ; elles débordent de 1 px à gauche */
+.mc-grid,.about-grid,.figures,.artists,.arch-grid,.foot-grid{display:grid;margin-left:-1px;width:calc(100% + 1px)}
+.mc,.about-grid>*,.fig,.artist,.arch,.foot-grid>div{border-left:var(--cl);border-top:var(--cl)}
 
 /* ---------- boutons ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;font:700 13px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;text-align:center;border:1px solid transparent;border-radius:0;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,transform .12s}
@@ -102,25 +91,32 @@ main>#agenda{border-top:0}
 .btn-light{background:#fff;color:#1A0B3D}
 .btn-light:hover{background:var(--bg);color:#fff}
 .btn svg{width:14px;height:14px;flex:none}
-.btn:active,.fx-btn:active,.copy-btn:active{transform:translateY(1px) scale(.985)}
-.btn svg,.foot-link svg,.artist a svg:not(.wf){transition:transform .28s cubic-bezier(.2,.7,.2,1)}
-.btn:hover svg,.btn:focus-visible svg,.foot-link:hover svg,.foot-link:focus-visible svg,.artist:hover a svg:not(.wf),.artist:focus-within a svg:not(.wf){transform:translate(3px,-3px)}
+.btn:active,.linkrow:active,.fx-btn:active,.copy-btn:active{transform:translateY(1px) scale(.985)}
+.btn svg,.linkrow svg,.foot-link svg,.artist a svg:not(.wf){transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+.btn:hover svg,.btn:focus-visible svg,.linkrow:hover svg,.linkrow:focus-visible svg,.foot-link:hover svg,.foot-link:focus-visible svg,.artist:hover a svg:not(.wf),.artist:focus-within a svg:not(.wf){transform:translate(3px,-3px)}
 .rise{background:linear-gradient(var(--violet),var(--violet)) no-repeat 0 100%/100% 0%;transition:background-size .32s cubic-bezier(.2,.7,.2,1),color .2s,transform .12s}
 .rise:hover,.rise:focus-visible{background-size:100% 100%;color:#fff}
 .status{display:inline-flex;align-items:center;gap:10px;font:700 12px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
 .status::before{content:"";flex:none;width:9px;height:9px;border-radius:50%;background:currentColor;animation:pulse 2.8s ease-out infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(222,208,255,.8);transform:scale(1)}12%{transform:scale(1.16)}72%,100%{box-shadow:0 0 0 13px rgba(222,208,255,0);transform:scale(1)}}
+.cd{font:700 13px/1.4 var(--f-mono);letter-spacing:.06em;text-transform:none;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cd:empty{display:none}
+.status+.cd{padding-left:19px}
 
-/* ---------- bandeau d'infos (pleine largeur ; texte sur la colonne) ---------- */
-.kv>div{padding:12px var(--pad);border-top:var(--cl);font:500 14px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
-.sub{display:block;margin-top:2px;font:400 12px/1.5 var(--f-mono);letter-spacing:.06em;color:var(--text-2)}
+/* ---------- fiches clé / valeur ---------- */
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.kv>div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:12px;padding:12px var(--gut);border-top:var(--cl)}
+.kv>div:nth-child(even){border-left:var(--cl)}
+.kv>div:last-child:nth-child(odd){grid-column:1/-1}
+.kv dt{font:500 12px/1.6 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+.kv dd{font:500 14px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
 
 /* ---------- en-tête ---------- */
 .site-header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
-.hdr{position:relative;display:flex;align-items:stretch;height:var(--hdr);padding-inline:var(--pad)}
+.hdr{position:relative;display:flex;align-items:stretch;height:var(--hdr)}
 .progress{position:absolute;left:0;right:0;top:100%;height:2px;pointer-events:none}
 .progress i{display:block;height:100%;background:var(--violet);box-shadow:0 0 8px rgba(122,60,255,.75);transform:scaleX(var(--p,0));transform-origin:0 50%}
-.logo{display:flex;align-items:center;gap:1px;padding:0 var(--gut) 0 0;font:800 22px/1 var(--f-title);letter-spacing:.015em;text-decoration:none;color:var(--text);text-transform:uppercase}
+.logo{display:flex;align-items:center;gap:1px;padding:0 var(--gut);font:800 22px/1 var(--f-title);letter-spacing:.015em;text-decoration:none;color:var(--text);text-transform:uppercase}
 .logo svg{width:.74em;height:.74em;flex:none;margin-right:.02em}
 .logo svg path{fill:none;stroke:currentColor;stroke-width:3.6}
 .logo span{display:block;margin-bottom:-.02em}
@@ -131,7 +127,7 @@ main>#agenda{border-top:0}
 .nl[aria-current]::before{content:"";flex:none;width:6px;height:6px;margin-right:8px;background:var(--violet)}
 .nl[aria-current]:hover{color:#fff}
 .nav-cta{min-height:0;padding:0 clamp(22px,2.4vw,40px);border-left:1px solid var(--line)}
-.burger{display:none;margin-left:auto;align-items:center;gap:12px;min-height:44px;padding:0 0 0 20px;background:transparent;color:var(--text);border:0;border-left:1px solid var(--line);font:500 13px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.burger{display:none;margin-left:auto;align-items:center;gap:12px;min-height:44px;padding:0 20px;background:transparent;color:var(--text);border:0;border-left:1px solid var(--line);font:500 13px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 .burger-bars{position:relative;width:20px;height:12px}
 .burger-bars::before,.burger-bars::after{content:"";position:absolute;left:0;right:0;height:2px;background:currentColor;transition:transform .2s,top .2s}
 .burger-bars::before{top:0}
@@ -142,40 +138,45 @@ main>#agenda{border-top:0}
 /* ---------- hero : plein écran ---------- */
 .hero{position:relative;isolation:isolate;overflow:hidden}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:1fr auto;min-height:max(520px,calc(100svh - var(--hdr) - 56px))}
-.hero-main{display:flex;flex-direction:column;justify-content:space-between;gap:clamp(28px,5vh,64px);padding:clamp(20px,3vh,32px) var(--pad) clamp(28px,4.5vh,52px)}
-/* le titre géant remplit la colonne : la plus longue ligne (« Le Château Cosco », ≈ 9,67 em) tient dans la largeur de colonne */
-.hero-title{font-size:clamp(1.5rem,calc(min(var(--wrap),100vw - 2*var(--m)) / 9.9),14rem);line-height:.9;letter-spacing:-.015em}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:1fr auto;min-height:max(520px,calc(100svh - var(--hdr)))}
+.hero-main{display:flex;flex-direction:column;justify-content:space-between;gap:clamp(28px,5vh,64px);padding:clamp(20px,3vh,32px) var(--gut) clamp(28px,4.5vh,52px)}
+.hero-title{font-size:clamp(2.2rem,9.4vw,14rem);line-height:.9;letter-spacing:-.015em}
 .hero-title span{display:block}
 .hero-styles{margin-top:clamp(16px,2.4vh,26px);font-size:clamp(1.0625rem,1.5vw,1.5rem);line-height:1.45;color:var(--text);max-width:44ch}
-.hero-side{border-top:var(--cl);border-bottom:var(--cl)}
+.hero-side{border-top:var(--cl)}
 .fiche{display:flex;flex-direction:column;background:rgba(21,17,31,.8)}
-.fiche-head{display:flex;align-items:center;min-height:52px;padding:12px var(--pad);background:var(--violet);color:#fff}
-.fiche-act{display:flex;flex-direction:column;padding:16px var(--pad);border-top:var(--cl)}
+.fiche-head{display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:52px;padding:12px var(--gut);background:var(--violet);color:#fff}
+.fiche-act{display:flex;flex-direction:column;gap:8px;padding:16px var(--gut);border-top:var(--cl)}
 .fiche-act .btn{width:100%;min-height:46px}
+.fiche-note{padding:14px max(var(--gut),calc(100% - 70ch - var(--gut))) 18px var(--gut);border-top:var(--cl);font-size:.9375rem;line-height:1.5;color:var(--text-2);text-wrap:balance}
 
-/* ---------- agenda : le line-up sert de titre ; une ligne « date · lieu · billetterie » ; l'affiche en colonne ---------- */
+/* ---------- agenda : bloc événement ---------- */
+.event{background:var(--violet);color:#fff;border-top:var(--cl)}
 .event :focus-visible{outline-color:#fff}
-.lineup-label{padding:12px var(--pad);border-top:var(--cl)}
-.lineup li,.artist{display:grid;grid-template-columns:var(--rows);gap:6px 28px;align-items:center;padding:clamp(16px,1.6vw,26px) var(--pad);border-top:var(--cl)}
-.lineup,.artists{--rows:minmax(0,1.3fr) minmax(0,1fr) 11rem}
-.lineup li{background:linear-gradient(var(--violet),var(--violet)) no-repeat 0 100%/100% 0%;transition:background-size .32s cubic-bezier(.2,.7,.2,1)}
-.lineup .name{font:800 clamp(1.8rem,3.5vw,4rem)/1 var(--f-title);text-transform:uppercase;letter-spacing:-.01em}
-.lineup .style{font:500 13px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
-@media (hover:hover){
-  .lineup li:hover{background-size:100% 100%}
-  .lineup li:hover .style{color:#fff}
-}
-.event-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:stretch;padding-inline:var(--pad);background:var(--violet);color:#fff}
-.event-row>div{display:flex;align-items:center;padding:clamp(14px,1.4vw,22px) clamp(16px,1.6vw,28px);border-left:1px solid rgba(255,255,255,.34)}
-.event-row>div:first-child{border-left:0;padding-left:0}
-.event-row>div:last-child{padding-right:0}
-.ev-date,.ev-lieu{font:700 14px/1.45 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
-.ev-date{white-space:nowrap}
-.event-row .act .btn{min-height:52px}
-.poster-cell{display:flex;align-items:center;justify-content:center;margin-top:clamp(28px,4vw,64px);padding:clamp(28px,3vw,48px) var(--gut);background:rgba(13,10,20,.24);border:var(--cl)}
+.event-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding:14px var(--gut)}
+.ev-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 24px}
+.event-body{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,28vw,520px);border-top:1px solid rgba(255,255,255,.34)}
+.event-info{padding:clamp(28px,3.6vw,60px) var(--gut) clamp(32px,4vw,64px)}
+.event-title{font-size:clamp(2rem,6.2vw,7.2rem);line-height:.93}
+.event-title span:not(.sr-only){display:block}
+.event-styles{margin-top:clamp(14px,1.6vw,24px);font-size:clamp(1.0625rem,1.4vw,1.4rem);font-weight:600}
+.lineup-label{margin-top:clamp(28px,3vw,48px);padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.34)}
+.lineup li{display:grid;grid-template-columns:minmax(0,clamp(260px,30%,440px)) minmax(0,1fr);gap:6px 28px;padding:clamp(16px,1.6vw,24px) 0;border-bottom:1px solid rgba(255,255,255,.34)}
+.lineup .name{font:800 clamp(1.5rem,2.4vw,2.7rem)/1 var(--f-title);text-transform:uppercase;letter-spacing:-.005em}
+.lineup .style{display:block;margin-top:8px;font:500 12px/1.5 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.lineup p{font-size:1rem;line-height:1.55;max-width:60ch}
+.poster-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:clamp(28px,3vw,48px) var(--gut);background:rgba(13,10,20,.24);border-left:1px solid rgba(255,255,255,.34)}
 .poster{width:100%;max-width:clamp(240px,20vw,400px);transform:rotate(-1.4deg);box-shadow:0 14px 30px rgba(13,10,20,.45)}
 .poster svg{display:block;width:100%;height:auto}
+.poster-cap{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.event-row{display:grid;grid-template-columns:1fr 1.4fr .8fr auto;border-top:1px solid rgba(255,255,255,.34)}
+.event-row>div{padding:clamp(16px,1.5vw,24px) var(--gut);border-left:1px solid rgba(255,255,255,.34)}
+.event-row>div:first-child{border-left:0}
+.event-row dt{font:500 12px/1.5 var(--f-mono);letter-spacing:.1em;text-transform:uppercase}
+.event-row dd{margin-top:4px;font:700 14px/1.45 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.event-row .act{display:flex;align-items:center;padding:12px var(--gut)}
+.event-row .act .btn{min-height:52px}
+.event-note{padding:14px max(var(--gut),calc(100% - 70ch - var(--gut))) 14px var(--gut);border-top:1px solid rgba(255,255,255,.34);font-size:.9375rem;line-height:1.5;text-wrap:balance}
 
 /* ---------- masterclass ---------- */
 .mc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -196,31 +197,45 @@ main>#agenda{border-top:0}
 .vid-play svg{width:16px;height:16px}
 .vid:hover .vid-play,.vid:focus-visible .vid-play{background:var(--text);color:var(--bg)}
 .vid-dur{position:absolute;right:16px;bottom:16px;padding:6px 10px;background:var(--bg);font:500 12px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.vid-note{padding:10px clamp(16px,1.6vw,24px);border-bottom:1px solid var(--line);font:400 12px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--text-2)}
 .mc-body{padding:clamp(18px,1.8vw,26px) clamp(16px,1.6vw,24px) clamp(20px,2vw,28px)}
 .mc-title{font:800 clamp(1.25rem,1.6vw,1.7rem)/1.12 var(--f-title);letter-spacing:-.005em;text-wrap:balance}
 .mc-by{margin-top:6px;color:var(--text-2);font-size:1rem}
-.mc-body .tag{margin-top:16px}
-.mc-note{padding-top:14px;font:400 12px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--text-2)}
+.mc-kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:20px;border-right:var(--cl);border-bottom:var(--cl)}
+.mc-kv>div{padding:10px 12px;border-left:var(--cl);border-top:var(--cl)}
+.mc-kv dt{font:500 12px/1.5 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+.mc-kv dd{margin-top:3px;font:500 13px/1.45 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.mc-kv .dur{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.gauge{display:flex;gap:3px;margin-bottom:5px}
+.gauge i{display:block;width:16px;height:8px;border:1px solid var(--violet-l)}
+.gauge.g1 i:nth-child(-n+1),.gauge.g2 i:nth-child(-n+2),.gauge.g3 i{background:var(--violet-l)}
+.gauge.all i{opacity:.55}
+.chip{display:inline-block;margin:0 5px 5px 0;padding:1px 7px;border:1px solid var(--line-strong);background:rgba(122,60,255,.14);font:500 12px/1.5 var(--f-mono);letter-spacing:.04em;text-transform:none;color:var(--text)}
+.linkrow{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;padding:0 var(--gut);border-top:var(--cl);font:700 13px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--text)}
+.linkrow svg{width:16px;height:16px;flex:none}
 
 /* ---------- à propos ---------- */
 .about-grid{grid-template-columns:1.5fr 1fr 1fr}
 .about-grid>*{padding:clamp(28px,3.2vw,56px) var(--gut)}
-.lead{font:600 clamp(1.35rem,1.9vw,2.3rem)/1.25 var(--f-body);letter-spacing:-.01em;text-wrap:pretty}
+.lead{font:600 clamp(1.5rem,2.3vw,2.8rem)/1.22 var(--f-body);letter-spacing:-.01em;text-wrap:pretty}
+.about-text p+p{margin-top:16px;color:var(--text-2);max-width:60ch}
 .pillar{display:flex;flex-direction:column;gap:14px}
 .pillar h3{font:800 clamp(2rem,3.4vw,3.9rem)/1 var(--f-title);text-transform:uppercase;letter-spacing:-.01em}
 .pillar p{color:var(--text-2);max-width:52ch}
 .figures{grid-template-columns:repeat(6,minmax(0,1fr))}
 .fig{background:rgba(21,17,31,.6);padding:clamp(20px,2vw,32px) clamp(16px,1.6vw,26px) clamp(18px,1.8vw,28px)}
-.fig b{display:block;font:800 clamp(2rem,calc(min(var(--wrap),100vw - 2*var(--m))*.039),4.8rem)/1 var(--f-title);letter-spacing:-.02em}
+.fig b{display:block;font:800 clamp(2rem,3.9vw,4.8rem)/1 var(--f-title);letter-spacing:-.02em}
 .fig b i{font-style:normal;color:var(--violet-l)}
 .fig span{display:block;margin-top:10px;font:500 12px/1.5 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
 
-/* ---------- artistes : rangées pleine largeur (nom | style | SoundCloud) ---------- */
-.artist{position:relative;overflow:hidden;isolation:isolate}
+/* ---------- artistes ---------- */
+.artists{grid-template-columns:repeat(3,minmax(0,1fr))}
+.artist{position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;gap:12px;min-height:clamp(200px,20vw,320px);padding:clamp(18px,2vw,32px) var(--gut)}
 .artist::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--violet);transform:translateY(101%);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
-.artist h3{font:800 clamp(1.8rem,3.5vw,4rem)/1 var(--f-title);text-transform:uppercase;letter-spacing:-.01em}
+.artist .kind{color:var(--violet-l)}
+.artist h3{margin-top:auto;font:800 clamp(1.8rem,3.5vw,4rem)/1 var(--f-title);text-transform:uppercase;letter-spacing:-.01em}
 .artist .st{font:500 13px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
-.artist a{position:static;justify-self:end;display:inline-flex;align-items:center;gap:8px;min-height:44px;font:700 13px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--text)}
+.artist a{position:static;display:inline-flex;align-items:center;gap:8px;min-height:44px;font:700 13px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--text)}
 .artist a::after{content:"";position:absolute;inset:0}
 .artist a:focus-visible{outline:none}
 .artist:focus-within{outline:3px solid var(--violet-l);outline-offset:-3px}
@@ -228,29 +243,45 @@ main>#agenda{border-top:0}
 .artist .wf{width:22px;height:12px;flex:none;color:var(--violet-l);transition:color .2s}
 .artist:hover .wf,.artist:focus-within .wf{color:#fff}
 .artist:hover::before,.artist:focus-within::before{transform:none}
-.artist:hover .st,.artist:focus-within .st{color:#fff}
+.artist:hover .kind,.artist:hover .st,.artist:focus-within .kind,.artist:focus-within .st{color:#fff}
 
-/* ---------- archives : rangées pleine largeur (date | événement | lieu) ---------- */
-.arch li{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1.6fr) minmax(0,1.1fr);gap:2px 28px;align-items:baseline;padding:14px var(--pad);border-top:var(--cl);background:linear-gradient(var(--violet),var(--violet)) no-repeat 0 100%/100% 0%;transition:background-size .32s cubic-bezier(.2,.7,.2,1)}
-.arch .d{font:500 13px/1.6 var(--f-mono);letter-spacing:.06em;white-space:nowrap;color:var(--violet-l)}
-.arch .t{font-weight:600;line-height:1.4;color:var(--text)}
-.arch .l{font-size:.9375rem;line-height:1.4;color:var(--text-2)}
+/* ---------- archives ---------- */
+.histo{display:grid;grid-template-columns:minmax(180px,24%) minmax(0,1fr);gap:16px clamp(20px,3vw,48px);align-items:end;padding:clamp(18px,2vw,30px) var(--gut) 14px;border-top:var(--cl);background:rgba(21,17,31,.4)}
+.histo-t{font:500 12px/1.6 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+.histo-t b{display:block;font-weight:500;color:var(--violet-l)}
+.histo-bars,.histo-lab{display:grid;grid-template-columns:repeat(var(--n,11),minmax(0,1fr))}
+.histo-bars{align-items:end;height:104px;border-bottom:1px solid var(--line-strong)}
+.hb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
+.hb b{font:500 11px/1 var(--f-mono);color:var(--text-2)}
+.hb i{display:block;width:clamp(5px,.6vw,9px);height:calc(var(--c,0)*var(--u,24px));min-height:2px;background:var(--violet-l)}
+.hb.z i{background:var(--line-strong)}
+.histo-lab span{display:flex;flex-direction:column;align-items:center;padding-top:6px;font:500 11px/1.3 var(--f-mono);letter-spacing:0;text-transform:uppercase;color:var(--text-2)}
+.histo-lab em{display:block;min-height:13px;font-style:normal;font-size:10px;color:var(--violet-l)}
+.arch-grid{grid-template-columns:minmax(0,1fr)}
+.arch table{width:100%;border-collapse:collapse}
+.arch th{padding:12px 14px;background:rgba(21,17,31,.6);border-bottom:1px solid var(--line-strong);font:500 12px/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--text-2)}
+.arch td{padding:14px;border-bottom:1px solid var(--line);vertical-align:top;background:linear-gradient(var(--violet),var(--violet)) no-repeat 0 100%/100% 0%;transition:background-size .32s cubic-bezier(.2,.7,.2,1)}
+.arch th:first-child,.arch td:first-child{padding-left:var(--gut)}
+.arch tr:last-child td{border-bottom:0}
+.arch .d{width:1%;white-space:nowrap;font:500 13px/1.6 var(--f-mono);letter-spacing:.06em;color:var(--violet-l)}
+.arch .t{font-weight:600;color:var(--text);line-height:1.4}
+.arch .l{color:var(--text-2);line-height:1.4}
+.arch .sub{display:block;margin-top:4px;font:400 12px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
 @media (hover:hover){
-  .arch li:hover{background-size:100% 100%}
-  .arch li:hover *{color:#fff}
+  .arch tbody tr:hover td{background-size:100% 100%}
+  .arch tbody tr:hover td,.arch tbody tr:hover td *{color:#fff}
 }
+.arch-count{padding:18px var(--gut);border-top:var(--cl);font:500 12px/1.6 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
 
 /* ---------- cinematek ---------- */
-.cine{display:grid;grid-template-columns:minmax(0,clamp(260px,26vw,480px)) minmax(0,1fr) auto;gap:20px clamp(24px,3vw,56px);align-items:center;padding:clamp(28px,3.4vw,56px) var(--gut) clamp(28px,3.4vw,56px) calc(var(--gut) + 4px);border:var(--cl);border-left:4px solid #39FF14;background:rgba(21,17,31,.62)}
+.cine{display:grid;grid-template-columns:minmax(0,clamp(260px,26vw,480px)) minmax(0,1fr) auto;gap:20px clamp(24px,3vw,56px);align-items:center;padding:clamp(28px,3.4vw,56px) var(--gut) clamp(28px,3.4vw,56px) calc(var(--gut) + 4px);border-left:4px solid #39FF14;border-top:var(--cl);background:rgba(21,17,31,.62)}
 .cine h2{font-size:clamp(1.8rem,3.8vw,4.2rem)}
 .cine p{font-size:1rem;line-height:1.55;color:var(--text-2);max-width:68ch}
 .cine .btn{white-space:nowrap}
 
 /* ---------- pied de page ---------- */
-footer{border-top:var(--cl);background:rgba(21,17,31,.6)}
-.foot-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr}
-.foot-grid>div{padding:clamp(24px,2.6vw,44px) var(--gut) clamp(26px,2.8vw,46px);border-left:var(--cl);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-.foot-grid>div:first-child{border-left:0;padding-left:0}
+.foot-grid{grid-template-columns:1fr 1fr 1fr 1.5fr}
+.foot-grid>div{padding:clamp(24px,2.6vw,44px) var(--gut) clamp(26px,2.8vw,46px);display:flex;flex-direction:column;align-items:flex-start;gap:14px}
 .foot-grid ul{display:flex;flex-direction:column;gap:2px}
 .foot-link,.foot-bar a{text-decoration:none;background:linear-gradient(currentColor,currentColor) no-repeat 0 calc(50% + .78em)/0 1px;transition:background-size .3s cubic-bezier(.2,.7,.2,1),color .2s}
 .foot-link:hover,.foot-link:focus-visible,.foot-bar a:hover,.foot-bar a:focus-visible{background-size:100% 1px}
@@ -264,7 +295,7 @@ footer{border-top:var(--cl);background:rgba(21,17,31,.6)}
 .foot-price{font:500 14px/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
 .qualiopi{width:100%;padding:16px;border:1.5px dashed var(--line-strong);font-size:.9375rem;line-height:1.5;color:var(--text-2)}
 .qualiopi b{display:block;margin-bottom:6px;font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
-.foot-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;padding:8px var(--pad) 72px;border-top:var(--cl);font:400 13px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--text-2)}
+.foot-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;padding:8px var(--gut) 72px;border-top:var(--cl);font:400 13px/1.5 var(--f-mono);letter-spacing:.04em;color:var(--text-2)}
 .foot-bar ul{display:flex;flex-wrap:wrap;gap:0 8px}
 .foot-bar a{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:var(--text)}
 .foot-bar a:hover{color:var(--violet-l)}
@@ -306,36 +337,36 @@ footer{border-top:var(--cl);background:rgba(21,17,31,.6)}
 .fx-mx{background-image:radial-gradient(circle,rgba(183,156,255,.13) 0,rgba(183,156,255,.13) 1.1px,transparent 1.7px)}
 html.fx-onde main>section{position:relative}
 @media (hover:hover){
-  :where(html.fx-signal) :where(.mc,.about-grid>*,.fig,.artist,.foot-grid>div,.event-row>div,.kv>div,.cine){outline:1px solid transparent;outline-offset:-1px;transition:outline-color .28s ease,box-shadow .28s ease}
-  :where(html.fx-signal) :where(.mc,.about-grid>*,.fig,.artist,.foot-grid>div,.event-row>div,.kv>div,.cine):hover{outline-color:var(--violet-l);box-shadow:inset 0 0 22px rgba(122,60,255,.2)}
+  :where(html.fx-signal) :where(.mc,.mc-kv>div,.about-grid>*,.fig,.artist,.foot-grid>div,.event-row>div,.kv>div,.cine){outline:1px solid transparent;outline-offset:-1px;transition:outline-color .28s ease,box-shadow .28s ease}
+  :where(html.fx-signal) :where(.mc,.mc-kv>div,.about-grid>*,.fig,.artist,.foot-grid>div,.event-row>div,.kv>div,.cine):hover{outline-color:var(--violet-l);box-shadow:inset 0 0 22px rgba(122,60,255,.2)}
 }
 
 /* ---------- responsive ---------- */
 @media (min-width:1280px){
   .mc-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .arch-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .arch th:first-child,.arch td:first-child{padding-left:20px}
 }
-@media (min-width:640px) and (max-width:1179px){
-  .kv{display:grid;grid-template-columns:1.1fr 1.4fr .5fr;padding-inline:var(--pad);border-top:var(--cl)}
-  .kv>div{padding:12px var(--gut);border-top:0}
-  .kv>div:first-child{padding-left:0}
-  .kv>div:last-child{padding-right:0}
-  .kv>div+div{border-left:var(--cl)}
+@media (max-width:1279px){
+  .arch:not(:first-child) thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 }
 @media (min-width:1180px){
-  .fiche{flex-direction:row;align-items:stretch}
-  .fiche-head{flex:0 0 auto;padding:14px var(--gut) 14px var(--pad);white-space:nowrap}
-  .kv{display:grid;flex:1 1 0;min-width:0;grid-template-columns:1.15fr 1.45fr .5fr}
-  .kv>div{display:flex;flex-direction:column;justify-content:center;padding:16px clamp(14px,1.4vw,24px);border-top:0;border-left:var(--cl)}
-  .fiche-act{flex:0 0 auto;justify-content:center;padding:12px var(--pad) 12px clamp(16px,1.4vw,24px);border-top:0;border-left:var(--cl)}
-  .fiche-act .btn{width:clamp(180px,14vw,260px)}
+  .fiche{flex-direction:row;flex-wrap:wrap;align-items:stretch}
+  .fiche-head{flex:0 0 clamp(224px,19vw,300px);padding:14px var(--gut)}
+  .kv{flex:1 1 0;min-width:0;grid-template-columns:1.15fr .6fr 1.35fr 1.25fr .9fr}
+  .kv>div{display:block;padding:16px clamp(14px,1.4vw,24px);border-top:0;border-left:var(--cl)}
+  .kv>div:last-child:nth-child(odd){grid-column:auto}
+  .kv dt{margin-bottom:6px}
+  .fiche-act{flex:0 0 clamp(280px,21vw,340px);justify-content:center;padding:12px clamp(16px,1.4vw,24px);border-top:0;border-left:var(--cl)}
+  .fiche-note{flex:1 1 100%;padding-left:calc(clamp(224px,19vw,300px) + 56px)}
 }
 @media (max-width:1100px){
+  .event-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .event-row .act{grid-column:1/-1;border-left:0;border-top:1px solid rgba(255,255,255,.34)}
   .about-grid{grid-template-columns:1fr 1fr}
   .about-text{grid-column:1/-1}
   .figures{grid-template-columns:repeat(3,minmax(0,1fr))}
   .foot-grid{grid-template-columns:1fr 1fr}
-  .foot-grid>div:nth-child(odd){border-left:0;padding-left:0}
-  .foot-grid>div:nth-child(n+3){border-top:var(--cl)}
   .cine{grid-template-columns:1fr}
 }
 @media (max-width:1020px){
@@ -344,40 +375,51 @@ html.fx-onde main>section{position:relative}
   .js .nav.open{display:flex}
   .nav{margin-left:0;flex-direction:column}
   .nav ul{display:block}
-  .nl{border-left:0;border-top:1px solid var(--line);min-height:56px;padding:0 var(--pad);font-size:14px}
-  .nav-cta{margin:16px var(--pad) 20px;min-height:52px;border-left:0}
+  .nl{border-left:0;border-top:1px solid var(--line);min-height:56px;padding:0 var(--gut);font-size:14px}
+  .nav-cta{margin:16px var(--gut) 20px;min-height:52px;border-left:0}
+  .event-body{grid-template-columns:1fr}
+  .poster-cell{border-left:0;border-top:1px solid rgba(255,255,255,.34)}
   .fiche-act{flex-direction:row}
   .fiche-act .btn{flex:1 1 0}
 }
 @media (max-width:760px){
   body{font-size:16px}
+  .sec-head{grid-template-columns:1fr}
   .mc-grid{grid-template-columns:1fr}
+  .artists{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .artist{min-height:176px}
   .figures{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about-grid{grid-template-columns:1fr}
   .lead{font-size:1.3rem}
   .lineup li{grid-template-columns:1fr}
-  .artist{grid-template-columns:minmax(0,1fr) auto;gap:4px 16px}
-  .artist h3{grid-column:1/-1}
-  .artist .st{grid-column:1}
-  .artist a{grid-column:2;grid-row:2}
-  .arch li{grid-template-columns:112px minmax(0,1fr);gap:2px 14px}
-  .arch .d{grid-row:1/3}
-  .arch .t,.arch .l{grid-column:2}
-  .event-row{grid-template-columns:1fr}
-  .event-row>div{border-left:0;padding-inline:0;border-top:1px solid rgba(255,255,255,.34)}
-  .event-row>div:first-child{border-top:0}
+  .event-row{grid-template-columns:1fr 1fr}
+  .event-row>div:nth-child(odd){border-left:0}
+  .event-row>div:nth-child(3){grid-column:1/-1;border-left:0;border-top:1px solid rgba(255,255,255,.34)}
   .event-row .act .btn{width:100%}
   .foot-grid{grid-template-columns:1fr}
-  .foot-grid>div+div{border-top:var(--cl)}
   .logo{font-size:20px}
+  .histo{grid-template-columns:1fr}
+  .arch thead,.arch:not(:first-child) thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .arch tr{display:grid;grid-template-columns:1fr;gap:2px;padding:14px var(--gut);border-bottom:1px solid var(--line)}
+  .arch tr:last-child{border-bottom:0}
+  .arch td,.arch td:first-child{display:block;padding:0;border:0;background:none;width:auto}
+  .arch .d{width:auto}
 }
 @media (max-width:560px){
+  .artists{grid-template-columns:1fr}
+  .artist{min-height:0}
+  .artist h3{margin-top:4px}
+  .kv{grid-template-columns:1fr}
+  .kv>div:nth-child(even){border-left:0}
   .fiche-act{flex-direction:column}
+}
+@media (max-width:380px){
+  .mc-kv dd{font-size:12px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation:none!important}
-  .btn:active,.fx-btn:active,.copy-btn:active{transform:none}
-  .btn:hover svg,.btn:focus-visible svg,.foot-link:hover svg,.foot-link:focus-visible svg,.artist:hover a svg:not(.wf),.artist:focus-within a svg:not(.wf){transform:none}
+  .btn:active,.linkrow:active,.fx-btn:active,.copy-btn:active{transform:none}
+  .btn:hover svg,.btn:focus-visible svg,.linkrow:hover svg,.linkrow:focus-visible svg,.foot-link:hover svg,.foot-link:focus-visible svg,.artist:hover a svg:not(.wf),.artist:focus-within a svg:not(.wf){transform:none}
 }
 </style>
 
@@ -413,7 +455,7 @@ html.fx-onde main>section{position:relative}
   <section class="hero" id="hero" aria-labelledby="hero-title">
     <div class="hero-grid">
       <div class="hero-main">
-        <p class="tag">Prochain événement</p>
+        <p class="tag">prochain événement · 1 date</p>
         <div>
           <h1 id="hero-title" class="h-title hero-title"><span>Encore et Encor</span><span class="sr-only"> · </span><span>Le Château Cosco</span><span class="sr-only"> · </span><span>Liminaal</span></h1>
           <p class="hero-styles">Live machines modulaire · Techno DIY · Cold techno</p>
@@ -421,16 +463,20 @@ html.fx-onde main>section{position:relative}
       </div>
       <div class="hero-side">
         <div class="fiche">
-          <div class="fiche-head"><span class="status"><span>Billetterie ouverte<span data-countdown></span></span></span></div>
-          <div class="kv">
-            <div><time datetime="2026-10-16T21:00+02:00">Ven. 16.10.2026 · 21:00</time></div>
-            <div>Le Salon des Indépendants<span class="sub">4 rue Lunaret, Montpellier</span></div>
-            <div>10 €</div>
-          </div>
+          <div class="fiche-head"><span class="status">Billetterie ouverte</span><span class="cd" role="timer" data-countdown></span></div>
+          <dl class="kv">
+            <div><dt>Date</dt><dd><time datetime="2026-10-16">Ven. 16.10.2026</time></dd></div>
+            <div><dt>Heure</dt><dd>21:00</dd></div>
+            <div><dt>Lieu</dt><dd>Le Salon des Indépendants</dd></div>
+            <div><dt>Adresse</dt><dd>4 rue Lunaret, Montpellier</dd></div>
+            <div><dt>Tarif</dt><dd>10 € · tarif unique</dd></div>
+          </dl>
           <div class="fiche-act">
             <a class="btn btn-primary" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie
               <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+            <a class="btn btn-ghost" href="#agenda">Détails de la soirée</a>
           </div>
+          <p class="fiche-note">Prix bas pour rémunérer correctement les artistes et soutenir la scène indépendante.</p>
         </div>
       </div>
     </div>
@@ -438,24 +484,38 @@ html.fx-onde main>section{position:relative}
 
   <!-- ============ AGENDA ============ -->
   <section id="agenda" aria-labelledby="agenda-t">
+    <div class="tagbar"><span class="tag">agenda · 1 date</span></div>
     <div class="sec-head">
       <h2 id="agenda-t" class="h-title h2">Agenda</h2>
+      <p class="sec-sub">Événements à venir à Montpellier. Une seule date annoncée pour le moment.</p>
     </div>
 
-    <article class="event">
-      <p class="lineup-label mono-up">Line-up</p>
-      <ol class="lineup">
-        <li><span class="name">Encore et Encor</span><span class="style">Live machines · techno 130-145 BPM</span></li>
-        <li><span class="name">Le Château Cosco</span><span class="style">Trio · noise rock · techno DIY</span></li>
-        <li><span class="name">Liminaal</span><span class="style">Cold techno · slow rave · acid</span></li>
-      </ol>
-      <div class="event-row">
-        <div class="ev-date"><time datetime="2026-10-16T21:00+02:00">Ven. 16.10</time></div>
-        <div class="ev-lieu">Le Salon des Indépendants</div>
-        <div class="act"><a class="btn btn-light" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie
-          <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></div>
+    <article class="event" aria-labelledby="ev-title">
+      <div class="event-top">
+        <span class="mono-up"><time datetime="2026-10-16T21:00">Vendredi 16 octobre 2026 · 21:00</time></span>
+        <span class="ev-meta"><span class="cd" role="timer" data-countdown></span><span class="status">Billetterie ouverte</span></span>
       </div>
-      <div class="poster-cell">
+      <div class="event-body">
+        <div class="event-info">
+          <h3 id="ev-title" class="h-title event-title"><span>Encore et Encor</span><span class="sr-only"> · </span><span>Le Château Cosco</span><span class="sr-only"> · </span><span>Liminaal</span></h3>
+          <p class="event-styles">Live machines modulaire · Techno DIY · Cold techno</p>
+          <p class="lineup-label mono-up">Line-up · 3 artistes</p>
+          <ol class="lineup">
+            <li>
+              <div><span class="name">Encore et Encor</span><span class="style">Live machines · techno 130-145 BPM</span></div>
+              <p>Live machines sans timecode. Techno hypnotique et rave.</p>
+            </li>
+            <li>
+              <div><span class="name">Le Château Cosco</span><span class="style">Trio · noise rock · techno DIY</span></div>
+              <p>Transe répétitive et cérémonielle.</p>
+            </li>
+            <li>
+              <div><span class="name">Liminaal</span><span class="style">Cold techno · slow rave · acid</span></div>
+              <p>Textures cold wave. Mixe avec le collectif depuis 2024.</p>
+            </li>
+          </ol>
+        </div>
+        <div class="poster-cell">
           <figure class="poster">
             <svg viewBox="0 0 300 400" role="img" aria-label="Affiche de la soirée du 16 octobre : smiley violet tracé à la bombe sur papier blanc froissé">
               <rect width="300" height="400" fill="#EEEBE5"/>
@@ -487,16 +547,26 @@ html.fx-onde main>section{position:relative}
               <text x="20" y="28" fill="#141018" font-family="'JetBrains Mono',monospace" font-weight="500" font-size="12" letter-spacing="1">16.10.2026</text>
             </svg>
           </figure>
+          <p class="poster-cap">Affiche · soirée du 16.10</p>
+        </div>
       </div>
+      <dl class="event-row">
+        <div><dt>Date</dt><dd>Ven. 16.10.2026 · 21:00</dd></div>
+        <div><dt>Lieu</dt><dd>Le Salon des Indépendants<br>4 rue Lunaret, Montpellier</dd></div>
+        <div><dt>Tarif</dt><dd>10 € · unique</dd></div>
+        <div class="act"><a class="btn btn-light" href="https://www.helloasso.com/associations/universitek/evenements/encore-et-encor-le-chateau-cosco-liminaal" target="_blank" rel="noopener">Billetterie
+          <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></div>
+      </dl>
+      <p class="event-note">Prix bas pour rémunérer correctement les artistes et soutenir la scène indépendante.</p>
     </article>
   </section>
 
   <!-- ============ MASTERCLASS ============ -->
   <section id="masterclass" aria-labelledby="mc-t">
+    <div class="tagbar"><span class="tag">masterclass · 4 vidéos · 6 h 38 au total</span></div>
     <div class="sec-head">
       <h2 id="mc-t" class="h-title h2">Masterclass</h2>
-      <a class="btn btn-ghost" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener" aria-label="Toutes les masterclass sur YouTube">YouTube
-        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+      <p class="sec-sub">Replays de masterclass en ligne avec des intervenant·e·s de la scène électronique. Cours en français et en anglais.</p>
     </div>
     <div class="mc-grid">
 
@@ -508,10 +578,16 @@ html.fx-onde main>section{position:relative}
             <span class="vid-dur">1h59</span>
           </button>
         </div>
+        <p class="vid-note">Lire la vidéo charge YouTube (Google)</p>
         <div class="mc-body">
           <h3 class="mc-title">Dark progressive : patches, tips &amp; tricks</h3>
           <p class="mc-by">OddWave (Hadra Records)</p>
-          <p class="tag">Confirmé·e·s</p>
+          <dl class="mc-kv">
+            <div><dt>Date</dt><dd>08.08.2020</dd></div>
+            <div><dt>Durée</dt><dd class="dur">1h59</dd></div>
+            <div><dt>Niveau</dt><dd><span class="gauge g3" aria-hidden="true"><i></i><i></i><i></i></span>Confirmé·e·s</dd></div>
+            <div><dt>Outils</dt><dd><span class="chip">Ableton</span><span class="chip">Serum</span></dd></div>
+          </dl>
         </div>
       </article>
 
@@ -523,10 +599,16 @@ html.fx-onde main>section{position:relative}
             <span class="vid-dur">1h17</span>
           </button>
         </div>
+        <p class="vid-note">Lire la vidéo charge YouTube (Google)</p>
         <div class="mc-body">
           <h3 class="mc-title">Liveset &amp; improvisation <span lang="en">(EN)</span></h3>
           <p class="mc-by">69DB (Spiral Tribe / SP23)</p>
-          <p class="tag">Débutant·e·s</p>
+          <dl class="mc-kv">
+            <div><dt>Date</dt><dd>19.09.2020</dd></div>
+            <div><dt>Durée</dt><dd class="dur">1h17</dd></div>
+            <div><dt>Niveau</dt><dd><span class="gauge g1" aria-hidden="true"><i></i><i></i><i></i></span>Débutant·e·s</dd></div>
+            <div><dt>Outils</dt><dd><span class="chip">Ableton</span><span class="chip">NI</span></dd></div>
+          </dl>
         </div>
       </article>
 
@@ -538,10 +620,16 @@ html.fx-onde main>section{position:relative}
             <span class="vid-dur">1h58</span>
           </button>
         </div>
+        <p class="vid-note">Lire la vidéo charge YouTube (Google)</p>
         <div class="mc-body">
           <h3 class="mc-title">Concert évolutif (BPM) &amp; mix harmonique</h3>
           <p class="mc-by">Dj Bigmat</p>
-          <p class="tag">Tous niveaux</p>
+          <dl class="mc-kv">
+            <div><dt>Date</dt><dd>07.02.2021</dd></div>
+            <div><dt>Durée</dt><dd class="dur">1h58</dd></div>
+            <div><dt>Niveau</dt><dd><span class="gauge g3 all" aria-hidden="true"><i></i><i></i><i></i></span>Tous niveaux</dd></div>
+            <div><dt>Outils</dt><dd><span class="chip">DJing</span><span class="chip">scratch</span></dd></div>
+          </dl>
         </div>
       </article>
 
@@ -553,33 +641,45 @@ html.fx-onde main>section{position:relative}
             <span class="vid-dur">1h24</span>
           </button>
         </div>
+        <p class="vid-note">Lire la vidéo charge YouTube (Google)</p>
         <div class="mc-body">
           <h3 class="mc-title">Initiation DJing sur CDJ &amp; DJM</h3>
           <p class="mc-by">Bernadette (Move Ur Gambettes)</p>
-          <p class="tag">Débutant·e·s</p>
+          <dl class="mc-kv">
+            <div><dt>Date</dt><dd>13.12.2023</dd></div>
+            <div><dt>Durée</dt><dd class="dur">1h24</dd></div>
+            <div><dt>Niveau</dt><dd><span class="gauge g1" aria-hidden="true"><i></i><i></i><i></i></span>Débutant·e·s</dd></div>
+            <div><dt>Outils</dt><dd>—</dd></div>
+          </dl>
         </div>
       </article>
 
     </div>
-    <p class="mc-note">Lire une vidéo charge YouTube (Google).</p>
+    <a class="linkrow rise" href="https://www.youtube.com/@UNIVERSITEK" target="_blank" rel="noopener">Toutes les masterclass sur YouTube
+      <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
   </section>
 
   <!-- ============ À PROPOS ============ -->
   <section id="a-propos" aria-labelledby="ap-t">
+    <div class="tagbar"><span class="tag">à propos · 2 pôles</span></div>
     <div class="sec-head">
       <h2 id="ap-t" class="h-title h2">À propos</h2>
+      <p class="sec-sub">Transmission &amp; célébrations. Association montpelliéraine et organisme de formation certifié Qualiopi.</p>
     </div>
     <div class="about-grid">
       <div class="about-text">
-        <p class="lead">Association montpelliéraine de musique électronique et organisme de formation certifié Qualiopi.</p>
+        <p class="lead">Universitek fait de la musique électronique un terrain d’apprentissage, de création et de partage.</p>
+        <p>Pédagogie inspirée de l’éducation populaire, exigence professionnelle.</p>
       </div>
       <article class="pillar">
+        <p class="tag">pôle · formation</p>
         <h3>Formation</h3>
-        <p>Masterclass en ligne, sessions en présentiel, stages intensifs.</p>
+        <p>Masterclass en ligne, en direct ou en replay. Sessions en présentiel. Stages intensifs.</p>
       </article>
       <article class="pillar">
+        <p class="tag">pôle · production</p>
         <h3>Production</h3>
-        <p>Soirées club, concerts, festival : la scène locale et underground.</p>
+        <p>Soirées club, concerts, formats en espace public et festival, pour faire briller la scène locale et underground.</p>
       </article>
     </div>
     <ul class="figures" aria-label="Chiffres clés">
@@ -587,54 +687,86 @@ html.fx-onde main>section{position:relative}
       <li class="fig"><b>70<i> h+</i></b><span>de formation</span></li>
       <li class="fig"><b>~20</b><span>événements</span></li>
       <li class="fig"><b>12</b><span>lieux</span></li>
-      <li class="fig"><b>1</b><span>festival</span></li>
-      <li class="fig"><b>FR<i> / </i>EN</b><span>cours</span></li>
+      <li class="fig"><b>1</b><span>festival à Victoire 2</span></li>
+      <li class="fig"><b>FR<i> / </i>EN</b><span>langues des cours</span></li>
     </ul>
   </section>
 
   <!-- ============ ARTISTES ============ -->
   <section id="artistes" aria-labelledby="art-t">
+    <div class="tagbar"><span class="tag">artistes · 6 profils</span></div>
     <div class="sec-head">
       <h2 id="art-t" class="h-title h2">Artistes associé·e·s</h2>
+      <p class="sec-sub">Artistes et VJ associé·e·s aux soirées. Écoute sur SoundCloud.</p>
     </div>
     <div class="artists">
-      <article class="artist"><h3>Meremix</h3><p class="st">Groovy techno · dark acid disco</p><a href="#" aria-label="Écouter Meremix sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
-      <article class="artist"><h3>Wildtrack</h3><p class="st">Psytrance · forest</p><a href="#" aria-label="Écouter Wildtrack sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
-      <article class="artist"><h3>Zöta</h3><p class="st">Techno · acid house</p><a href="#" aria-label="Écouter Zöta sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
-      <article class="artist"><h3>Cosmic Bazaar</h3><p class="st">Groovy techno · psytechno</p><a href="#" aria-label="Écouter Cosmic Bazaar sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
-      <article class="artist"><h3>Liminaal</h3><p class="st">Cold techno · slow rave</p><a href="#" aria-label="Écouter Liminaal sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
-      <article class="artist"><h3>Hurluberlu</h3><p class="st">VJing · mapping</p><a href="#" aria-label="Écouter Hurluberlu sur SoundCloud"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">musique</p><h3>Meremix</h3><p class="st">Groovy techno · dark acid disco</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Meremix</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">musique</p><h3>Wildtrack</h3><p class="st">Psytrance · forest</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Wildtrack</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">musique</p><h3>Zöta</h3><p class="st">Techno · acid house</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Zöta</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">musique</p><h3>Cosmic Bazaar</h3><p class="st">Groovy techno · psytechno</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Cosmic Bazaar</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">musique</p><h3>Liminaal</h3><p class="st">Cold techno · slow rave</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Liminaal</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
+      <article class="artist"><p class="tag kind">visuel</p><h3>Hurluberlu</h3><p class="st">VJing · mapping</p><a href="#"><svg class="wf" viewBox="0 0 22 12" aria-hidden="true" focusable="false"><path d="M1 5v2M4 3v6M7 1v10M10 4v4M13 2v8M16 4v4M19 3v6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>SoundCloud<span class="sr-only"> : Hurluberlu</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a></article>
     </div>
   </section>
 
   <!-- ============ ARCHIVES ============ -->
   <section id="archives" aria-labelledby="arc-t">
+    <div class="tagbar"><span class="tag">archives · 13 dates · 12 lieux</span></div>
     <div class="sec-head">
       <h2 id="arc-t" class="h-title h2">Archives</h2>
+      <p class="sec-sub">Événements passés, de décembre 2024 à octobre 2025.</p>
     </div>
-    <ul class="arch">
-      <li><time class="d" datetime="2025-10-31">31.10.2025</time><span class="t">Panacée Horror Show</span><span class="l">Café de la Panacée</span></li>
-      <li><time class="d" datetime="2025-09-26">26.09.2025</time><span class="t">Concert pour la paix</span><span class="l">Parc Clemenceau</span></li>
-      <li><time class="d" datetime="2025-08-29">29-30.08.2025</time><span class="t">Ateliers scratch</span><span class="l">Hadra Trance Festival</span></li>
-      <li><time class="d" datetime="2025-08-22">22.08.2025</time><span class="t">Boiler Groove #4</span><span class="l">Tropisme</span></li>
-      <li><time class="d" datetime="2025-07-13">13.07.2025</time><span class="t">Universitek × Solaation</span><span class="l">MOBA</span></li>
-      <li><time class="d" datetime="2025-07-12">12.07.2025</time><span class="t">Boiler Groove #3</span><span class="l">Panorama, Corum</span></li>
-      <li><time class="d" datetime="2025-06-21">21.06.2025</time><span class="t">Fête de la musique</span><span class="l">Bistrot Gilles</span></li>
-      <li><time class="d" datetime="2025-05-31">31.05.2025</time><span class="t">Universitek Festival #1</span><span class="l">Victoire 2</span></li>
-      <li><time class="d" datetime="2025-05-07">07.05.2025</time><span class="t">Blastfest</span><span class="l">Université Paul-Valéry</span></li>
-      <li><time class="d" datetime="2025-05-02">02.05.2025</time><span class="t">Elements of Baraka</span><span class="l">Le Salon des Indépendants</span></li>
-      <li><time class="d" datetime="2025-04-04">04.04.2025</time><span class="t">Boiler Groove #2</span><span class="l">MO.CO. Faune</span></li>
-      <li><time class="d" datetime="2025-02-21">21.02.2025</time><span class="t">Boiler Groove #1</span><span class="l">MO.CO. Faune</span></li>
-      <li><time class="d" datetime="2024-12-07">07.12.2024</time><span class="t">Universitek invite Puzzle Puzzle</span><span class="l">Mélomane Club</span></li>
-    </ul>
+    <div class="arch-grid">
+      <div class="arch">
+        <table>
+          <caption class="sr-only">Événements passés, d’octobre 2025 à juillet 2025</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Événement</th><th scope="col">Lieu</th></tr></thead>
+          <tbody>
+            <tr><td class="d"><time datetime="2025-10-31">31.10.2025</time></td><td class="t">Panacée Horror Show</td><td class="l">Café de la Panacée</td></tr>
+            <tr><td class="d"><time datetime="2025-09-26">26.09.2025</time></td><td class="t">Concert pour la paix</td><td class="l">Parc Clemenceau</td></tr>
+            <tr><td class="d"><time datetime="2025-08-29">29-30.08.2025</time></td><td class="t">Ateliers scratch</td><td class="l">Hadra Trance Festival</td></tr>
+            <tr><td class="d"><time datetime="2025-08-22">22.08.2025</time></td><td class="t">Boiler Groove #4</td><td class="l">Tropisme</td></tr>
+            <tr><td class="d"><time datetime="2025-07-13">13.07.2025</time></td><td class="t">Universitek × Solaation</td><td class="l">MOBA</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arch">
+        <table>
+          <caption class="sr-only">Événements passés, de juillet 2025 à mai 2025</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Événement</th><th scope="col">Lieu</th></tr></thead>
+          <tbody>
+            <tr><td class="d"><time datetime="2025-07-12">12.07.2025</time></td><td class="t">Boiler Groove #3</td><td class="l">Panorama, Corum</td></tr>
+            <tr><td class="d"><time datetime="2025-06-21">21.06.2025</time></td><td class="t">Fête de la musique</td><td class="l">Bistrot Gilles</td></tr>
+            <tr><td class="d"><time datetime="2025-05-31">31.05.2025</time></td><td class="t">Universitek Festival #1<span class="sub">16h-4h · 2 scènes · 18 artistes</span></td><td class="l">Victoire 2</td></tr>
+            <tr><td class="d"><time datetime="2025-05-07">07.05.2025</time></td><td class="t">Blastfest</td><td class="l">Université Paul-Valéry</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="arch">
+        <table>
+          <caption class="sr-only">Événements passés, de mai 2025 à décembre 2024</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Événement</th><th scope="col">Lieu</th></tr></thead>
+          <tbody>
+            <tr><td class="d"><time datetime="2025-05-02">02.05.2025</time></td><td class="t">Elements of Baraka</td><td class="l">Le Salon des Indépendants</td></tr>
+            <tr><td class="d"><time datetime="2025-04-04">04.04.2025</time></td><td class="t">Boiler Groove #2</td><td class="l">MO.CO. Faune</td></tr>
+            <tr><td class="d"><time datetime="2025-02-21">21.02.2025</time></td><td class="t">Boiler Groove #1</td><td class="l">MO.CO. Faune</td></tr>
+            <tr><td class="d"><time datetime="2024-12-07">07.12.2024</time></td><td class="t">Universitek invite Puzzle Puzzle</td><td class="l">Mélomane Club</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="arch-count">13 événements · du 07.12.2024 au 31.10.2025</p>
   </section>
 
   <!-- ============ CINEMATEK ============ -->
   <section id="cinematek" aria-labelledby="cine-t">
     <div class="cine">
-      <h2 id="cine-t" class="h-title">Cinematek</h2>
+      <div>
+        <p class="tag" style="margin-bottom:10px">cinematek · branche cinéma</p>
+        <h2 id="cine-t" class="h-title">Cinematek</h2>
+      </div>
       <p>Créée en 2025, CINEMATEK est la branche d’Universitek dédiée aux métiers du cinéma et de l’audiovisuel. Dans la continuité du projet de transmission développé par Universitek depuis 2017 elle propose des formations professionnalisantes dans le registre du cinéma.</p>
-      <a class="btn btn-ghost" href="https://www.cinematek.fr/" target="_blank" rel="noopener">cinematek.fr
+      <a class="btn btn-ghost" href="https://www.cinematek.fr/" target="_blank" rel="noopener">+ d’infos sur cinematek.fr
         <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
     </div>
   </section>
@@ -668,12 +800,14 @@ html.fx-onde main>section{position:relative}
         <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
     </div>
     <div>
+      <p class="tag">organisme de formation</p>
       <a class="btn btn-primary" href="https://drive.google.com/drive/folders/1zArshubiv1V8xgagEm6ryqpQ_6pF1rAo" target="_blank" rel="noopener">Informations liées à l’organisme de formation
         <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 11 11 3M4.5 3H11v6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
       <div class="qualiopi"><b>[logo Qualiopi]</b>La certification qualité a été délivrée au titre de la catégorie d’action suivante : actions de formation.</div>
     </div>
   </div>
   <div class="foot-bar">
+    <span>© 2026 Universitek · Montpellier</span>
     <span class="upd">Mise à jour : <time datetime="2026-10-03">03.10.2026</time></span>
     <ul>
       <li><a href="#">Mentions légales</a></li>
@@ -683,7 +817,7 @@ html.fx-onde main>section{position:relative}
 </footer>
 
 <div class="fx-dock" id="fx-dock">
-  <div class="badge">PISTE A · v4 · maquette</div>
+  <div class="badge">PISTE A · v3 (avant épure) · maquette</div>
 </div>
 
 <script>
@@ -739,7 +873,7 @@ html.fx-onde main>section{position:relative}
 
 <script id="details">
 /* =====================================================================
-   DÉTAILS · fond (trame, brume, grain) · statut J-x
+   DÉTAILS · fond (trame, brume, grain) · compte à rebours · totaux · histogramme
    progression de lecture + menu courant · croix de repérage · copie e-mail
    ===================================================================== */
 (function(){
@@ -750,15 +884,15 @@ function qsa(s,r){return Array.prototype.slice.call((r||doc).querySelectorAll(s)
 var reduceMQ=window.matchMedia('(prefers-reduced-motion: reduce)');
 function reduced(){return reduceMQ.matches}
 
-/* ---------- statut : « Billetterie ouverte · J-x » (jours calendaires, Paris) ---------- */
+/* ---------- compte à rebours jusqu'au 16/10/2026 21:00 (Paris, UTC+2 à cette date) ---------- */
 (function(){
   var els=qsa('[data-countdown]');if(!els.length)return;
-  var START=Date.parse('2026-10-16T21:00:00+02:00'),END=START+8*3600*1000,DAY=86400000,OFF=2*3600000,timer=0,last='';
+  var START=Date.parse('2026-10-16T21:00:00+02:00'),END=START+8*3600*1000,timer=0,last='';
   function label(now){
-    if(now>=END)return ' · terminé';
-    if(now>=START)return ' · en cours';
-    var d=Math.floor((START+OFF)/DAY)-Math.floor((now+OFF)/DAY);
-    return d>0?' · J-'+d:' · ce soir';
+    if(now>=END)return 'terminé';
+    if(now>=START)return 'en cours';
+    var m=Math.floor((START-now)/60000),d=Math.floor(m/1440),h=Math.floor((m%1440)/60);
+    return 'J-'+d+' · '+d+' j '+h+' h '+(m%60)+' min';
   }
   function tick(){
     var now=Date.now(),t=label(now);
@@ -770,6 +904,41 @@ function reduced(){return reduceMQ.matches}
   doc.addEventListener('visibilitychange',function(){if(!doc.hidden)tick()});
 })();
 
+/* ---------- archives : totaux réels + histogramme par mois ---------- */
+(function(){
+  var rows=qsa('.arch tbody tr'),grid=qs('#archives .arch-grid');
+  if(!rows.length||!grid)return;
+  var venues={},months={},mn='',mx='';
+  rows.forEach(function(r){
+    var l=qs('.l',r),t=qs('.d time',r),dt=t&&t.getAttribute('datetime');
+    if(l)venues[l.textContent.replace(/\s+/g,' ').trim().toLowerCase()]=1;
+    if(dt){var k=dt.slice(0,7);months[k]=(months[k]||0)+1;if(!mn||k<mn)mn=k;if(!mx||k>mx)mx=k}
+  });
+  var tag=qs('#archives .tagbar .tag');
+  if(tag)tag.textContent='archives · '+rows.length+' dates · '+Object.keys(venues).length+' lieux';
+  if(!mn)return;
+  var SH=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'],
+      FL=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],
+      y=+mn.slice(0,4),m=+mn.slice(5,7),ye=+mx.slice(0,4),me=+mx.slice(5,7),list=[],max=1,first=true;
+  while(y<ye||(y===ye&&m<=me)){
+    var key=y+'-'+(m<10?'0':'')+m,c=months[key]||0;if(c>max)max=c;
+    list.push({y:y,m:m,c:c,first:first});first=false;
+    if(++m>12){m=1;y++}
+  }
+  var u=Math.min(24,Math.floor(72/max)),bars='',labs='',alt=[];
+  list.forEach(function(o){
+    var s=SH[o.m-1].replace('.','');
+    bars+='<span class="hb'+(o.c?'':' z')+'" style="--c:'+o.c+'"><b>'+(o.c||'')+'</b><i></i></span>';
+    labs+='<span>'+s+'<em>'+((o.first||o.m===1)?o.y:'')+'</em></span>';
+    alt.push(FL[o.m-1]+' '+o.y+' : '+o.c);
+  });
+  var a=list[0],b=list[list.length-1],box=doc.createElement('div');
+  box.className='histo';box.setAttribute('role','img');
+  box.setAttribute('aria-label','Nombre d’événements par mois, de '+FL[a.m-1]+' '+a.y+' à '+FL[b.m-1]+' '+b.y+'. '+alt.join(', ')+'.');
+  box.innerHTML='<p class="histo-t" aria-hidden="true">Événements par mois<b>'+SH[a.m-1]+' '+a.y+' → '+SH[b.m-1]+' '+b.y+'</b></p>'+
+    '<div class="histo-plot" aria-hidden="true"><div class="histo-bars" style="--n:'+list.length+';--u:'+u+'px">'+bars+'</div><div class="histo-lab" style="--n:'+list.length+'">'+labs+'</div></div>';
+  grid.parentNode.insertBefore(box,grid);
+})();
 
 /* ---------- e-mail : copie en un clic ---------- */
 (function(){
@@ -843,7 +1012,7 @@ function reduced(){return reduceMQ.matches}
 (function(){
   var layer=doc.createElement('div'),timer=0;
   layer.className='marks';layer.setAttribute('aria-hidden','true');doc.body.appendChild(layer);
-  var SEL='.fiche-head,.hero-side .kv>div,.fiche-act,.poster-cell,.event-row>div,.mc,.about-grid>*,.fig,.foot-grid>div+div,.cine';
+  var SEL='.fiche-head,.hero-side .kv>div,.fiche-act,.event-info,.poster-cell,.event-row>div,.mc,.about-grid>*,.fig,.artist,.arch,.foot-grid>div,.cine';
   function build(){
     var sx=window.pageXOffset||0,sy=window.pageYOffset||0,W=root.clientWidth,seen={},out=[];
     qsa(SEL).forEach(function(el){
@@ -995,7 +1164,7 @@ var Ov={cv:null,ctx:null,w:0,h:0,refs:0,done:false,
 };
 
 /* ---------- géométrie : arêtes de la grille de blocs ---------- */
-var BLOCK_SEL='.hero-main,.hero-side,.fiche-head,.fiche-act,.kv>div,main>section:not(.hero),.lineup-label,.lineup li,.event-row,.event-row>div,.poster-cell,.mc,.about-grid>*,.fig,.artist,.arch li,.foot-grid>div,.cine';
+var BLOCK_SEL='.hero-main,.hero-side,.fiche-head,.fiche-act,.kv>div,.tagbar,.sec-head,.event-info,.poster-cell,.event-row>div,.mc,.mc-kv>div,.about-grid>*,.fig,.artist,.arch,.foot-grid>div,.cine';
 var Geo={dirty:true,nodes:[],edges:[],hooks:[],
   build:function(){
     var sx=window.pageXOffset||0,sy=window.pageYOffset||0,H=[],V=[],seen={},nodes=[],cells={},edges=[],ekeys={},i,j,k;
@@ -1297,8 +1466,7 @@ var matrice=(function(){
     var rg=doc.createRange(),lr,sr=styles.getBoundingClientRect();
     rg.selectNodeContents(spans[spans.length-1]);lr=rg.getBoundingClientRect();
     if(!lr.width)return null;                              /* à droite de la dernière ligne du titre et de la ligne des styles */
-    var hm=qs('.hero-main',hero),gut=hm?parseFloat(getComputedStyle(hm).paddingRight)||0:40;   /* marge droite de la colonne */
-    var x0=Math.max(lr.right,sr.right)-hr.left+40,x1=hr.width-gut,yt=lr.top-hr.top,yb=sr.bottom-hr.top;
+    var gut=clamp(window.innerWidth*.025,16,40),x0=Math.max(lr.right,sr.right)-hr.left+40,x1=hr.width-gut,yt=lr.top-hr.top,yb=sr.bottom-hr.top;
     if(x1-x0<needW||yb-yt<needH)return null;
     return {x:x1-needW,y:yb-needH};
   }
@@ -1349,27 +1517,19 @@ var matrice=(function(){
 })();
 
 /* =====================================================================
-   4 · DÉCODAGE : quelques étiquettes de section, ~400 ms de caractères
-   aléatoires puis le texte réel. Aucun brouillage hors de l'animation.
+   4 · DÉCODAGE : étiquettes mono, ~400 ms de caractères aléatoires
    ===================================================================== */
 var decodage=(function(){
-  var SEL='.hero-main .tag,.lineup-label,.foot-grid .tag',CH='0123456789ABCDEF#_·/',DUR=.4;
+  var SEL='.tag,.kv dt,.event-row dt,.mc-kv dt,.lineup-label',CH='0123456789ABCDEF#_·/',DUR=.4;
   var recs=[],running=[],io=null,alnum=/[0-9A-Za-zÀ-ÿ]/;
   function scr(t,lock){
     var o='',i,c;
     for(i=0;i<t.length;i++){c=t.charAt(i);o+=(i<lock||!alnum.test(c))?c:CH.charAt((Math.random()*CH.length)|0)}
     return o;
   }
-  function begin(r){                                         /* texte réel pour les lecteurs d'écran, brouillage masqué pour eux */
-    var a=doc.createElement('span'),b=doc.createElement('span');
-    a.className='sr-only';a.textContent=r.text;
-    b.setAttribute('aria-hidden','true');b.textContent=scr(r.text,0);
-    r.el.textContent='';r.el.appendChild(a);r.el.appendChild(b);
-    r.vis=b;r.state=1;
-  }
   function restore(r){
-    if(r.state===1)r.el.textContent=r.text;
-    r.state=2;
+    if(r.state===2)return;
+    r.el.textContent=r.text;r.state=2;
   }
   var e={key:'decodage',on:false,vis:true,wake:Infinity,
     enable:function(){
@@ -1378,23 +1538,29 @@ var decodage=(function(){
       io=hasIO?new IntersectionObserver(function(es){
         var d=0,now=performance.now()/1000;
         es.forEach(function(en){
-          if(!en.isIntersecting||!io)return;
+          if(!en.isIntersecting)return;
+          if(!io)return;
           var r=en.target.__fx;io.unobserve(en.target);
           if(!r||r.state!==0)return;
-          begin(r);r.t0=now+Math.min(.28,d*.035);d++;running.push(r);
+          r.state=1;r.t0=now+Math.min(.28,d*.035);d++;running.push(r);
         });
         if(d){e.wake=0;kick()}
       },{threshold:0,rootMargin:'0px 0px -6% 0px'}):null;
       qsa(SEL).forEach(function(el){
         if(el.__fxDone||el.__fx||el.children.length)return;
         var text=el.textContent;if(!text.replace(/\s+/g,''))return;
-        var r={el:el,text:text,vis:null,state:0,t0:0,last:-1};el.__fx=r;recs.push(r);
-        if(io)io.observe(el);                               /* texte réel visible tant que l'étiquette n'est pas entrée à l'écran */
+        var a=doc.createElement('span'),b=doc.createElement('span'),r;
+        a.className='sr-only';a.textContent=text;
+        b.setAttribute('aria-hidden','true');b.textContent=scr(text,0);
+        el.textContent='';el.appendChild(a);el.appendChild(b);
+        r={el:el,text:text,vis:b,state:0,t0:0,last:-1};el.__fx=r;recs.push(r);
+        if(io)io.observe(el);else{r.state=1;r.t0=performance.now()/1000;running.push(r);e.wake=0}
       });
+      if(running.length)kick();
     },
     disable:function(){
       if(io){io.disconnect();io=null}
-      recs.forEach(function(r){restore(r);delete r.el.__fx});
+      recs.forEach(function(r){if(r.state!==2){restore(r)}delete r.el.__fx});
       recs=[];running=[];e.wake=Infinity;
     },
     frame:function(T){
